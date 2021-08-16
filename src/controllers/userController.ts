@@ -1,10 +1,13 @@
 import { Request, Response } from 'express';
+import User from '../models/userModel';
 
 class UserController {
-  getAllUsers = (req: Request, res: Response) => {
-    res.status(500).json({
-      status: 'error',
-      message: 'This route is not yet defined!',
+  getAllUsers = async (req: Request, res: Response) => {
+    const users = await User.find();
+    res.status(200).json({
+      status: 'success',
+      results: users.length,
+      data: { users },
     });
   };
 

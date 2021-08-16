@@ -25,11 +25,12 @@ const UserSchema = new mongoose.Schema<User>({
     type: String,
     required: [true, 'Please provide a password'],
     minlength: 8,
-    select: false,
+    select: false, // for security purpose
   },
   passwordConfirm: {
     type: String,
     required: [true, 'Please confirm your password'],
+    select: false,
     validate: { // trigger on save and create
       validator(this: User, p: String): boolean {
         return p === this.password;
@@ -39,12 +40,16 @@ const UserSchema = new mongoose.Schema<User>({
   },
 });
 
-UserSchema.pre<User>('save', async function hashPassword(next): Promise<void> {
+UserSchema.pre<User>('save', async function hashPassword(next) {
   if (this.isModified('password')) {
     this.password = await bcrypt.hash(this.password, 12);
     this.passwordConfirm = '';
   }
-  return next();
+  next();
 });
+
+UserSchema.methods.passwordMatch = async (candidatePassword, userPassword) => (
+  bcrypt.compare(candidatePassword, userPassword)
+);
 
 export default mongoose.model<User>('User', UserSchema);
