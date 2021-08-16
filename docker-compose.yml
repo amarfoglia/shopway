@@ -3,9 +3,9 @@ version: '3.4'
 services:
   nodejs_mongo_docker:
     image: nodejs_mongo_docker
-    build: .
-    environment:
-      NODE_ENV: production
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
       - 3000:3000
     volumes:
@@ -18,6 +18,8 @@ services:
       - 27017:27017
     volumes:
       - data:/data/db
+    logging:
+      driver: none
 
 volumes:
   data:

@@ -1,8 +1,12 @@
 import express, { Router } from 'express';
+import AuthController from '../controllers/authController';
 import UserController from '../controllers/userController';
 
 const router: Router = express.Router();
-const userController: UserController = new UserController();
+const userController = new UserController();
+const authController = new AuthController();
+
+router.post('/signup', authController.signup);
 
 router
   .route('/')
