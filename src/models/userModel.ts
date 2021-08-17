@@ -1,9 +1,9 @@
 import mongoose from 'mongoose';
 import validator from 'validator';
 import bcrypt from 'bcrypt';
-import User from './user';
+import IUser from './user';
 
-const UserSchema = new mongoose.Schema<User>({
+const userSchema = new mongoose.Schema<IUser>({
   name: {
     type: String,
     required: [true, 'Please tell us your name!'],
@@ -32,15 +32,16 @@ const UserSchema = new mongoose.Schema<User>({
     required: [true, 'Please confirm your password'],
     select: false,
     validate: { // trigger on save and create
-      validator(this: User, p: String): boolean {
+      validator(this: IUser, p: String): boolean {
         return p === this.password;
       },
       message: 'Passwords are not the same!',
     },
   },
+  passwordChangedAt: Date,
 });
 
-UserSchema.pre<User>('save', async function hashPassword(next) {
+userSchema.pre<IUser>('save', async function hashPassword(next) {
   if (this.isModified('password')) {
     this.password = await bcrypt.hash(this.password, 12);
     this.passwordConfirm = '';
@@ -48,8 +49,16 @@ UserSchema.pre<User>('save', async function hashPassword(next) {
   next();
 });
 
-UserSchema.methods.passwordMatch = async (candidatePassword, userPassword) => (
+userSchema.methods.passwordMatch = async (candidatePassword: string, userPassword: string) => (
   bcrypt.compare(candidatePassword, userPassword)
 );
 
-export default mongoose.model<User>('User', UserSchema);
+userSchema.methods.changedPasswordAfter = function _(this: IUser, JWTTimestamp: number) {
+  if (this?.passwordChangedAt) {
+    const changedTimestamp = this.passwordChangedAt.valueOf() / 1000;
+    return JWTTimestamp < changedTimestamp;
+  }
+  return false;
+};
+
+export default mongoose.model<IUser>('User', userSchema);

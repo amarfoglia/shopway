@@ -3,9 +3,7 @@ import { MongoError } from 'mongodb';
 import { ValidationError } from '@tsed/common';
 import AppError from '../utils/appError';
 
-const handleCastErrorDB = (err: any): AppError => (
-  new AppError(`Invalid ${err.path}: ${err.value}.`, 400)
-);
+const handleCastErrorDB = (err: any): AppError => new AppError(`Invalid ${err.path}: ${err.value}.`, 400);
 
 const handleDuplicateFieldsDB = (err: MongoError): AppError => {
   const value = err.errmsg?.match(/(["'])(\\?.)*?\1/);
@@ -57,18 +55,27 @@ const handleMongoError = (err: Error): AppError => {
   }
 };
 
+const handleJWTError = () => new AppError('Invalid token. Please log in again!', 401);
+
+const handleJWTExpiredError = () => new AppError('Your token has expired! Please log in again.', 401);
+
+const errorMap = new Map([
+  ['CastError', (e: AppError) => handleCastErrorDB(e)],
+  ['ValidationError', (e: AppError) => handleValidationErrorDB(e)],
+  ['MongoError', (e: AppError) => handleMongoError(e)],
+  ['JsonWebTokenError', () => handleJWTError()],
+  ['TokenExpiredError', () => handleJWTExpiredError()],
+]);
+
 // eslint-disable-next-line no-unused-vars
 export default (err: Error, req: Request, res: Response, _next: NextFunction) => {
-  let error = err as AppError;
+  const error = err as AppError;
   error.statusCode = error.statusCode || 500;
   error.status = error.status || 'error';
 
   if (process.env.NODE_ENV === 'development') {
     sendErrorDev(error, res);
   } else if (process.env.NODE_ENV === 'production') {
-    if (err.name === 'CastError') { error = handleCastErrorDB(error); }
-    if (err.name === 'ValidationError') { error = handleValidationErrorDB(error); }
-    if (err.name === 'MongoError') { error = handleMongoError(error); }
-    sendErrorProd(error, res);
+    sendErrorProd(errorMap.get(error.name)?.(error) || error, res);
   }
 };

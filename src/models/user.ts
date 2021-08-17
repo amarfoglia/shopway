@@ -1,14 +1,16 @@
+/* eslint-disable no-unused-vars */
 import { Document } from 'mongoose';
 
-interface User extends Document {
+interface IUser extends Document {
   name: string,
   email: string,
   photo: string,
   role: string,
   password: string,
   passwordConfirm: string,
-  // eslint-disable-next-line no-unused-vars
+  passwordChangedAt: Date,
   passwordMatch(candidatePassword: string, userPassword: string): Promise<boolean>,
+  changedPasswordAfter(JWTTimestamp: number): boolean,
 }
 
-export default User;
+export default IUser;
