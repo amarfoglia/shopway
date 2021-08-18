@@ -16,6 +16,11 @@ router.patch(
   authController.checkUserToken,
   authController.updatePassword,
 );
+router.patch(
+  '/updateMe',
+  authController.checkUserToken,
+  userController.updateMe,
+);
 
 router
   .route('/')

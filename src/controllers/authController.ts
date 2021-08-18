@@ -148,7 +148,7 @@ class AuthController {
   updatePassword = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const user = await User.findById((req as any).user.id).select('+password');
     if (!user) {
-      next(new AppError('There is no user with id.', 401));
+      next(new AppError('The user logged in is undefined.', 500));
       return;
     }
 

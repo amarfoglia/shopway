@@ -1,8 +1,29 @@
 import { Request, Response, NextFunction } from 'express';
 import User from '../models/userModel';
 import AppError from '../utils/appError';
+import catchAsync from '../utils/catchAsync';
 
 class UserController {
+  updateMe = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    if (req.body.password || req.body.passwordConfirm) {
+      next(new AppError('This route is not for password updates. Please use /updateMyPassword.', 400));
+      return;
+    }
+
+    const { email, name } = req.body;
+    const userId = (req as any).user.id;
+
+    const updatedUser = await User.findByIdAndUpdate(userId, { name, email }, {
+      new: true,
+      runValidators: true,
+    });
+
+    res.status(200).json({
+      status: 'success',
+      data: { user: updatedUser },
+    });
+  });
+
   getAllUsers = async (req: Request, res: Response) => {
     const users = await User.find();
     res.status(200).json({
