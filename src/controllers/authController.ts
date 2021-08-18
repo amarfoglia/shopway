@@ -73,7 +73,6 @@ class AuthController {
       return;
     }
 
-    console.log(token);
     const decoded = await promisify.create(() => verifyToken(token));
     const { id, iat } = (decoded as jwt.JwtPayload);
 
