@@ -4,18 +4,26 @@ import crypto from 'crypto';
 import Promisify from '../utils/promisify';
 import catchAsync from '../utils/catchAsync';
 import User from '../models/userModel';
+import IUser from '../models/user';
 import AppError from '../utils/appError';
 import sendEmail from '../utils/email';
 
-const getJwtSecret = () => (process.env.JWT_SECRET || 'default-token');
+const getJwtSecret = () => (process.env.JWT_SECRET || 'invalid-token');
 
-const generateToken = (id: string): string => (
-  jwt.sign(
-    { id },
-    getJwtSecret(),
-    { expiresIn: process.env.JWT_EXPIRES_IN },
-  )
+const generateToken = (id: string): string => jwt.sign(
+  { id },
+  getJwtSecret(),
+  { expiresIn: process.env.JWT_EXPIRES_IN },
 );
+
+const sendToken = (user: IUser, statusCode: number, res: Response) => {
+  const token = generateToken(user.id);
+  res.status(statusCode).json({
+    status: 'success',
+    token,
+    data: { user },
+  });
+};
 
 const promisify = new Promisify<jwt.JwtPayload | string>();
 const verifyToken = (token: string) => jwt.verify(token, getJwtSecret());
@@ -23,14 +31,8 @@ const verifyToken = (token: string) => jwt.verify(token, getJwtSecret());
 class AuthController {
   signup = catchAsync(async (req: Request, res: Response) => {
     const { role, ...user } = req.body;
-    const newUser = await User.create(user);// client can't set the admin role;
-    const token = generateToken(newUser.id);
-
-    res.status(201).json({
-      status: 'success',
-      token,
-      data: { user: newUser },
-    });
+    const newUser = await User.create(user); // client can't set the admin role;
+    sendToken(newUser, 201, res);
   });
 
   login = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
@@ -48,12 +50,7 @@ class AuthController {
       return;
     }
 
-    const token = generateToken(user.id);
-
-    res.status(200).json({
-      status: 'success',
-      token,
-    });
+    sendToken(user, 200, res);
   });
 
   checkUserToken = catchAsync(async (req: any, res: Response, next: NextFunction) => {
@@ -78,6 +75,7 @@ class AuthController {
     // check if user changed password after the token was issued
     if (currentUser.changedPasswordAfter(iat || -1)) {
       next(new AppError('User recently changed password! Please log in again.', 401));
+      return;
     }
 
     req.user = currentUser;
@@ -100,7 +98,6 @@ class AuthController {
 
     const resetToken = user?.createPasswordResetToken();
     await user?.save({ validateBeforeSave: false });
-
     const resetURL = `${req.protocol}://${req.get('host')}/api/v1/users/resetPassword/${resetToken}`;
     const message = process.env.EMAIL_MSG?.replace('RESET_URL', resetURL);
 
@@ -143,14 +140,7 @@ class AuthController {
     user.passwordResetToken = undefined;
     user.passwordResetExpires = undefined;
     await user.save();
-
-    const token = generateToken(user.id);
-
-    res.status(201).json({
-      status: 'success',
-      token,
-      data: { user },
-    });
+    sendToken(user, 201, res);
   });
 }
 
