@@ -8,6 +8,8 @@ import IUser from '../models/user';
 import AppError from '../utils/appError';
 import sendEmail from '../utils/email';
 
+const ONE_DAY_IN_MS = 24 * 60 * 60 * 1000;
+
 const getJwtSecret = () => (process.env.JWT_SECRET || 'invalid-token');
 
 const generateToken = (id: string): string => jwt.sign(
@@ -18,10 +20,19 @@ const generateToken = (id: string): string => jwt.sign(
 
 const sendFreshToken = (user: IUser, statusCode: number, res: Response) => {
   const token = generateToken(user.id);
+  const cookieOptions = {
+    expires: new Date(Date.now() + Number(process.env.JWT_COOKIE_EXPIRES_IN) * ONE_DAY_IN_MS),
+    httpOnly: true, // prevent cross-site scripting attack
+    secure: process.env.NODE_ENV === 'production',
+  };
+
+  res.cookie('jwt', token, cookieOptions);
+  const { password, ...outputUser } = user.toObject(); // exclude password
+
   res.status(statusCode).json({
     status: 'success',
     token,
-    data: { user },
+    data: { user: outputUser },
   });
 };
 
