@@ -7,10 +7,13 @@ interface IUser extends Document {
   photo: string,
   role: string,
   password: string,
-  passwordConfirm: string,
+  passwordConfirm?: string,
   passwordChangedAt: Date,
+  passwordResetToken?: string,
+  passwordResetExpires?: Date,
   passwordMatch(candidatePassword: string, userPassword: string): Promise<boolean>,
   changedPasswordAfter(JWTTimestamp: number): boolean,
+  createPasswordResetToken(): string,
 }
 
 export default IUser;

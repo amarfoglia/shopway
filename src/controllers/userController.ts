@@ -1,5 +1,6 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import User from '../models/userModel';
+import AppError from '../utils/appError';
 
 class UserController {
   getAllUsers = async (req: Request, res: Response) => {
@@ -32,10 +33,16 @@ class UserController {
     });
   };
 
-  deleteUser = (req: Request, res: Response) => {
-    res.status(500).json({
-      status: 'error',
-      message: 'This route is not yet defined!',
+  deleteUser = async (req: Request, res: Response, next: NextFunction) => {
+    const user = await User.findByIdAndDelete(req.params.id);
+    if (!user) {
+      next(new AppError('No user found with that ID', 404));
+      return;
+    }
+
+    res.status(204).json({
+      status: 'success',
+      data: null,
     });
   };
 }
