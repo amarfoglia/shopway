@@ -24,14 +24,24 @@ class UserController {
     });
   });
 
-  getAllUsers = async (req: Request, res: Response) => {
+  getAllUsers = catchAsync(async (req: Request, res: Response) => {
     const users = await User.find();
     res.status(200).json({
       status: 'success',
       results: users.length,
       data: { users },
     });
-  };
+  });
+
+  deleteMe = catchAsync(async (req: Request, res: Response) => {
+    const userId = (req as any).user.id;
+    await User.findByIdAndUpdate(userId, { active: false });
+
+    res.status(204).json({
+      status: 'success',
+      data: null,
+    });
+  });
 
   getUser = (req: Request, res: Response) => {
     res.status(500).json({

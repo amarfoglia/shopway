@@ -44,7 +44,14 @@ const userSchema = new mongoose.Schema<IUser>({
   passwordChangedAt: Date,
   passwordResetToken: String,
   passwordResetExpires: Date,
+  active: {
+    type: Boolean,
+    default: true,
+    select: false,
+  },
 });
+
+export interface IUserModel extends mongoose.Model<IUser> { }
 
 userSchema.pre<IUser>('save', async function hashPassword(next) {
   if (this.isModified('password')) {
@@ -58,6 +65,11 @@ userSchema.pre<IUser>('save', function _(next) {
   if (this.isModified('password') && !this.isNew) {
     this.passwordChangedAt = new Date(Date.now() - ONE_SEC_IN_MS);
   }
+  next();
+});
+
+userSchema.pre<IUserModel>(/^find/, function _(next) {
+  this.find({ active: { $ne: false } });
   next();
 });
 
@@ -87,4 +99,4 @@ userSchema.methods.createPasswordResetToken = function _() {
   return resetToken;
 };
 
-export default mongoose.model<IUser>('User', userSchema);
+export default <IUserModel>mongoose.model<IUser>('User', userSchema);

@@ -18,7 +18,6 @@ const generateToken = (id: string): string => jwt.sign(
 
 const sendFreshToken = (user: IUser, statusCode: number, res: Response) => {
   const token = generateToken(user.id);
-  console.log(token);
   res.status(statusCode).json({
     status: 'success',
     token,
