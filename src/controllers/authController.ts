@@ -16,8 +16,9 @@ const generateToken = (id: string): string => jwt.sign(
   { expiresIn: process.env.JWT_EXPIRES_IN },
 );
 
-const sendToken = (user: IUser, statusCode: number, res: Response) => {
+const sendFreshToken = (user: IUser, statusCode: number, res: Response) => {
   const token = generateToken(user.id);
+  console.log(token);
   res.status(statusCode).json({
     status: 'success',
     token,
@@ -32,7 +33,7 @@ class AuthController {
   signup = catchAsync(async (req: Request, res: Response) => {
     const { role, ...user } = req.body;
     const newUser = await User.create(user); // client can't set the admin role;
-    sendToken(newUser, 201, res);
+    sendFreshToken(newUser, 201, res);
   });
 
   login = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
@@ -50,18 +51,19 @@ class AuthController {
       return;
     }
 
-    sendToken(user, 200, res);
+    sendFreshToken(user, 200, res);
   });
 
   checkUserToken = catchAsync(async (req: any, res: Response, next: NextFunction) => {
     const { authorization } = req.headers;
-    const token = authorization?.startsWith('Bearer') ? authorization.split(' ')[1] : 'default-token';
+    const token = authorization?.startsWith('Bearer') ? authorization.split(' ')[1] : 'invalid-token';
 
     if (!token) {
       next(new AppError('You are not logged in! Please log in to get access.', 401));
       return;
     }
 
+    console.log(token);
     const decoded = await promisify.create(() => verifyToken(token));
     const { id, iat } = (decoded as jwt.JwtPayload);
 
@@ -140,7 +142,28 @@ class AuthController {
     user.passwordResetToken = undefined;
     user.passwordResetExpires = undefined;
     await user.save();
-    sendToken(user, 201, res);
+    sendFreshToken(user, 201, res);
+  });
+
+  updatePassword = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const user = await User.findById((req as any).user.id).select('+password');
+    if (!user) {
+      next(new AppError('There is no user with id.', 401));
+      return;
+    }
+
+    // check current password
+    if (!(await user.passwordMatch(req.body.passwordCurrent, user.password))) {
+      next(new AppError('Your current password is wrong.', 401));
+      return;
+    }
+
+    // update the user's password
+    user.password = req.body.password;
+    user.passwordConfirm = req.body.passwordConfirm;
+    await user?.save();
+
+    sendFreshToken(user, 200, res);
   });
 }
 

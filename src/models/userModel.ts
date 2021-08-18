@@ -4,6 +4,8 @@ import bcrypt from 'bcrypt';
 import crypto from 'crypto';
 import IUser from './user';
 
+const ONE_SEC_IN_MS = 1000;
+
 const userSchema = new mongoose.Schema<IUser>({
   name: {
     type: String,
@@ -52,19 +54,26 @@ userSchema.pre<IUser>('save', async function hashPassword(next) {
   next();
 });
 
+userSchema.pre<IUser>('save', function _(next) {
+  if (this.isModified('password') && !this.isNew) {
+    this.passwordChangedAt = new Date(Date.now() - ONE_SEC_IN_MS);
+  }
+  next();
+});
+
 userSchema.methods.passwordMatch = async (candidatePassword: string, userPassword: string) => (
   bcrypt.compare(candidatePassword, userPassword)
 );
 
 userSchema.methods.changedPasswordAfter = function _(this: IUser, JWTTimestamp: number) {
   if (this?.passwordChangedAt) {
-    const changedTimestamp = this.passwordChangedAt.valueOf() / 1000;
+    const changedTimestamp = this.passwordChangedAt.valueOf() / ONE_SEC_IN_MS;
     return JWTTimestamp < changedTimestamp;
   }
   return false;
 };
 
-const getMinutesFromNow = (minutes: number): Date => new Date(Date.now() + minutes * 60000);
+const getMinutesFromNow = (minutes: number) => new Date(Date.now() + minutes * 60 * ONE_SEC_IN_MS);
 
 userSchema.methods.createPasswordResetToken = function _() {
   const resetToken = crypto.randomBytes(32).toString('hex');
