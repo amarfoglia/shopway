@@ -7,8 +7,7 @@ import User from '../models/userModel';
 import IUser from '../models/user';
 import AppError from '../utils/appError';
 import sendEmail from '../utils/email';
-
-const ONE_DAY_IN_MS = 24 * 60 * 60 * 1000;
+import { ONE_DAY_IN_MS } from '../utils/time';
 
 const getJwtSecret = () => (process.env.JWT_SECRET || 'invalid-token');
 

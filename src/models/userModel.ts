@@ -3,32 +3,31 @@ import validator from 'validator';
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
 import IUser from './user';
-
-const ONE_SEC_IN_MS = 1000;
+import { getDateFromNow, ONE_SEC_IN_MS } from '../utils/time';
 
 const userSchema = new mongoose.Schema<IUser>({
   name: {
     type: String,
-    required: [true, 'Please tell us your name!'],
+    required: [true, 'Please tell us your name!']
   },
   email: {
     type: String,
     required: [true, 'Please provide your email'],
     unique: true,
     lowercase: true,
-    validate: [validator.isEmail, 'Please provide a valid email'],
+    validate: [validator.isEmail, 'Please provide a valid email']
   },
   photo: String,
   role: {
     type: String,
     enum: ['customer', 'seller', 'admin'],
-    default: 'customer',
+    default: 'customer'
   },
   password: {
     type: String,
     required: [true, 'Please provide a password'],
     minlength: 8,
-    select: false, // for security purpose
+    select: false // for security purpose
   },
   passwordConfirm: {
     type: String,
@@ -38,8 +37,8 @@ const userSchema = new mongoose.Schema<IUser>({
       validator(this: IUser, p: String): boolean {
         return p === this.password;
       },
-      message: 'Passwords are not the same!',
-    },
+      message: 'Passwords are not the same!'
+    }
   },
   passwordChangedAt: Date,
   passwordResetToken: String,
@@ -47,8 +46,8 @@ const userSchema = new mongoose.Schema<IUser>({
   active: {
     type: Boolean,
     default: true,
-    select: false,
-  },
+    select: false
+  }
 });
 
 export interface IUserModel extends mongoose.Model<IUser> { }
@@ -85,8 +84,6 @@ userSchema.methods.changedPasswordAfter = function _(this: IUser, JWTTimestamp: 
   return false;
 };
 
-const getMinutesFromNow = (minutes: number) => new Date(Date.now() + minutes * 60 * ONE_SEC_IN_MS);
-
 userSchema.methods.createPasswordResetToken = function _() {
   const resetToken = crypto.randomBytes(32).toString('hex');
 
@@ -95,7 +92,7 @@ userSchema.methods.createPasswordResetToken = function _() {
     .update(resetToken)
     .digest('hex');
 
-  this.passwordResetExpires = getMinutesFromNow(parseInt(process.env.RESET_TOKEN_EXPIRES || '1', 10));
+  this.passwordResetExpires = getDateFromNow(parseInt(process.env.RESET_TOKEN_EXPIRES || '1', 10));
   return resetToken;
 };
 
