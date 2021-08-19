@@ -12,24 +12,23 @@ router.post('/login', authController.login);
 router.post('/forgotPassword', authController.forgotPassword);
 router.patch('/resetPassword/:token', authController.resetPassword);
 
-router.patch('/updateMyPassword', authController.checkUserToken, authController.updatePassword);
-router.get('/me', authController.checkUserToken, userController.getMe, userController.getUser);
-router.patch('/updateMe', authController.checkUserToken, userController.updateMe);
-router.delete('/deleteMe', authController.checkUserToken, userController.deleteMe);
+router.use(authController.checkUserToken);
 
-router
-  .route('/')
-  .get(authController.checkUserToken, userController.getAllUsers)
-  .post(userController.createUser);
+router.patch('/updateMyPassword', authController.updatePassword);
+router.get('/me', userController.getMe, userController.getUser);
+router.patch('/updateMe', userController.updateMe);
+router.delete('/deleteMe', userController.deleteMe);
+
+router.use(authController.restrictTo('admin'));
+
+router.route('/')
+  .get(userController.getAllUsers)
+  .post(authController.restrictTo('admin'), userController.createUser);
 
 router
   .route('/:id')
   .get(userController.getUser)
   .patch(userController.updateUser)
-  .delete(
-    authController.checkUserToken,
-    authController.restrictTo('admin'),
-    userController.deleteUser
-  );
+  .delete(userController.deleteUser);
 
 export default router;

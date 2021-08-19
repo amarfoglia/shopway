@@ -65,7 +65,7 @@ class AuthController {
 
   checkUserToken = catchAsync(async (req: any, res: Response, next: NextFunction) => {
     const { authorization } = req.headers;
-    const token = authorization?.startsWith('Bearer') ? authorization.split(' ')[1] : 'invalid-token';
+    const token = authorization?.startsWith('Bearer') ? authorization.split(' ')[1] : undefined;
 
     if (!token) {
       next(new AppError('You are not logged in! Please log in to get access.', 401));
