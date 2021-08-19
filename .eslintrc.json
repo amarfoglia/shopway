@@ -22,7 +22,10 @@
     ],
     "rules": {
         "import/extensions": "off",
-        "no-console": "off"
+        "no-console": "off",
+        "comma-dangle": ["error", {
+            "functions": "never"
+        }]
     },
     "settings": {
         "import/resolver": {

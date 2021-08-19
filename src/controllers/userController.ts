@@ -1,9 +1,18 @@
 import { Request, Response, NextFunction } from 'express';
 import User from '../models/userModel';
+import IUser from '../models/user';
 import AppError from '../utils/appError';
 import catchAsync from '../utils/catchAsync';
+import HandlerFactory from './handlerFactory';
+
+const factory = new HandlerFactory<IUser>();
 
 class UserController {
+  getMe = (req: Request, _: Response, next: NextFunction) => {
+    req.params.id = (req as any).user.id;
+    next();
+  };
+
   updateMe = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     if (req.body.password || req.body.passwordConfirm) {
       next(new AppError('This route is not for password updates. Please use /updateMyPassword.', 400));
@@ -15,21 +24,12 @@ class UserController {
 
     const updatedUser = await User.findByIdAndUpdate(userId, { name, email }, {
       new: true,
-      runValidators: true,
+      runValidators: true
     });
 
     res.status(200).json({
       status: 'success',
-      data: { user: updatedUser },
-    });
-  });
-
-  getAllUsers = catchAsync(async (req: Request, res: Response) => {
-    const users = await User.find();
-    res.status(200).json({
-      status: 'success',
-      results: users.length,
-      data: { users },
+      data: { user: updatedUser }
     });
   });
 
@@ -39,43 +39,24 @@ class UserController {
 
     res.status(204).json({
       status: 'success',
-      data: null,
+      data: null
     });
-  });
-
-  getUser = (req: Request, res: Response) => {
-    res.status(500).json({
-      status: 'error',
-      message: 'This route is not yet defined!',
-    });
-  };
+  })
 
   createUser = (req: Request, res: Response) => {
     res.status(500).json({
       status: 'error',
-      message: 'This route is not yet defined!',
+      message: 'This route is not yet defined!'
     });
-  };
+  }
 
-  updateUser = (req: Request, res: Response) => {
-    res.status(500).json({
-      status: 'error',
-      message: 'This route is not yet defined!',
-    });
-  };
+  getUser = factory.getOne(User);
 
-  deleteUser = async (req: Request, res: Response, next: NextFunction) => {
-    const user = await User.findByIdAndDelete(req.params.id);
-    if (!user) {
-      next(new AppError('No user found with that ID', 404));
-      return;
-    }
+  getAllUsers = factory.getAll(User, {});
 
-    res.status(204).json({
-      status: 'success',
-      data: null,
-    });
-  };
+  updateUser = factory.updateOne(User);
+
+  deleteUser = factory.deleteOne(User);
 }
 
 export default UserController;

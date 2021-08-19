@@ -15,7 +15,7 @@ const getJwtSecret = () => (process.env.JWT_SECRET || 'invalid-token');
 const generateToken = (id: string): string => jwt.sign(
   { id },
   getJwtSecret(),
-  { expiresIn: process.env.JWT_EXPIRES_IN },
+  { expiresIn: process.env.JWT_EXPIRES_IN }
 );
 
 const sendFreshToken = (user: IUser, statusCode: number, res: Response) => {
@@ -23,7 +23,7 @@ const sendFreshToken = (user: IUser, statusCode: number, res: Response) => {
   const cookieOptions = {
     expires: new Date(Date.now() + Number(process.env.JWT_COOKIE_EXPIRES_IN) * ONE_DAY_IN_MS),
     httpOnly: true, // prevent cross-site scripting attack
-    secure: process.env.NODE_ENV === 'production',
+    secure: process.env.NODE_ENV === 'production'
   };
 
   res.cookie('jwt', token, cookieOptions);
@@ -32,7 +32,7 @@ const sendFreshToken = (user: IUser, statusCode: number, res: Response) => {
   res.status(statusCode).json({
     status: 'success',
     token,
-    data: { user: outputUser },
+    data: { user: outputUser }
   });
 };
 
@@ -116,12 +116,12 @@ class AuthController {
       await sendEmail({
         email: user.email,
         subject: `Your password reset token (valid for ${process.env.RESET_TOKEN_EXPIRES} min)`,
-        message,
+        message
       });
 
       res.status(200).json({
         status: 'success',
-        message: 'Token sent to email!',
+        message: 'Token sent to email!'
       });
     } catch (err) {
       user.passwordResetToken = undefined;
@@ -139,7 +139,7 @@ class AuthController {
 
     const user = await User.findOne({
       passwordResetToken: hashedToken,
-      passwordResetExpires: { $gt: new Date() },
+      passwordResetExpires: { $gt: new Date() }
     });
 
     if (!user) {
