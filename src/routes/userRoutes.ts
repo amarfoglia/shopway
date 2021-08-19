@@ -1,6 +1,7 @@
 import express, { Router } from 'express';
 import AuthController from '../controllers/authController';
 import UserController from '../controllers/userController';
+import { resizeUserPhoto, uploadUserPhoto } from '../controllers/imageController';
 
 const router: Router = express.Router();
 const userController = new UserController();
@@ -16,7 +17,12 @@ router.use(authController.checkUserToken);
 
 router.patch('/updateMyPassword', authController.updatePassword);
 router.get('/me', userController.getMe, userController.getUser);
-router.patch('/updateMe', userController.updateMe);
+router.patch(
+  '/updateMe',
+  uploadUserPhoto,
+  resizeUserPhoto,
+  userController.updateMe
+);
 router.delete('/deleteMe', userController.deleteMe);
 
 router.use(authController.restrictTo('admin'));

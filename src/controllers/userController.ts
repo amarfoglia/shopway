@@ -19,10 +19,12 @@ class UserController {
       return;
     }
 
-    const { email, name } = req.body;
-    const userId = (req as any).user.id;
+    const customReq = req as any;
+    const { email, name } = customReq.body;
+    const userId = customReq.user.id;
+    const photo = customReq.file.filename;
 
-    const updatedUser = await User.findByIdAndUpdate(userId, { name, email }, {
+    const updatedUser = await User.findByIdAndUpdate(userId, { name, email, photo }, {
       new: true,
       runValidators: true
     });
