@@ -1,15 +1,14 @@
 import { Request, Response, NextFunction } from 'express';
-import User from '../models/userModel';
-import IUser from '../models/user';
+import UserModel, { UserDoc } from '../models/userModel';
 import AppError from '../utils/appError';
 import catchAsync from '../utils/catchAsync';
-import HandlerFactory from './handlerFactory';
+import HandlerFactory from './helpers/handlerFactory';
 
-const factory = new HandlerFactory<IUser>();
+const factory = new HandlerFactory<UserDoc>();
 
 class UserController {
   getMe = (req: Request, _: Response, next: NextFunction) => {
-    req.params.id = (req as any).user.id;
+    req.params.id = req.user?.id || 'invalid-id';
     next();
   };
 
@@ -19,12 +18,11 @@ class UserController {
       return;
     }
 
-    const customReq = req as any;
-    const { email, name } = customReq.body;
-    const userId = customReq.user.id;
-    const photo = customReq.file.filename;
+    const { email, name } = req.body;
+    const userId = req.user?.id;
+    const photo = req.file?.filename;
 
-    const updatedUser = await User.findByIdAndUpdate(userId, { name, email, photo }, {
+    const updatedUser = await UserModel.findByIdAndUpdate(userId, { name, email, photo }, {
       new: true,
       runValidators: true
     });
@@ -36,8 +34,8 @@ class UserController {
   });
 
   deleteMe = catchAsync(async (req: Request, res: Response) => {
-    const userId = (req as any).user.id;
-    await User.findByIdAndUpdate(userId, { active: false });
+    const userId = req.user.id;
+    await UserModel.findByIdAndUpdate(userId, { active: false });
 
     res.status(204).json({
       status: 'success',
@@ -52,13 +50,13 @@ class UserController {
     });
   }
 
-  getUser = factory.getOne(User);
+  getUser = factory.getOne(UserModel);
 
-  getAllUsers = factory.getAll(User, {});
+  getAllUsers = factory.getAll(UserModel, {});
 
-  updateUser = factory.updateOne(User);
+  updateUser = factory.updateOne(UserModel);
 
-  deleteUser = factory.deleteOne(User);
+  deleteUser = factory.deleteOne(UserModel);
 }
 
 export default UserController;

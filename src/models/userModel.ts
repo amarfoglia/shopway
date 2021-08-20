@@ -1,11 +1,20 @@
-import mongoose from 'mongoose';
+/* eslint-disable no-unused-vars */
+import mongoose, { Document } from 'mongoose';
 import validator from 'validator';
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
-import IUser from './user';
+import User from './user';
 import { getDateFromNow, ONE_SEC_IN_MS } from '../utils/time';
 
-const userSchema = new mongoose.Schema<IUser>({
+interface UserDoc extends Document, User {
+  passwordMatch(candidatePassword: string, userPassword: string): Promise<boolean>,
+  changedPasswordAfter(JWTTimestamp: number): boolean,
+  createPasswordResetToken(): string,
+}
+
+interface IUserModel extends mongoose.Model<UserDoc> { }
+
+const userSchema = new mongoose.Schema<UserDoc>({
   name: {
     type: String,
     required: [true, 'Please tell us your name!']
@@ -37,7 +46,7 @@ const userSchema = new mongoose.Schema<IUser>({
     required: [true, 'Please confirm your password'],
     select: false,
     validate: { // trigger on save and create
-      validator(this: IUser, p: String): boolean {
+      validator(this: UserDoc, p: String): boolean {
         return p === this.password;
       },
       message: 'Passwords are not the same!'
@@ -53,9 +62,7 @@ const userSchema = new mongoose.Schema<IUser>({
   }
 });
 
-export interface IUserModel extends mongoose.Model<IUser> { }
-
-userSchema.pre<IUser>('save', async function hashPassword(next) {
+userSchema.pre<UserDoc>('save', async function hashPassword(next) {
   if (this.isModified('password')) {
     this.password = await bcrypt.hash(this.password, 12);
     this.passwordConfirm = undefined;
@@ -63,7 +70,7 @@ userSchema.pre<IUser>('save', async function hashPassword(next) {
   next();
 });
 
-userSchema.pre<IUser>('save', function _(next) {
+userSchema.pre<UserDoc>('save', function _(next) {
   if (this.isModified('password') && !this.isNew) {
     this.passwordChangedAt = new Date(Date.now() - ONE_SEC_IN_MS);
   }
@@ -79,7 +86,7 @@ userSchema.methods.passwordMatch = async (candidatePassword: string, userPasswor
   bcrypt.compare(candidatePassword, userPassword)
 );
 
-userSchema.methods.changedPasswordAfter = function _(this: IUser, JWTTimestamp: number) {
+userSchema.methods.changedPasswordAfter = function _(this: UserDoc, JWTTimestamp: number) {
   if (this?.passwordChangedAt) {
     const changedTimestamp = this.passwordChangedAt.valueOf() / ONE_SEC_IN_MS;
     return JWTTimestamp < changedTimestamp;
@@ -99,4 +106,6 @@ userSchema.methods.createPasswordResetToken = function _() {
   return resetToken;
 };
 
-export default <IUserModel>mongoose.model<IUser>('User', userSchema);
+export { UserDoc, IUserModel };
+
+export default <IUserModel>mongoose.model<UserDoc>('User', userSchema);

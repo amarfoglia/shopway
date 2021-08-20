@@ -10,7 +10,7 @@ import xss from 'xss-clean';
 import hpp from 'hpp';
 import AppError from './utils/appError';
 import userRouter from './routes/userRoutes';
-import globalErrorHandler from './controllers/errorController';
+import globalErrorHandler from './controllers/helpers/errorController';
 import { ONE_HOUR_IN_MS } from './utils/time';
 
 const app: Application = express();

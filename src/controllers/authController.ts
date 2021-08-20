@@ -3,8 +3,8 @@ import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import Promisify from '../utils/promisify';
 import catchAsync from '../utils/catchAsync';
-import User from '../models/userModel';
-import IUser from '../models/user';
+import UserModel from '../models/userModel';
+import User from '../models/user';
 import AppError from '../utils/appError';
 import sendEmail from '../utils/email';
 import { ONE_DAY_IN_MS } from '../utils/time';
@@ -17,7 +17,7 @@ const generateToken = (id: string): string => jwt.sign(
   { expiresIn: process.env.JWT_EXPIRES_IN }
 );
 
-const sendFreshToken = (user: IUser, statusCode: number, res: Response) => {
+const sendFreshToken = (user: User, statusCode: number, res: Response) => {
   const token = generateToken(user.id);
   const cookieOptions = {
     expires: new Date(Date.now() + Number(process.env.JWT_COOKIE_EXPIRES_IN) * ONE_DAY_IN_MS),
@@ -26,12 +26,14 @@ const sendFreshToken = (user: IUser, statusCode: number, res: Response) => {
   };
 
   res.cookie('jwt', token, cookieOptions);
-  const { password, ...outputUser } = user.toObject(); // exclude password
+  const { email, name, role } = user; // exclude password
 
   res.status(statusCode).json({
     status: 'success',
     token,
-    data: { user: outputUser }
+    data: {
+      user: { email, name, role }
+    }
   });
 };
 
@@ -41,7 +43,7 @@ const verifyToken = (token: string) => jwt.verify(token, getJwtSecret());
 class AuthController {
   signup = catchAsync(async (req: Request, res: Response) => {
     const { role, ...user } = req.body;
-    const newUser = await User.create(user); // client can't set the admin role;
+    const newUser = await UserModel.create(user); // client can't set the admin role;
     sendFreshToken(newUser, 201, res);
   });
 
@@ -53,7 +55,7 @@ class AuthController {
       return;
     }
 
-    const user = await User.findOne({ email }).select('+password');
+    const user = await UserModel.findOne({ email }).select('+password');
 
     if (!user || !(await user.passwordMatch(password, user.password))) {
       next(new AppError('Incorrect email or password', 401));
@@ -63,7 +65,7 @@ class AuthController {
     sendFreshToken(user, 200, res);
   });
 
-  checkUserToken = catchAsync(async (req: any, res: Response, next: NextFunction) => {
+  checkUserToken = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const { authorization } = req.headers;
     const token = authorization?.startsWith('Bearer') ? authorization.split(' ')[1] : undefined;
 
@@ -76,7 +78,7 @@ class AuthController {
     const { id, iat } = (decoded as jwt.JwtPayload);
 
     // check if someone are using a token owned by a removed user
-    const currentUser = await User.findById(id);
+    const currentUser = await UserModel.findById(id);
     if (!currentUser) {
       next(new AppError('The user belonging to this token does no longer exist.', 401));
       return;
@@ -92,15 +94,15 @@ class AuthController {
     next();
   });
 
-  restrictTo = (...roles: string[]) => (req: any, res: Response, next: NextFunction) => {
-    if (!roles.includes(req.user.role)) {
+  restrictTo = (...roles: string[]) => (req: Request, res: Response, next: NextFunction) => {
+    if (!roles.includes(req.user?.role)) {
       next(new AppError('You do not have permission to perform this action', 403));
     }
     next();
   };
 
   forgotPassword = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const user = await User.findOne({ email: req.body.email });
+    const user = await UserModel.findOne({ email: req.body.email });
     if (!user) {
       next(new AppError('There is no user with email address', 403));
       return;
@@ -136,7 +138,7 @@ class AuthController {
       .update(req.params.token)
       .digest('hex');
 
-    const user = await User.findOne({
+    const user = await UserModel.findOne({
       passwordResetToken: hashedToken,
       passwordResetExpires: { $gt: new Date() }
     });
@@ -154,7 +156,7 @@ class AuthController {
   });
 
   updatePassword = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const user = await User.findById((req as any).user.id).select('+password');
+    const user = await UserModel.findById(req.user?.id).select('+password');
     if (!user) {
       next(new AppError('The user logged in is undefined.', 500));
       return;

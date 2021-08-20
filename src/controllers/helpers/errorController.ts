@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { MongoError } from 'mongodb';
 import { ValidationError } from '@tsed/common';
-import AppError from '../utils/appError';
+import AppError from '../../utils/appError';
 
 const handleCastErrorDB = (err: any): AppError => new AppError(`Invalid ${err.path}: ${err.value}.`, 400);
 

@@ -1,11 +1,12 @@
 import express, { Router } from 'express';
 import AuthController from '../controllers/authController';
 import UserController from '../controllers/userController';
-import { resizeUserPhoto, uploadUserPhoto } from '../controllers/imageController';
+import UserImageController from '../controllers/helpers/imageController';
 
 const router: Router = express.Router();
 const userController = new UserController();
 const authController = new AuthController();
+const userImageController = new UserImageController();
 
 router.post('/signup', authController.signup);
 router.post('/login', authController.login);
@@ -19,8 +20,8 @@ router.patch('/updateMyPassword', authController.updatePassword);
 router.get('/me', userController.getMe, userController.getUser);
 router.patch(
   '/updateMe',
-  uploadUserPhoto,
-  resizeUserPhoto,
+  userImageController.uploadUserPhoto,
+  userImageController.resizeUserPhoto,
   userController.updateMe
 );
 router.delete('/deleteMe', userController.deleteMe);
@@ -29,7 +30,7 @@ router.use(authController.restrictTo('admin'));
 
 router.route('/')
   .get(userController.getAllUsers)
-  .post(authController.restrictTo('admin'), userController.createUser);
+  .post(userController.createUser);
 
 router
   .route('/:id')

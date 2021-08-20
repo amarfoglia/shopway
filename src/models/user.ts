@@ -1,7 +1,6 @@
 /* eslint-disable no-unused-vars */
-import { Document } from 'mongoose';
-
-interface IUser extends Document {
+interface User {
+  id?: any;
   name: string,
   email: string,
   photo: string,
@@ -11,10 +10,7 @@ interface IUser extends Document {
   passwordConfirm?: string,
   passwordChangedAt: Date,
   passwordResetToken?: string,
-  passwordResetExpires?: Date,
-  passwordMatch(candidatePassword: string, userPassword: string): Promise<boolean>,
-  changedPasswordAfter(JWTTimestamp: number): boolean,
-  createPasswordResetToken(): string,
+  passwordResetExpires?: Date
 }
 
-export default IUser;
+export default User;

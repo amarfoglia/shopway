@@ -1,9 +1,8 @@
 import { Model, FilterQuery } from 'mongoose';
 import { NextFunction, Request, Response } from 'express';
-
-import catchAsync from '../utils/catchAsync';
-import AppError from '../utils/appError';
-import APIFeatures from '../utils/apiFeatures';
+import catchAsync from '../../utils/catchAsync';
+import AppError from '../../utils/appError';
+import APIFeatures from '../../utils/apiFeatures';
 
 class HandlerFactory<T> {
   deleteOne = (model: Model<T>) => catchAsync(
