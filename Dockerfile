@@ -1,7 +1,11 @@
 FROM node:12-buster-slim
+RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
-COPY ["./", "./"]
-RUN npm install --production --silent && mv node_modules ../
-COPY . .
-EXPOSE 3000
-CMD ["npm", "start"]
+
+COPY package.json /usr/src/app/
+RUN npm install
+COPY . /usr/src/app
+
+CMD [ "npm", "start" ]
+
+EXPOSE 5000

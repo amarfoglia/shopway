@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import mongoose, { Document } from 'mongoose';
 import validator from 'validator';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 import User from './user';
 import { getDateFromNow, ONE_SEC_IN_MS } from '../utils/time';
