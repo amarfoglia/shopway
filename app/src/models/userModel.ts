@@ -7,12 +7,15 @@ import User from './user';
 import { getDateFromNow, ONE_SEC_IN_MS } from '../utils/time';
 
 interface UserDoc extends Document, User {
-  passwordMatch(candidatePassword: string, userPassword: string): Promise<boolean>,
-  changedPasswordAfter(JWTTimestamp: number): boolean,
-  createPasswordResetToken(): string,
+  passwordMatch(
+    candidatePassword: string,
+    userPassword: string
+  ): Promise<boolean>;
+  changedPasswordAfter(JWTTimestamp: number): boolean;
+  createPasswordResetToken(): string;
 }
 
-interface IUserModel extends mongoose.Model<UserDoc> { }
+interface IUserModel extends mongoose.Model<UserDoc> {}
 
 const userSchema = new mongoose.Schema<UserDoc>({
   name: {
@@ -45,7 +48,8 @@ const userSchema = new mongoose.Schema<UserDoc>({
     type: String,
     required: [true, 'Please confirm your password'],
     select: false,
-    validate: { // trigger on save and create
+    validate: {
+      // trigger on save and create
       validator(this: UserDoc, p: String): boolean {
         return p === this.password;
       },
@@ -82,11 +86,15 @@ userSchema.pre<IUserModel>(/^find/, function _(next) {
   next();
 });
 
-userSchema.methods.passwordMatch = async (candidatePassword: string, userPassword: string) => (
-  bcrypt.compare(candidatePassword, userPassword)
-);
+userSchema.methods.passwordMatch = async (
+  candidatePassword: string,
+  userPassword: string
+) => bcrypt.compare(candidatePassword, userPassword);
 
-userSchema.methods.changedPasswordAfter = function _(this: UserDoc, JWTTimestamp: number) {
+userSchema.methods.changedPasswordAfter = function _(
+  this: UserDoc,
+  JWTTimestamp: number
+) {
   if (this?.passwordChangedAt) {
     const changedTimestamp = this.passwordChangedAt.valueOf() / ONE_SEC_IN_MS;
     return JWTTimestamp < changedTimestamp;
@@ -102,7 +110,9 @@ userSchema.methods.createPasswordResetToken = function _() {
     .update(resetToken)
     .digest('hex');
 
-  this.passwordResetExpires = getDateFromNow(parseInt(process.env.RESET_TOKEN_EXPIRES || '1', 10));
+  this.passwordResetExpires = getDateFromNow(
+    parseInt(process.env.RESET_TOKEN_EXPIRES || '1', 10)
+  );
   return resetToken;
 };
 
