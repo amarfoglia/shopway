@@ -1,17 +1,17 @@
 version: '3.4'
 
 services:
-  nodejs_mongo_docker:
-    image: nodejs_mongo_docker
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - 5000:5000
-    volumes:
-      - ./src:/usr/src/app/src
-    links:
-      - mongodb
+#  nodejs_mongo_docker:
+#    image: nodejs_mongo_docker
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    ports:
+#      - 5000:5000
+#    volumes:
+#      - ./src:/usr/src/app/src
+#    links:
+#      - mongodb
   mongodb:
     image: mongo:5.0.2
     ports:
