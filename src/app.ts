@@ -8,12 +8,21 @@ import helmet from 'helmet';
 import mongoSanitize from 'express-mongo-sanitize';
 import xss from 'xss-clean';
 import hpp from 'hpp';
+import cors from 'cors';
+import dotenv from 'dotenv';
+
 import AppError from './utils/appError';
 import userRouter from './routes/userRoutes';
 import globalErrorHandler from './controllers/helpers/errorController';
 import { ONE_HOUR_IN_MS } from './utils/time';
 
 const app: Application = express();
+dotenv.config({ path: `${__dirname}/../config.env` });
+
+app.use(cors({
+  credentials: true,
+  origin: 'http://localhost:3000'
+}));
 
 // Set security HTTP headers
 app.use(helmet());

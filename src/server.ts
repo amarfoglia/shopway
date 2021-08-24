@@ -1,4 +1,3 @@
-import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import app from './app';
 
@@ -8,8 +7,6 @@ process.on('uncaughtException', (err:Error) => {
   console.log(err.name, err.message);
   process.exit(1);
 });
-
-dotenv.config({ path: `${__dirname}/../config.env` });
 
 const DB = process.env.DATABASE || 'invalid-db-path';
 
@@ -26,10 +23,10 @@ const port = process.env.PORT || 3000;
 
 const server = app.listen(port, () => console.log(`App running on port ${port}...`));
 
-/* Catch Promise rejection (asyncronous exception) produced outside
+/* Catch Promise rejection (asynchronous exception) produced outside
    the express scope (es. database connection failure) */
 process.on('unhandledRejection', (err:Error) => {
   console.log('UNHANDLED REJECTION! 💥 Shutting down...');
   console.log(err.name, err.message);
-  server.close(process.exit(1)); // gracefuly shutdown
+  server.close(process.exit(1)); // gracefully shutdown
 });

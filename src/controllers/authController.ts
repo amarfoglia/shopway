@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
+import Cookies from 'universal-cookie';
 import Promisify from '../utils/promisify';
 import catchAsync from '../utils/catchAsync';
 import UserModel from '../models/userModel';
@@ -30,7 +31,6 @@ const sendFreshToken = (user: User, statusCode: number, res: Response) => {
 
   res.status(statusCode).json({
     status: 'success',
-    token,
     data: {
       user: { email, name, role }
     }
@@ -66,9 +66,10 @@ class AuthController {
   });
 
   checkUserToken = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const { authorization } = req.headers;
-    const token = authorization?.startsWith('Bearer') ? authorization.split(' ')[1] : undefined;
-
+    const { authorization, cookie } = req.headers;
+    const token = new Cookies(cookie).get('jwt')
+      ?? (authorization?.startsWith('Bearer') && authorization.split(' ')[1]);
+    console.log(`Received token: ${new Cookies(cookie).get('jwt')}`);
     if (!token) {
       next(new AppError('You are not logged in! Please log in to get access.', 401));
       return;
