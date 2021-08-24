@@ -1,24 +1,33 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { ReactElement } from 'react';
 import './App.css';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { Container } from '@material-ui/core';
+import Home from './pages/Home';
+import ProtectedRoute from './components/ProtectedRoute';
+import Login from './pages/Login';
+import NavBar from './components/NavBar';
 
-function App() {
+const renderContent = () => (
+  <Router>
+    <NavBar />
+    <Container maxWidth="md">
+      <Switch>
+        <Route exact path="/" component={Home} />
+        <Route path="/login" component={Login} />
+        <ProtectedRoute path="/dashboard" component={Dashboard} />
+      </Switch>
+    </Container>
+  </Router>
+);
+
+const App = (): ReactElement => {
+  return <div className="App">{renderContent()}</div>;
+};
+
+function Dashboard() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h2>Dashboard</h2>
     </div>
   );
 }
