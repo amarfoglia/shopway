@@ -1,3 +1,16 @@
+interface CustomerAccount {
+  id?: any,
+  userId: any,
+  followerList: [any]
+}
+
+interface SellerAccount {
+  id?: any,
+  userId: any,
+  storeList: [any],
+  details: string
+}
+
 /* eslint-disable no-unused-vars */
 interface User {
   id?: any;
@@ -14,19 +27,6 @@ interface User {
   passwordChangedAt: Date,
   passwordResetToken?: string,
   passwordResetExpires?: Date
-}
-
-interface CustomerAccount {
-  id?: any,
-  userId: any,
-  followerList: [any]
-}
-
-interface SellerAccount {
-  id?: any,
-  userId: any,
-  storeList: [any],
-  details: string
 }
 
 export { CustomerAccount, SellerAccount };

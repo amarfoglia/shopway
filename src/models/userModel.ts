@@ -92,6 +92,7 @@ userSchema.pre<UserDoc>('save', async function setRole() {
     case 'seller':
       this.seller?.push((await SellerModel.create({ userId: this.id })).id);
       break;
+    default:
   }
 });
 
@@ -119,7 +120,7 @@ userSchema.pre<UserDoc>(/^find/, function _(next) {
   const paramsToExclude = '-userId -__v';
   this.populate([
     { path: 'seller', select: paramsToExclude },
-    { path: 'customer', select: paramsToExclude },
+    { path: 'customer', select: paramsToExclude }
   ]);
   next();
 });
