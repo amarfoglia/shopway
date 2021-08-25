@@ -7,10 +7,24 @@ const sellerSchema = new mongoose.Schema({
         ref: 'User',
         required: [true, 'Please, provide a userId']
     },
-    storeList: {
-        type: [ObjectId],
-        ref: 'Store'
-    },
+    store: {
+        type: Object,
+        name: {
+            type: String,
+            required: [true, 'Please, provide the store name']
+        },
+        address: {
+            type: String,
+            required: [true, 'Please, provide the store address']
+        },
+        logo: {
+            type: String
+        },
+        phoneNumber: {
+            type: String,
+            required: [true, 'Please, provide the store number']
+        }
+    }
 });
 
 export default mongoose.model('Seller', sellerSchema);

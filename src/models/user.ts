@@ -2,7 +2,7 @@
 interface User {
   id?: any;
   customer?: CustomerAccount,
-  seller?: SellerAccount,
+  seller?: [SellerAccount],
   firstname: string,
   lastname: string,
   email: string,

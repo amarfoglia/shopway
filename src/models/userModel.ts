@@ -16,7 +16,7 @@ interface UserDoc extends Document, User {
   ): Promise<boolean>;
   changedPasswordAfter(JWTTimestamp: number): boolean;
   createPasswordResetToken(): string;
-  seller?: PopulatedDoc<SellerAccount & Document>;
+  seller?: [PopulatedDoc<SellerAccount & Document>];
   customer?: PopulatedDoc<CustomerAccount & Document>;
 }
 
@@ -25,31 +25,31 @@ interface IUserModel extends mongoose.Model<UserDoc> {}
 const userSchema = new mongoose.Schema<UserDoc>({
   firstname: {
     type: String,
-    required: [true, 'Please tell us your firstname!']
+    required: [true, 'Please tell us your firstname!'],
   },
   lastname: {
     type: String,
-    required: [true, 'Please tell us your lastname']
+    required: [true, 'Please tell us your lastname'],
   },
   email: {
     type: String,
     required: [true, 'Please provide your email'],
     unique: true,
     lowercase: true,
-    validate: [validator.isEmail, 'Please provide a valid email']
+    validate: [validator.isEmail, 'Please provide a valid email'],
   },
   photo: {
     type: String,
-    default: 'default.jpg'
+    default: 'default.jpg',
   },
   role: {
     type: String,
     enum: ['customer', 'seller', 'admin'],
-    required: [true,'please provide a valid role'],
-    default: 'customer'
+    required: [true, 'please provide a valid role'],
+    default: 'customer',
   },
   seller: {
-    type: ObjectId,
+    type: [ObjectId],
     ref: 'Seller',
   },
   customer: {
@@ -60,7 +60,7 @@ const userSchema = new mongoose.Schema<UserDoc>({
     type: String,
     required: [true, 'Please provide a password'],
     minlength: 8,
-    select: false // for security purpose
+    select: false, // for security purpose
   },
   passwordConfirm: {
     type: String,
@@ -71,8 +71,8 @@ const userSchema = new mongoose.Schema<UserDoc>({
       validator(this: UserDoc, p: String): boolean {
         return p === this.password;
       },
-      message: 'Passwords are not the same!'
-    }
+      message: 'Passwords are not the same!',
+    },
   },
   passwordChangedAt: Date,
   passwordResetToken: String,
@@ -80,19 +80,17 @@ const userSchema = new mongoose.Schema<UserDoc>({
   active: {
     type: Boolean,
     default: true,
-    select: false
-  }
+    select: false,
+  },
 });
 
 userSchema.pre<UserDoc>('save', async function setRole() {
-  const userId = this._id;
-  switch(this.role) {
+  switch (this.role) {
     case 'customer':
-        //this.customer?._id = (await CustomerModel.create({ userId: this._id }))._id
-        this.customer = (await CustomerModel.create({ userId: this._id }))._id;
+      this.customer = (await CustomerModel.create({ userId: this.id })).id;
       break;
     case 'seller':
-        this.seller = (await SellerModel.create({ userId: this._id }))._id;
+      this.seller?.push((await SellerModel.create({ userId: this.id })).id);
       break;
   }
 });
@@ -120,8 +118,8 @@ userSchema.pre<IUserModel>(/^find/, function _(next) {
 userSchema.pre<UserDoc>(/^find/, function _(next) {
   const paramsToExclude = '-userId -__v';
   this.populate([
-    { path: 'seller' , select: paramsToExclude }, 
-    { path: 'customer', select: paramsToExclude }
+    { path: 'seller', select: paramsToExclude },
+    { path: 'customer', select: paramsToExclude },
   ]);
   next();
 });
