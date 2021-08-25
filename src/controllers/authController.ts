@@ -27,12 +27,16 @@ const sendFreshToken = (user: User, statusCode: number, res: Response) => {
   };
 
   res.cookie('jwt', token, cookieOptions);
-  const { email, name, role } = user; // exclude password
+  const {
+    email, firstname, lastname, role
+  } = user; // exclude password
 
   res.status(statusCode).json({
     status: 'success',
     data: {
-      user: { email, name, role }
+      user: {
+        email, firstname, lastname, role
+      }
     }
   });
 };
@@ -42,7 +46,8 @@ const verifyToken = (token: string) => jwt.verify(token, getJwtSecret());
 
 class AuthController {
   signup = catchAsync(async (req: Request, res: Response) => {
-    const { role, ...user } = req.body;
+    const user = req.body;
+    user.role = user.role === 'admin' ? undefined : user.role;
     const newUser = await UserModel.create(user); // client can't set the admin role;
     sendFreshToken(newUser, 201, res);
   });

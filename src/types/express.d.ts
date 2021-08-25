@@ -4,6 +4,7 @@ declare global {
 
     export interface Request {
       user?: User;
+      file?: any;
     }
   }
 }
