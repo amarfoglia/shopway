@@ -18,11 +18,11 @@ class UserController {
       return;
     }
 
-    const { email, name } = req.body;
+    const { email, firstname, lastname } = req.body;
     const userId = req.user?.id;
     const photo = req.file?.filename;
 
-    const updatedUser = await UserModel.findByIdAndUpdate(userId, { name, email, photo }, {
+    const updatedUser = await UserModel.findByIdAndUpdate(userId, { firstname, lastname, email, photo }, {
       new: true,
       runValidators: true
     });
@@ -36,14 +36,13 @@ class UserController {
   deleteMe = catchAsync(async (req: Request, res: Response) => {
     const userId = req.user.id;
     await UserModel.findByIdAndUpdate(userId, { active: false });
-
     res.status(204).json({
       status: 'success',
       data: null
     });
   })
 
-  createUser = (req: Request, res: Response) => {
+  createUser = (_: Request, res: Response) => {
     res.status(500).json({
       status: 'error',
       message: 'This route is not yet defined!'

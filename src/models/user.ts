@@ -1,7 +1,10 @@
 /* eslint-disable no-unused-vars */
 interface User {
   id?: any;
-  name: string,
+  customer?: CustomerAccount,
+  seller?: SellerAccount,
+  firstname: string,
+  lastname: string,
   email: string,
   photo: string,
   role: string,
@@ -12,5 +15,20 @@ interface User {
   passwordResetToken?: string,
   passwordResetExpires?: Date
 }
+
+interface CustomerAccount {
+  id?: any,
+  userId: any,
+  followerList: [any]
+}
+
+interface SellerAccount {
+  id?: any,
+  userId: any,
+  storeList: [any],
+  details: string
+}
+
+export { CustomerAccount, SellerAccount };
 
 export default User;

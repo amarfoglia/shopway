@@ -1,10 +1,13 @@
 /* eslint-disable no-unused-vars */
-import mongoose, { Document } from 'mongoose';
+import mongoose, { Document, PopulatedDoc } from 'mongoose';
 import validator from 'validator';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
-import User from './user';
+import { ObjectId } from 'mongodb';
+import User, { SellerAccount, CustomerAccount } from './user';
 import { getDateFromNow, ONE_SEC_IN_MS } from '../utils/time';
+import SellerModel from './sellerModel';
+import CustomerModel from './customerModel';
 
 interface UserDoc extends Document, User {
   passwordMatch(
@@ -13,14 +16,20 @@ interface UserDoc extends Document, User {
   ): Promise<boolean>;
   changedPasswordAfter(JWTTimestamp: number): boolean;
   createPasswordResetToken(): string;
+  seller?: PopulatedDoc<SellerAccount & Document>;
+  customer?: PopulatedDoc<CustomerAccount & Document>;
 }
 
 interface IUserModel extends mongoose.Model<UserDoc> {}
 
 const userSchema = new mongoose.Schema<UserDoc>({
-  name: {
+  firstname: {
     type: String,
-    required: [true, 'Please tell us your name!']
+    required: [true, 'Please tell us your firstname!']
+  },
+  lastname: {
+    type: String,
+    required: [true, 'Please tell us your lastname']
   },
   email: {
     type: String,
@@ -36,7 +45,16 @@ const userSchema = new mongoose.Schema<UserDoc>({
   role: {
     type: String,
     enum: ['customer', 'seller', 'admin'],
+    required: [true,'please provide a valid role'],
     default: 'customer'
+  },
+  seller: {
+    type: ObjectId,
+    ref: 'Seller',
+  },
+  customer: {
+    type: ObjectId,
+    ref: 'Customer',
   },
   password: {
     type: String,
@@ -66,6 +84,19 @@ const userSchema = new mongoose.Schema<UserDoc>({
   }
 });
 
+userSchema.pre<UserDoc>('save', async function setRole() {
+  const userId = this._id;
+  switch(this.role) {
+    case 'customer':
+        //this.customer?._id = (await CustomerModel.create({ userId: this._id }))._id
+        this.customer = (await CustomerModel.create({ userId: this._id }))._id;
+      break;
+    case 'seller':
+        this.seller = (await SellerModel.create({ userId: this._id }))._id;
+      break;
+  }
+});
+
 userSchema.pre<UserDoc>('save', async function hashPassword(next) {
   if (this.isModified('password')) {
     this.password = await bcrypt.hash(this.password, 12);
@@ -83,6 +114,15 @@ userSchema.pre<UserDoc>('save', function _(next) {
 
 userSchema.pre<IUserModel>(/^find/, function _(next) {
   this.find({ active: { $ne: false } });
+  next();
+});
+
+userSchema.pre<UserDoc>(/^find/, function _(next) {
+  const paramsToExclude = '-userId -__v';
+  this.populate([
+    { path: 'seller' , select: paramsToExclude }, 
+    { path: 'customer', select: paramsToExclude }
+  ]);
   next();
 });
 
