@@ -27,5 +27,6 @@ module.exports = {
 
   rules: {
     'react/prop-types': 'off',
+    'comma-dangle': 'off',
   },
 };
