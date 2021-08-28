@@ -33,6 +33,11 @@ const SignupFormModel = {
       label: 'Confirm password',
       invalidErrorMsg: 'Passwords must match',
     },
+    role: {
+      name: 'role',
+      label: 'Role',
+      requiredErrorMsg: 'Role is required',
+    },
   },
 };
 

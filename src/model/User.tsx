@@ -10,3 +10,18 @@ export default interface User {
   passwordResetToken?: string;
   passwordResetExpires?: Date;
 }
+
+const Roles = {
+  CUSTOMER: {
+    value: 'customer',
+    label: 'Customer',
+    index: 0,
+  },
+  SELLER: {
+    value: 'seller',
+    label: 'Seller',
+    index: 1,
+  },
+};
+
+export { Roles };

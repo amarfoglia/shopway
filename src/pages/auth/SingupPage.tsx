@@ -1,35 +1,51 @@
 import React, { useState } from 'react';
-import { Button, Typography, CircularProgress } from '@material-ui/core';
+import { Button, Grid, Typography } from '@material-ui/core';
 import { Formik, Form, FormikHelpers } from 'formik';
 
-import { SellerForm, UserForm } from './forms';
-import { SellerFormModel, SignupFormModel } from '../../model/auth';
+import { SellerForm, CustomerForm, UserForm, RoleForm } from './forms';
+import { CustomerFormModel, SellerFormModel, SignupFormModel } from '../../model/auth';
 import { signupValidation } from '../../model/auth/validationSchema';
+import { Roles } from '../../model/User';
+import LoadButton from '../../components/formFields/LoadButton';
 
-const steps = ['User details', 'Seller details'];
+const steps = ['Step-1', 'Step-2', 'Step-3C', 'Step-3S'];
+const ROLE_OFFSET = new Map([
+  ['customer', 1],
+  ['seller', 2],
+]);
+
 const { formId: userFormId, formField: userFormField } = SignupFormModel;
 const { formField: sellerFormField } = SellerFormModel;
+const { formField: customerFormField } = CustomerFormModel;
 
-const { email, password, confirmPassword } = userFormField;
+const { email, password, confirmPassword, role } = userFormField;
+const { firstname, lastname, phone } = customerFormField;
 const { store, address, city } = sellerFormField;
+const { CUSTOMER } = Roles;
 
 const initialValues = {
   [email.name]: '',
   [password.name]: '',
   [confirmPassword.name]: '',
+  [role.name]: CUSTOMER.value,
+  [firstname.name]: '',
+  [lastname.name]: '',
+  [phone.name]: '',
   [store.name]: '',
   [address.name]: '',
   [city.name]: '',
 };
 
 function _renderStepContent(step: number) {
-  switch (step) {
-    case 0:
+  switch (steps[step]) {
+    case 'Step-1':
       return <UserForm formField={userFormField} />;
-    case 1:
+    case 'Step-2':
+      return <RoleForm formField={userFormField} />;
+    case 'Step-3C':
+      return <CustomerForm formField={customerFormField} />;
+    case 'Step-3S':
       return <SellerForm formField={sellerFormField} />;
-    default:
-      return <div>Not Found</div>;
   }
 }
 
@@ -38,56 +54,67 @@ type Values = typeof initialValues;
 const SignupPage: React.FC<void> = () => {
   const [activeStep, setActiveStep] = useState(0);
   const currentValidationSchema = signupValidation[activeStep];
-  const isLastStep = activeStep === steps.length - 1;
+  const isLastStep = steps[activeStep]?.startsWith('Step-3');
 
   async function _submitForm(values: Values, helpers: FormikHelpers<Values>) {
     // alert(JSON.stringify(values, null, 2));
+    console.log(values);
     helpers.setSubmitting(false);
-    setActiveStep(activeStep + 1);
+    setActiveStep(steps.length);
   }
 
+  const _nextStep = (helpers: FormikHelpers<Values>, offset: number) => {
+    setActiveStep(activeStep + offset);
+    helpers.setTouched({});
+    helpers.setSubmitting(false);
+  };
+
   function _handleSubmit(values: Values, helpers: FormikHelpers<Values>) {
-    if (isLastStep) {
-      _submitForm(values, helpers);
-    } else {
-      setActiveStep(activeStep + 1);
-      helpers.setTouched({});
-      helpers.setSubmitting(false);
+    switch (steps[activeStep]) {
+      case 'Step-1':
+        _nextStep(helpers, 1);
+        break;
+      case 'Step-2':
+        _nextStep(helpers, ROLE_OFFSET.get(values[role.name]) || 0);
+        break;
+      case 'Step-3C' || 'Step-3S':
+        _submitForm(values, helpers);
+        break;
     }
   }
 
-  const _handleBack = () => setActiveStep(activeStep - 1);
+  const _handleBack = () => {
+    const offset = steps[activeStep] === 'Step-3S' ? 2 : 1;
+    setActiveStep(activeStep - offset);
+  };
 
   return (
     <React.Fragment>
-      <Typography component="h1" variant="h4" align="center">
-        Signup
-      </Typography>
-      <React.Fragment>
-        {activeStep === steps.length ? (
-          <p>Registration success!</p>
-        ) : (
-          <Formik
-            initialValues={initialValues}
-            validationSchema={currentValidationSchema}
-            onSubmit={_handleSubmit}
-          >
-            {({ isSubmitting }) => (
-              <Form id={userFormId}>
-                {_renderStepContent(activeStep)}
-                {activeStep !== 0 && <Button onClick={_handleBack}>Back</Button>}
-                {isSubmitting ? (
-                  <CircularProgress size={24} />
-                ) : (
-                  <Button disabled={isSubmitting} type="submit" variant="contained" color="primary">
-                    {isLastStep ? 'Confirm' : 'Next'}
-                  </Button>
-                )}
-              </Form>
-            )}
-          </Formik>
-        )}
-      </React.Fragment>
+      {activeStep === steps.length ? (
+        <Typography variant="h4" component="h2">
+          Registration success!
+        </Typography>
+      ) : (
+        <Formik
+          initialValues={initialValues}
+          validationSchema={currentValidationSchema}
+          onSubmit={_handleSubmit}
+        >
+          {({ isSubmitting }) => (
+            <Form id={userFormId}>
+              <Grid container spacing={3}>
+                <Grid item xs={12}>
+                  {_renderStepContent(activeStep)}
+                </Grid>
+                <Grid item xs={12}>
+                  {activeStep !== 0 && <Button onClick={_handleBack}>Back</Button>}
+                  <LoadButton isSubmitting={isSubmitting} text={isLastStep ? 'Confirm' : 'Next'} />
+                </Grid>
+              </Grid>
+            </Form>
+          )}
+        </Formik>
+      )}
     </React.Fragment>
   );
 };

@@ -4,9 +4,6 @@ import { TextField } from '@material-ui/core';
 
 const InputField: React.FC<FieldProps> = ({ form, field, ...rest }) => {
   const errorText = getIn(form.touched, field.name) && getIn(form.errors, field.name);
-  // const { errorText, ...rest } = props;
-  // const [field, meta] = useField(rest.field);
-
   return <TextField error={!!errorText} helperText={errorText} {...field} {...rest} fullWidth />;
 };
 
