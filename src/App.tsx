@@ -3,10 +3,11 @@ import './App.css';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { Container } from '@material-ui/core';
 import Home from './pages/HomePage';
-import ProtectedRoute from './components/AuthRoute';
+import AuthRoute from './components/AuthRoute';
 import Login from './pages/auth/LoginPage';
 import NavBar from './components/NavBar';
 import SignupPage from './pages/auth/SingupPage';
+import NoAuthRoute from './components/NoAuthRoute';
 
 const renderContent = () => (
   <Router>
@@ -14,9 +15,9 @@ const renderContent = () => (
     <Container maxWidth="md">
       <Switch>
         <Route exact path="/" component={Home} />
-        <Route path="/login" component={Login} />
-        <Route path="/register" component={SignupPage} />
-        <ProtectedRoute path="/dashboard" component={Dashboard} />
+        <NoAuthRoute path="/login" component={Login} />
+        <NoAuthRoute path="/register" component={SignupPage} />
+        <AuthRoute path="/dashboard" component={Dashboard} />
       </Switch>
     </Container>
   </Router>

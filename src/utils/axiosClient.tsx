@@ -1,5 +1,10 @@
 import axios from 'axios';
 
+const connectionError = {
+  message: 'The shopway server in unreachable',
+  status: 500,
+};
+
 const client = axios.create({
   baseURL: 'http://localhost:5000/api/v1',
   headers: {
@@ -13,10 +18,10 @@ const client = axios.create({
 
 client.interceptors.response.use(
   function (response) {
-    return response.data;
+    return response;
   },
   function (error) {
-    return Promise.reject(error.response.data);
+    return Promise.reject(!error.response ? connectionError : error.response.data);
   },
 );
 

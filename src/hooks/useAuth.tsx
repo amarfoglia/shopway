@@ -1,11 +1,16 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-empty-function */
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
 import client from '../utils/axiosClient';
-import { AppError } from '../model/http';
 import User from '../model/User';
-import { AxiosResponse } from 'axios';
+import { ErrorConsumer, DataConsumer, Response, AppError } from '../model/http';
 
 interface Props {
   children: ReactNode;
+}
+
+interface UserPayload {
+  user: User;
 }
 
 interface UserContext {
@@ -17,10 +22,12 @@ interface UserContext {
   logout: () => void;
 }
 
-type DataConsumer = (res: AxiosResponse<any>) => void;
-type ErrorConsumer = (error: AppError) => void;
-
-const AuthContext = createContext<UserContext | null>(null);
+const AuthContext = createContext<UserContext>({
+  isLoading: false,
+  register: (_u) => {},
+  login: (_e, _p) => {},
+  logout: () => {},
+});
 
 export type { UserContext };
 
@@ -33,15 +40,16 @@ export const AuthProvider = (props: Props): React.ReactElement => {
     checkUserLoggedIn();
   }, []);
 
-  const _authFun = (
-    promise: Promise<AxiosResponse<any>>,
-    onData: DataConsumer,
+  function _authFun<T>(
+    promise: Promise<Response<T>>,
+    onData: DataConsumer<T>,
     onError?: ErrorConsumer,
-  ) => {
+  ) {
+    setError('');
     setIsLoading(true);
-    promise
+    return promise
       .then((res) => {
-        onData(res);
+        onData(res.data);
         setIsLoading(false);
       })
       .catch((error: AppError) => {
@@ -49,21 +57,21 @@ export const AuthProvider = (props: Props): React.ReactElement => {
         onError?.(error);
         setIsLoading(false);
       });
-  };
+  }
 
   const register = (user: User) => {
     client.post(`/users/signup`, user);
   };
 
-  const login = (email: string, password: string) => {
-    _authFun(client.post(`/users/login`, { email, password }), ({ data }) => setUser(data));
-  };
+  const login = (email: string, password: string) =>
+    _authFun<UserPayload>(client.post(`/users/login`, { email, password }), ({ data }) =>
+      setUser(data?.user),
+    );
 
   const logout = () => console.log('logout');
 
-  const checkUserLoggedIn = () => {
-    _authFun(client.get(`/users/me`), ({ data }) => setUser(data.data));
-  };
+  const checkUserLoggedIn = () =>
+    _authFun<UserPayload>(client.get(`/users/me`), ({ data }) => setUser(data?.user));
 
   return (
     <AuthContext.Provider value={{ user, error, isLoading, register, login, logout }}>
