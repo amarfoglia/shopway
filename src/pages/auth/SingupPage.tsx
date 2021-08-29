@@ -5,92 +5,70 @@ import { Formik, Form, FormikHelpers } from 'formik';
 import { SellerForm, CustomerForm, UserForm, RoleForm } from './forms';
 import { CustomerFormModel, SellerFormModel, SignupFormModel } from '../../model/auth';
 import { signupValidation } from '../../model/auth/validationSchema';
-import { Roles } from '../../model/User';
 import LoadButton from '../../components/formFields/LoadButton';
+import initialValues from '../../model/auth/initialFormValues';
+import { Roles } from '../../model/User';
 
-const steps = ['Step-1', 'Step-2', 'Step-3C', 'Step-3S'];
-const ROLE_OFFSET = new Map([
-  ['customer', 1],
-  ['seller', 2],
-]);
+enum STEPS {
+  STEP_1 = 0,
+  STEP_2 = 1,
+  STEP_3C = 2,
+  STEP_3S = 3,
+  STEP_4 = 4,
+}
+
+const getStepOffset = (step: number) => (step === STEPS.STEP_3S ? 2 : 1);
+const getStepBasedOnRole = (role: string) =>
+  role === Roles.CUSTOMER.value ? STEPS.STEP_3C : STEPS.STEP_3S;
 
 const { formId: userFormId, formField: userFormField } = SignupFormModel;
 const { formField: sellerFormField } = SellerFormModel;
 const { formField: customerFormField } = CustomerFormModel;
 
-const { email, password, confirmPassword, role } = userFormField;
-const { firstname, lastname, phone } = customerFormField;
-const { store, address, city } = sellerFormField;
-const { CUSTOMER } = Roles;
-
-const initialValues = {
-  [email.name]: '',
-  [password.name]: '',
-  [confirmPassword.name]: '',
-  [role.name]: CUSTOMER.value,
-  [firstname.name]: '',
-  [lastname.name]: '',
-  [phone.name]: '',
-  [store.name]: '',
-  [address.name]: '',
-  [city.name]: '',
-};
-
-function _renderStepContent(step: number) {
-  switch (steps[step]) {
-    case 'Step-1':
-      return <UserForm formField={userFormField} />;
-    case 'Step-2':
-      return <RoleForm formField={userFormField} />;
-    case 'Step-3C':
-      return <CustomerForm formField={customerFormField} />;
-    case 'Step-3S':
-      return <SellerForm formField={sellerFormField} />;
-  }
-}
+const formComponents = new Map([
+  [STEPS.STEP_1, <UserForm key={STEPS.STEP_1} formField={userFormField} />],
+  [STEPS.STEP_2, <RoleForm key={STEPS.STEP_2} formField={userFormField} />],
+  [STEPS.STEP_3C, <CustomerForm key={STEPS.STEP_3C} formField={customerFormField} />],
+  [STEPS.STEP_3S, <SellerForm key={STEPS.STEP_3S} formField={sellerFormField} />],
+]);
 
 type Values = typeof initialValues;
 
 const SignupPage: React.FC<void> = () => {
-  const [activeStep, setActiveStep] = useState(0);
+  const [activeStep, setActiveStep] = useState(STEPS.STEP_1);
   const currentValidationSchema = signupValidation[activeStep];
-  const isLastStep = steps[activeStep]?.startsWith('Step-3');
+  const isLastStep = activeStep === STEPS.STEP_3C || activeStep === STEPS.STEP_3S;
 
-  async function _submitForm(values: Values, helpers: FormikHelpers<Values>) {
-    // alert(JSON.stringify(values, null, 2));
+  async function _submitForm(values: Values) {
     console.log(values);
-    helpers.setSubmitting(false);
-    setActiveStep(steps.length);
   }
 
-  const _nextStep = (helpers: FormikHelpers<Values>, offset: number) => {
-    setActiveStep(activeStep + offset);
+  const _nextStep = (helpers: FormikHelpers<Values>, step: number) => {
+    setActiveStep(step);
     helpers.setTouched({});
     helpers.setSubmitting(false);
   };
 
   function _handleSubmit(values: Values, helpers: FormikHelpers<Values>) {
-    switch (steps[activeStep]) {
-      case 'Step-1':
-        _nextStep(helpers, 1);
+    switch (activeStep) {
+      case STEPS.STEP_1:
+        _nextStep(helpers, STEPS.STEP_2);
         break;
-      case 'Step-2':
-        _nextStep(helpers, ROLE_OFFSET.get(values[role.name]) || 0);
+      case STEPS.STEP_2:
+        _nextStep(helpers, getStepBasedOnRole(values['role']));
         break;
-      case 'Step-3C' || 'Step-3S':
-        _submitForm(values, helpers);
+      case STEPS.STEP_3C | STEPS.STEP_3S:
+        _nextStep(helpers, STEPS.STEP_4);
+        _submitForm(values);
         break;
     }
   }
 
-  const _handleBack = () => {
-    const offset = steps[activeStep] === 'Step-3S' ? 2 : 1;
-    setActiveStep(activeStep - offset);
-  };
+  const _handleBack = () => setActiveStep(activeStep - getStepOffset(activeStep));
 
   return (
     <React.Fragment>
-      {activeStep === steps.length ? (
+      {activeStep === STEPS.STEP_4 ? (
         <Typography variant="h4" component="h2">
           Registration success!
         </Typography>
@@ -104,10 +82,10 @@ const SignupPage: React.FC<void> = () => {
             <Form id={userFormId}>
               <Grid container spacing={3}>
                 <Grid item xs={12}>
-                  {_renderStepContent(activeStep)}
+                  {formComponents.get(activeStep)}
                 </Grid>
                 <Grid item xs={12}>
-                  {activeStep !== 0 && <Button onClick={_handleBack}>Back</Button>}
+                  {activeStep > STEPS.STEP_1 && <Button onClick={_handleBack}>Back</Button>}
                   <LoadButton isSubmitting={isSubmitting} text={isLastStep ? 'Confirm' : 'Next'} />
                 </Grid>
               </Grid>
