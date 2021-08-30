@@ -16,6 +16,7 @@ const fileFilter = (_: Request, file: Express.Multer.File, cb: FileFilterCallbac
 
 const upload = multer({ storage, fileFilter });
 
+//better to call MIDDLEWARE
 class UserImageController {
   uploadUserPhoto = upload.single('photo');
 

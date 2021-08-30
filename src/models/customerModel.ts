@@ -1,16 +1,16 @@
 import { ObjectId } from 'mongodb';
 import mongoose from 'mongoose';
+import UserModel from './userModel';
+import Customer from './customer';
+
+interface CustomerDoc extends Document, Customer {}
 
 const customerSchema = new mongoose.Schema({
-  userId: {
-    type: ObjectId,
-    ref: 'User',
-    required: [true, 'Please, provide the customerId']
-  },
   followerList: {
     type: [ObjectId],
     ref: 'Store'
   }
 });
+export { CustomerDoc };
 
-export default mongoose.model('Customer', customerSchema);
+export default UserModel.discriminator<CustomerDoc>('Customer', customerSchema);

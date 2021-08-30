@@ -9,6 +9,8 @@ import User from '../models/user';
 import AppError from '../utils/appError';
 import sendEmail from '../utils/email';
 import { ONE_DAY_IN_MS } from '../utils/time';
+import CustomerModel from '../models/customerModel';
+import SellerModel from '../models/sellerModel';
 
 const getJwtSecret = () => (process.env.JWT_SECRET || 'invalid-token');
 
@@ -28,14 +30,15 @@ const sendFreshToken = (user: User, statusCode: number, res: Response) => {
 
   res.cookie('jwt', token, cookieOptions);
   const {
-    email, firstname, lastname, role
+    email, firstname, lastname
   } = user; // exclude password
 
   res.status(statusCode).json({
     status: 'success',
+    token,
     data: {
       user: {
-        email, firstname, lastname, role
+        email, firstname, lastname
       }
     }
   });
@@ -46,10 +49,31 @@ const verifyToken = (token: string) => jwt.verify(token, getJwtSecret());
 
 class AuthController {
   signup = catchAsync(async (req: Request, res: Response) => {
+    let newUser;
     const user = req.body;
     user.role = user.role === 'admin' ? undefined : user.role;
-    const newUser = await UserModel.create(user); // client can't set the admin role;
-    sendFreshToken(newUser, 201, res);
+
+    switch (user.role) {
+      case 'customer':
+        newUser = await CustomerModel.create(user);
+        break;
+      case 'seller':
+        newUser = await SellerModel.create(user);
+        break;
+      default:
+        newUser = undefined;
+        break;
+    }
+
+    // const newUser = await UserModel.create(user); // client can't set the admin role;
+    if (newUser !== undefined) {
+      sendFreshToken(newUser, 201, res);
+    }
+    // error
+    res.status(500).json({
+      status: 'error',
+      message: 'Role undefined'
+    });
   });
 
   login = catchAsync(async (req: Request, res: Response, next: NextFunction) => {

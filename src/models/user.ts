@@ -1,34 +1,20 @@
-interface CustomerAccount {
-  id?: any,
-  userId: any,
-  followerList: [any]
-}
-
-interface SellerAccount {
-  id?: any,
-  userId: any,
-  storeList: [any],
-  details: string
-}
+import Role from './role';
 
 /* eslint-disable no-unused-vars */
 interface User {
   id?: any;
-  customer?: CustomerAccount,
-  seller?: [SellerAccount],
-  firstname: string,
-  lastname: string,
-  email: string,
-  photo: string,
-  role: string,
-  active: boolean,
-  password: string,
-  passwordConfirm?: string,
-  passwordChangedAt: Date,
-  passwordResetToken?: string,
-  passwordResetExpires?: Date
+  firstname: string;
+  lastname: string;
+  fullname: string;
+  role: Role;
+  email: string;
+  photo: string;
+  active: boolean;
+  password: string;
+  passwordConfirm?: string;
+  passwordChangedAt: Date;
+  passwordResetToken?: string;
+  passwordResetExpires?: Date;
 }
-
-export { CustomerAccount, SellerAccount };
 
 export default User;

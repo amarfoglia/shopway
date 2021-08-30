@@ -1,30 +1,34 @@
-import { ObjectId } from 'mongodb';
 import mongoose from 'mongoose';
+import Seller from './seller';
+import UserModel from './userModel';
+
+interface SellerDoc extends Document, Seller {}
+
+const options = { discriminatorKey: 'role' };
 
 const sellerSchema = new mongoose.Schema({
-  userId: {
-    type: ObjectId,
-    ref: 'User',
-    required: [true, 'Please, provide a userId'],
-  },
   store: {
-    type: Object,
+    type: Array,
+    required: [true, 'Please, provide a valid store'],
+    default: [],
     name: {
       type: String,
-      required: [true, 'Please, provide the store name'],
+      required: [true, 'Please, provide the store name']
     },
     address: {
       type: String,
-      required: [true, 'Please, provide the store address'],
+      required: [true, 'Please, provide the store address']
     },
     logo: {
-      type: String,
+      type: String
     },
     phoneNumber: {
       type: String,
-      required: [true, 'Please, provide the store number'],
-    },
-  },
-});
+      required: [true, 'Please, provide the store number']
+    }
+  }
+}, options);
 
-export default mongoose.model('Seller', sellerSchema);
+export { SellerDoc };
+
+export default UserModel.discriminator<SellerDoc>('Seller', sellerSchema);

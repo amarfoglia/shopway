@@ -27,7 +27,6 @@ class HandlerFactory<T> {
         new: true,
         runValidators: true
       });
-
       if (!doc) {
         next(new AppError('No document found with that ID', 404));
         return;

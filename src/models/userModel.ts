@@ -3,11 +3,11 @@ import mongoose, { Document, PopulatedDoc } from 'mongoose';
 import validator from 'validator';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
-import { ObjectId } from 'mongodb';
-import User, { SellerAccount, CustomerAccount } from './user';
+import User from './user';
+import CustomerAccount from './customer';
+import SellerAccount from './seller';
 import { getDateFromNow, ONE_SEC_IN_MS } from '../utils/time';
-import SellerModel from './sellerModel';
-import CustomerModel from './customerModel';
+import Role from './role';
 
 interface UserDoc extends Document, User {
   passwordMatch(
@@ -16,8 +16,6 @@ interface UserDoc extends Document, User {
   ): Promise<boolean>;
   changedPasswordAfter(JWTTimestamp: number): boolean;
   createPasswordResetToken(): string;
-  seller?: [PopulatedDoc<SellerAccount & Document>];
-  customer?: PopulatedDoc<CustomerAccount & Document>;
 }
 
 interface IUserModel extends mongoose.Model<UserDoc> {}
@@ -25,42 +23,33 @@ interface IUserModel extends mongoose.Model<UserDoc> {}
 const userSchema = new mongoose.Schema<UserDoc>({
   firstname: {
     type: String,
-    required: [true, 'Please tell us your firstname!'],
+    required: [true, 'Please tell us your firstname!']
   },
   lastname: {
     type: String,
-    required: [true, 'Please tell us your lastname'],
+    required: [true, 'Please tell us your lastname']
+  },
+  role: {
+    type: String,
+    value: Role,
+    required: [true, 'Please provide a valid role']
   },
   email: {
     type: String,
     required: [true, 'Please provide your email'],
     unique: true,
     lowercase: true,
-    validate: [validator.isEmail, 'Please provide a valid email'],
+    validate: [validator.isEmail, 'Please provide a valid email']
   },
   photo: {
     type: String,
-    default: 'default.jpg',
-  },
-  role: {
-    type: String,
-    enum: ['customer', 'seller', 'admin'],
-    required: [true, 'please provide a valid role'],
-    default: 'customer',
-  },
-  seller: {
-    type: [ObjectId],
-    ref: 'Seller',
-  },
-  customer: {
-    type: ObjectId,
-    ref: 'Customer',
+    default: 'default.jpg'
   },
   password: {
     type: String,
     required: [true, 'Please provide a password'],
     minlength: 8,
-    select: false, // for security purpose
+    select: false // for security purpose
   },
   passwordConfirm: {
     type: String,
@@ -71,8 +60,8 @@ const userSchema = new mongoose.Schema<UserDoc>({
       validator(this: UserDoc, p: String): boolean {
         return p === this.password;
       },
-      message: 'Passwords are not the same!',
-    },
+      message: 'Passwords are not the same!'
+    }
   },
   passwordChangedAt: Date,
   passwordResetToken: String,
@@ -80,19 +69,7 @@ const userSchema = new mongoose.Schema<UserDoc>({
   active: {
     type: Boolean,
     default: true,
-    select: false,
-  },
-});
-
-userSchema.pre<UserDoc>('save', async function setRole() {
-  switch (this.role) {
-    case 'customer':
-      this.customer = (await CustomerModel.create({ userId: this.id })).id;
-      break;
-    case 'seller':
-      this.seller?.push((await SellerModel.create({ userId: this.id })).id);
-      break;
-    default:
+    select: false
   }
 });
 
