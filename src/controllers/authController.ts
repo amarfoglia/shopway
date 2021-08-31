@@ -30,16 +30,14 @@ const sendFreshToken = (user: User, statusCode: number, res: Response) => {
 
   res.cookie('jwt', token, cookieOptions);
   const {
-    email, firstname, lastname
+    email, fullName
   } = user; // exclude password
 
   res.status(statusCode).json({
     status: 'success',
     token,
     data: {
-      user: {
-        email, firstname, lastname
-      }
+      user: { email, fullName }
     }
   });
 };
@@ -48,32 +46,26 @@ const promisify = new Promisify<jwt.JwtPayload | string>();
 const verifyToken = (token: string) => jwt.verify(token, getJwtSecret());
 
 class AuthController {
-  signup = catchAsync(async (req: Request, res: Response) => {
-    let newUser;
-    const user = req.body;
-    user.role = user.role === 'admin' ? undefined : user.role;
+  signup = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    let newUser: User | undefined;
+    const { role } = req.body;
 
-    switch (user.role) {
+    switch (role) {
       case 'customer':
-        newUser = await CustomerModel.create(user);
+        newUser = await CustomerModel.create(req.body);
         break;
       case 'seller':
-        newUser = await SellerModel.create(user);
+        newUser = await SellerModel.create(req.body);
         break;
       default:
         newUser = undefined;
         break;
     }
-
-    // const newUser = await UserModel.create(user); // client can't set the admin role;
-    if (newUser !== undefined) {
-      sendFreshToken(newUser, 201, res);
+    if (!newUser) {
+      next(new AppError('Please provide a valid role [seller, customer]!', 400));
+      return;
     }
-    // error
-    res.status(500).json({
-      status: 'error',
-      message: 'Role undefined'
-    });
+    sendFreshToken(newUser, 201, res);
   });
 
   login = catchAsync(async (req: Request, res: Response, next: NextFunction) => {

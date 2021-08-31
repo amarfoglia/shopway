@@ -17,6 +17,10 @@ const sellerSchema = new mongoose.Schema({
       type: String,
       required: [true, 'Please, provide the store name']
     },
+    city: {
+      type: String,
+      required: [true, 'Please, provide the city name']
+    },
     address: {
       type: String,
       required: [true, 'Please, provide the store address']
@@ -24,7 +28,7 @@ const sellerSchema = new mongoose.Schema({
     logo: {
       type: String
     },
-    phoneNumber: {
+    phone: {
       type: String,
       required: [true, 'Please, provide the store number']
     }
