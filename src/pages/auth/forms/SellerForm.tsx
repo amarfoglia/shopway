@@ -1,3 +1,5 @@
+import { Grid } from '@material-ui/core';
+import { LocationCityOutlined, LocationOnOutlined, StorefrontOutlined } from '@material-ui/icons';
 import { Field } from 'formik';
 import * as React from 'react';
 import { InputField } from '../../../components/formFields';
@@ -9,21 +11,45 @@ interface Props {
 
 const SellerForm: React.FC<Props> = ({ formField: { store, address, city } }) => {
   return (
-    <React.Fragment>
-      <Field
-        name={store.name}
-        label={store.label}
-        autoComplete={store.name}
-        component={InputField}
-      />
-      <Field
-        name={address.name}
-        label={address.label}
-        autoComplete={address.name}
-        component={InputField}
-      />
-      <Field name={city.name} label={city.label} autoComplete={city.name} component={InputField} />
-    </React.Fragment>
+    <Grid container spacing={2}>
+      <Grid item xs={12}>
+        <Field
+          placeholder={store.label}
+          aria-label={store.label}
+          autoComplete={store.name}
+          variant="outlined"
+          name={store.name}
+          Icon={StorefrontOutlined}
+          component={InputField}
+          fullWidth
+        />
+      </Grid>
+
+      <Grid item xs={12}>
+        <Field
+          placeholder={address.label}
+          aria-label={address.label}
+          autoComplete={address.name}
+          variant="outlined"
+          name={address.name}
+          Icon={LocationOnOutlined}
+          component={InputField}
+          fullWidth
+        />
+      </Grid>
+      <Grid item xs={12}>
+        <Field
+          placeholder={city.label}
+          aria-label={city.label}
+          autoComplete={city.name}
+          variant="outlined"
+          name={city.name}
+          Icon={LocationCityOutlined}
+          component={InputField}
+          fullWidth
+        />
+      </Grid>
+    </Grid>
   );
 };
 

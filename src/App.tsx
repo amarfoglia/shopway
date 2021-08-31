@@ -13,6 +13,7 @@ import NotFoundPage from './pages/NotFoundPage';
 const useStyles = makeStyles({
   root: {
     height: '100vh',
+    padding: 0,
   },
 });
 

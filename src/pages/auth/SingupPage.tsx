@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import { Button, Grid, Typography } from '@material-ui/core';
+import React, { useContext, useState } from 'react';
+import { Fab, Grid, Paper, Typography } from '@material-ui/core';
 import { Formik, Form, FormikHelpers } from 'formik';
+import clsx from 'clsx';
 
 import { SellerForm, CustomerForm, UserForm, RoleForm } from './forms';
 import { CustomerFormModel, SellerFormModel, SignupFormModel } from '../../model/auth';
@@ -8,6 +9,11 @@ import { signupValidation } from '../../model/auth/validationSchema';
 import LoadButton from '../../components/formFields/LoadButton';
 import initialValues from '../../model/auth/initialFormValues';
 import { Roles } from '../../model/User';
+import PATHS from '../../utils/routes';
+import baseStyles, { loginStyles } from '../../style/styles';
+import AuthContext from '../../hooks/useAuth';
+import { Link } from 'react-router-dom';
+import { ArrowBackIosOutlined } from '@material-ui/icons';
 
 enum STEPS {
   STEP_1 = 0,
@@ -35,9 +41,12 @@ const formComponents = new Map([
 type Values = typeof initialValues;
 
 const SignupPage: React.FC<void> = () => {
+  const { error: signupError, isLoading } = useContext(AuthContext);
   const [activeStep, setActiveStep] = useState(STEPS.STEP_1);
   const currentValidationSchema = signupValidation[activeStep];
   const isLastStep = activeStep === STEPS.STEP_3C || activeStep === STEPS.STEP_3S;
+  const baseClasses = baseStyles();
+  const loginClasses = loginStyles();
 
   async function _submitForm(values: Values) {
     console.log(values);
@@ -48,6 +57,26 @@ const SignupPage: React.FC<void> = () => {
     helpers.setTouched({});
     helpers.setSubmitting(false);
   };
+
+  const renderErrors = () =>
+    signupError && (
+      <Grid item xs={12}>
+        <Typography color="error" variant="body2" gutterBottom>
+          {signupError}
+        </Typography>
+      </Grid>
+    );
+
+  const _handleBack = () => setActiveStep(activeStep - getStepOffset(activeStep));
+
+  const renderBackButton = () =>
+    activeStep > STEPS.STEP_1 && (
+      <Grid item className={baseClasses.backFabGrid}>
+        <Fab color="primary" aria-label="back">
+          <ArrowBackIosOutlined onClick={_handleBack} />
+        </Fab>
+      </Grid>
+    );
 
   function _handleSubmit(values: Values, helpers: FormikHelpers<Values>) {
     switch (activeStep) {
@@ -64,36 +93,72 @@ const SignupPage: React.FC<void> = () => {
     }
   }
 
-  const _handleBack = () => setActiveStep(activeStep - getStepOffset(activeStep));
-
   return (
-    <React.Fragment>
-      {activeStep === STEPS.STEP_4 ? (
-        <Typography variant="h4" component="h2">
-          Registration success!
-        </Typography>
-      ) : (
-        <Formik
-          initialValues={initialValues}
-          validationSchema={currentValidationSchema}
-          onSubmit={_handleSubmit}
-        >
-          {({ isSubmitting }) => (
-            <Form id={userFormId}>
-              <Grid container spacing={3}>
-                <Grid item xs={12}>
-                  {formComponents.get(activeStep)}
-                </Grid>
-                <Grid item xs={12}>
-                  {activeStep > STEPS.STEP_1 && <Button onClick={_handleBack}>Back</Button>}
-                  <LoadButton isSubmitting={isSubmitting} text={isLastStep ? 'Confirm' : 'Next'} />
-                </Grid>
-              </Grid>
-            </Form>
+    <Grid container className={clsx(baseClasses.container, loginClasses.container)}>
+      <Grid container className={clsx(baseClasses.container, loginClasses.subContainer)}>
+        <Grid item xs={12}>
+          <Typography
+            component="h1"
+            variant="h4"
+            className={clsx(baseClasses.title, loginClasses.title)}
+            gutterBottom
+          >
+            Let&apos;s start!
+          </Typography>
+        </Grid>
+      </Grid>
+      <Grid
+        item
+        container
+        xs={12}
+        className={clsx(baseClasses.container, loginClasses.subContainer)}
+      >
+        {renderBackButton()}
+        <Grid item>
+          {activeStep === STEPS.STEP_4 ? (
+            <Typography variant="h4" component="h2">
+              Registration success!
+            </Typography>
+          ) : (
+            <Paper elevation={3} className={baseClasses.paperPopup}>
+              <Formik
+                initialValues={initialValues}
+                validationSchema={currentValidationSchema}
+                onSubmit={_handleSubmit}
+              >
+                {() => (
+                  <Form id={userFormId}>
+                    <Grid container spacing={3}>
+                      {renderErrors()}
+                      <Grid item xs={12}>
+                        {formComponents.get(activeStep)}
+                      </Grid>
+                      <Grid item xs={12}>
+                        <LoadButton
+                          isSubmitting={isLoading}
+                          variant="contained"
+                          color="primary"
+                          fullWidth
+                          text={isLastStep ? 'Confirm' : 'Next'}
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Typography variant="body2">
+                          Already have an account?&nbsp;
+                          <Link to={PATHS.SIGN_IN} className={baseClasses.link}>
+                            Sign in
+                          </Link>
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </Form>
+                )}
+              </Formik>
+            </Paper>
           )}
-        </Formik>
-      )}
-    </React.Fragment>
+        </Grid>
+      </Grid>
+    </Grid>
   );
 };
 

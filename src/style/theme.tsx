@@ -24,12 +24,21 @@ const theme = createTheme({
   },
   typography: {
     fontFamily: 'DM Sans, sans-serif',
+    h4: {
+      color: primary,
+      fontWeight: 'bold',
+      textTransform: 'capitalize',
+    },
   },
   overrides: {
+    MuiLink: {
+      root: {
+        textDecoration: 'none',
+      },
+    },
     MuiButton: {
       root: {
-        marginTop: 10,
-        borderRadius: 35,
+        borderRadius: 30,
         padding: '12px 35px',
         textTransform: 'capitalize',
       },
@@ -53,7 +62,20 @@ const theme = createTheme({
     },
     MuiTextField: {
       root: {
-        borderRadius: 20,
+        border: 'none',
+        borderRadius: 30,
+      },
+    },
+    MuiOutlinedInput: {
+      root: {
+        borderRadius: 30,
+      },
+    },
+    MuiInputAdornment: {
+      root: {
+        '& hover': {
+          backgroundColor: secondary,
+        },
       },
     },
   },

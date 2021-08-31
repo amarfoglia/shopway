@@ -1,17 +1,19 @@
 import React, { ReactElement } from 'react';
 import Image from 'material-ui-image';
 import { Grid, Button, Typography, Box } from '@material-ui/core';
-import useStyles from '../style/landingStyles';
+import baseStyles, { homeStyles } from '../style/styles';
 import { useHistory } from 'react-router-dom';
 import PATHS from '../utils/routes';
+import clsx from 'clsx';
 
 const NotFoundPage = (): ReactElement => {
-  const classes = useStyles();
+  const baseclasses = baseStyles();
+  const homeClasses = homeStyles();
   const history = useHistory();
   return (
-    <Grid container className={classes.root}>
+    <Grid container className={clsx(baseclasses.container, homeClasses.container)}>
       <Grid item xs={12}>
-        <Typography variant="h4" className={classes.title} color="primary" gutterBottom>
+        <Typography variant="h4" component="h1" className={baseclasses.title} gutterBottom>
           404 Not Found
         </Typography>
       </Grid>

@@ -1,8 +1,6 @@
 import React from 'react';
 import { Grid, Typography, Paper } from '@material-ui/core';
 import { Formik, Form, FormikHelpers } from 'formik';
-import clsx from 'clsx';
-import { Link } from 'react-router-dom';
 
 import { LoginFormModel } from '../../model/auth';
 import LoginForm from './forms/LoginForm';
@@ -11,7 +9,7 @@ import { useContext } from 'react';
 import AuthContext from '../../hooks/useAuth';
 import LoadButton from '../../components/formFields/LoadButton';
 import baseStyles, { loginStyles } from '../../style/styles';
-import PATHS from '../../utils/routes';
+import clsx from 'clsx';
 
 const { formId, formField } = LoginFormModel;
 
@@ -33,28 +31,17 @@ const LoginPage: React.FC<void> = () => {
     helpers.setSubmitting(isLoading);
   };
 
-  const renderErrors = () =>
-    loginError && (
-      <Grid item xs={12}>
-        <Typography color="error" variant="body2" gutterBottom>
-          {loginError}
-        </Typography>
-      </Grid>
-    );
-
   return (
     <Grid container className={clsx(baseClasses.container, loginClasses.container)}>
-      <Grid container className={clsx(baseClasses.container, loginClasses.subContainer)}>
-        <Grid item xs={6}>
-          <Typography
-            component="h1"
-            variant="h4"
-            className={clsx(baseClasses.title, loginClasses.title)}
-            gutterBottom
-          >
-            Welcome Back
-          </Typography>
-        </Grid>
+      <Grid item xs={6}>
+        <Typography
+          component="h1"
+          variant="h4"
+          className={clsx(baseClasses.title, loginClasses.title)}
+          gutterBottom
+        >
+          Welcome Back
+        </Typography>
       </Grid>
       <Grid item xs={12}>
         <Paper elevation={3} className={baseClasses.paperPopup}>
@@ -65,8 +52,12 @@ const LoginPage: React.FC<void> = () => {
           >
             {() => (
               <Form id={formId}>
-                <Grid container spacing={3}>
-                  {renderErrors()}
+                <Grid container spacing={4}>
+                  <Grid item xs={12}>
+                    <Typography color="error" variant="body2" gutterBottom>
+                      {loginError}
+                    </Typography>
+                  </Grid>
                   <Grid item xs={12}>
                     <LoginForm formField={formField} />
                   </Grid>
@@ -78,14 +69,6 @@ const LoginPage: React.FC<void> = () => {
                       color="primary"
                       fullWidth
                     />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Typography variant="body2">
-                      Don&apos;t have an account?&nbsp;
-                      <Link to={PATHS.SIGN_UP} className={baseClasses.link}>
-                        Sign up
-                      </Link>
-                    </Typography>
                   </Grid>
                 </Grid>
               </Form>
