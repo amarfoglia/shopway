@@ -3,7 +3,6 @@ import User from './user';
 
 interface Seller extends User {
   id?: any;
-  fullname: string;
   store: Store[];
 }
 
