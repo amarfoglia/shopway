@@ -5,6 +5,11 @@ const commonFields = {
     requiredErrorMsg: 'Email is required',
     invalidErrorMsg: 'Email is invalid',
   },
+  fullName: {
+    name: 'fullName',
+    label: 'FullName',
+    requiredErrorMsg: 'FullName is required',
+  },
   password: {
     name: 'password',
     label: 'Password',
@@ -13,7 +18,7 @@ const commonFields = {
   },
 };
 
-const { email, password } = commonFields;
+const { email, fullName, password } = commonFields;
 
 const LoginFormModel = {
   formId: 'loginForm',
@@ -27,9 +32,10 @@ const SignupFormModel = {
   formId: 'signupForm',
   formField: {
     email,
+    fullName,
     password,
-    confirmPassword: {
-      name: 'confirmPassword',
+    passwordConfirm: {
+      name: 'passwordConfirm',
       label: 'Confirm password',
       invalidErrorMsg: 'Passwords must match',
     },

@@ -59,9 +59,8 @@ export const AuthProvider = (props: Props): React.ReactElement => {
       });
   }
 
-  const register = (user: User) => {
-    client.post(`/users/signup`, user);
-  };
+  const register = (user: User) =>
+    _authFun<UserPayload>(client.post(`/users/signup`, user), ({ data }) => setUser(data?.user));
 
   const login = (email: string, password: string) =>
     _authFun<UserPayload>(client.post(`/users/login`, { email, password }), ({ data }) =>

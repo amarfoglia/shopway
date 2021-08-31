@@ -76,15 +76,13 @@ const RoleGroup: React.FC<FieldProps & RadioProps> = ({ form, field, options, ..
 
 const SellerForm: React.FC<Props> = ({ formField: { role } }) => {
   return (
-    <Grid container spacing={2}>
-      <Grid item xs={12}>
-        <Field
-          name={role.name}
-          aria-label={role.label}
-          options={[CUSTOMER, SELLER]}
-          component={RoleGroup}
-        />
-      </Grid>
+    <Grid item xs={12}>
+      <Field
+        name={role.name}
+        aria-label={role.label}
+        options={[CUSTOMER, SELLER]}
+        component={RoleGroup}
+      />
     </Grid>
   );
 };

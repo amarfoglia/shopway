@@ -20,7 +20,6 @@ enum STEPS {
   STEP_2 = 1,
   STEP_3C = 2,
   STEP_3S = 3,
-  STEP_4 = 4,
 }
 
 const getStepOffset = (step: number) => (step === STEPS.STEP_3S ? 2 : 1);
@@ -41,21 +40,25 @@ const formComponents = new Map([
 type Values = typeof initialValues;
 
 const SignupPage: React.FC<void> = () => {
-  const { error: signupError, isLoading } = useContext(AuthContext);
+  const { register, error: signupError, isLoading } = useContext(AuthContext);
   const [activeStep, setActiveStep] = useState(STEPS.STEP_1);
   const currentValidationSchema = signupValidation[activeStep];
   const isLastStep = activeStep === STEPS.STEP_3C || activeStep === STEPS.STEP_3S;
   const baseClasses = baseStyles();
   const loginClasses = loginStyles();
 
-  async function _submitForm(values: Values) {
+  const _submitForm = (values: Values) => {
     console.log(values);
-  }
-
-  const _nextStep = (helpers: FormikHelpers<Values>, step: number) => {
-    setActiveStep(step);
-    helpers.setTouched({});
-    helpers.setSubmitting(false);
+    const { fullName, password, passwordConfirm, email, role, ...store } = values;
+    const user = {
+      fullName,
+      password,
+      passwordConfirm,
+      email,
+      role,
+      store,
+    };
+    register(user);
   };
 
   const renderErrors = () =>
@@ -78,7 +81,42 @@ const SignupPage: React.FC<void> = () => {
       </Grid>
     );
 
-  function _handleSubmit(values: Values, helpers: FormikHelpers<Values>) {
+  const renderForm = () => (
+    <Form id={userFormId}>
+      <Grid container spacing={3}>
+        {renderErrors()}
+        <Grid item xs={12}>
+          {formComponents.get(activeStep)}
+        </Grid>
+        <Grid item xs={12}>
+          <LoadButton
+            isSubmitting={isLoading}
+            variant="contained"
+            color="primary"
+            fullWidth
+            type={'submit'}
+            text={isLastStep ? 'Confirm' : 'Next'}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <Typography variant="body2">
+            Already have an account?&nbsp;
+            <Link to={PATHS.SIGN_IN} className={baseClasses.link}>
+              Sign in
+            </Link>
+          </Typography>
+        </Grid>
+      </Grid>
+    </Form>
+  );
+
+  const _nextStep = (helpers: FormikHelpers<Values>, step: number) => {
+    setActiveStep(step);
+    helpers.setTouched({});
+    helpers.setSubmitting(false);
+  };
+
+  const _handleSubmit = (values: Values, helpers: FormikHelpers<Values>) => {
     switch (activeStep) {
       case STEPS.STEP_1:
         _nextStep(helpers, STEPS.STEP_2);
@@ -86,12 +124,12 @@ const SignupPage: React.FC<void> = () => {
       case STEPS.STEP_2:
         _nextStep(helpers, getStepBasedOnRole(values['role']));
         break;
-      case STEPS.STEP_3C | STEPS.STEP_3S:
-        _nextStep(helpers, STEPS.STEP_4);
+      case STEPS.STEP_3C:
+      case STEPS.STEP_3S:
         _submitForm(values);
         break;
     }
-  }
+  };
 
   return (
     <Grid container className={clsx(baseClasses.container, loginClasses.container)}>
@@ -115,47 +153,15 @@ const SignupPage: React.FC<void> = () => {
       >
         {renderBackButton()}
         <Grid item>
-          {activeStep === STEPS.STEP_4 ? (
-            <Typography variant="h4" component="h2">
-              Registration success!
-            </Typography>
-          ) : (
-            <Paper elevation={3} className={baseClasses.paperPopup}>
-              <Formik
-                initialValues={initialValues}
-                validationSchema={currentValidationSchema}
-                onSubmit={_handleSubmit}
-              >
-                {() => (
-                  <Form id={userFormId}>
-                    <Grid container spacing={3}>
-                      {renderErrors()}
-                      <Grid item xs={12}>
-                        {formComponents.get(activeStep)}
-                      </Grid>
-                      <Grid item xs={12}>
-                        <LoadButton
-                          isSubmitting={isLoading}
-                          variant="contained"
-                          color="primary"
-                          fullWidth
-                          text={isLastStep ? 'Confirm' : 'Next'}
-                        />
-                      </Grid>
-                      <Grid item xs={12}>
-                        <Typography variant="body2">
-                          Already have an account?&nbsp;
-                          <Link to={PATHS.SIGN_IN} className={baseClasses.link}>
-                            Sign in
-                          </Link>
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  </Form>
-                )}
-              </Formik>
-            </Paper>
-          )}
+          <Paper elevation={3} className={baseClasses.paperPopup}>
+            <Formik
+              initialValues={initialValues}
+              validationSchema={currentValidationSchema}
+              onSubmit={_handleSubmit}
+            >
+              {renderForm}
+            </Formik>
+          </Paper>
         </Grid>
       </Grid>
     </Grid>

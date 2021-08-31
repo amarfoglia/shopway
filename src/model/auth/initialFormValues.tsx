@@ -5,20 +5,19 @@ const { formField: userFormField } = SignupFormModel;
 const { formField: sellerFormField } = SellerFormModel;
 const { formField: customerFormField } = CustomerFormModel;
 
-const { email, password, confirmPassword, role } = userFormField;
-const { firstname, lastname, phone } = customerFormField;
-const { store, address, city } = sellerFormField;
+const { email, password, passwordConfirm, role, fullName } = userFormField;
+const {} = customerFormField;
+const { storeName, address, city, phone } = sellerFormField;
 const { CUSTOMER } = Roles;
 
 const initialValues = {
   [email.name]: '',
   [password.name]: '',
-  [confirmPassword.name]: '',
+  [fullName.name]: '',
+  [passwordConfirm.name]: '',
   [role.name]: CUSTOMER.value,
-  [firstname.name]: '',
-  [lastname.name]: '',
-  [phone.name]: '',
-  [store.name]: '',
+  [phone.name]: '(+39)-',
+  [storeName.name]: '',
   [address.name]: '',
   [city.name]: '',
 };

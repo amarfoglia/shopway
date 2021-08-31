@@ -1,8 +1,8 @@
 export default {
   formId: 'signupForm',
   formField: {
-    store: {
-      name: 'store',
+    storeName: {
+      name: 'name',
       label: 'Store name',
       requiredErrorMsg: 'Store name is required',
     },
@@ -15,6 +15,11 @@ export default {
       name: 'city',
       label: 'City',
       requiredErrorMsg: 'City is required',
+    },
+    phone: {
+      name: 'phone',
+      label: 'Phone number',
+      requiredErrorMsg: 'Phone number is required',
     },
   },
 };

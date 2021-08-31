@@ -1,9 +1,9 @@
 export default interface User {
   id?: string;
-  name: string;
+  fullName: string;
+  role: string;
   email: string;
   photo?: string;
-  role: string;
   password?: string;
   passwordConfirm?: string;
   passwordChangedAt?: Date;
