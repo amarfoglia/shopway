@@ -1,11 +1,9 @@
 /* eslint-disable no-unused-vars */
-import mongoose, { Document, PopulatedDoc } from 'mongoose';
+import mongoose, { Document } from 'mongoose';
 import validator from 'validator';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 import User from './user';
-import CustomerAccount from './customer';
-import SellerAccount from './seller';
 import { getDateFromNow, ONE_SEC_IN_MS } from '../utils/time';
 import Role from './role';
 
@@ -21,13 +19,9 @@ interface UserDoc extends Document, User {
 interface IUserModel extends mongoose.Model<UserDoc> {}
 
 const userSchema = new mongoose.Schema<UserDoc>({
-  firstname: {
+  fullName: {
     type: String,
-    required: [true, 'Please tell us your firstname!']
-  },
-  lastname: {
-    type: String,
-    required: [true, 'Please tell us your lastname']
+    required: [true, 'Please tell us your name!']
   },
   role: {
     type: String,

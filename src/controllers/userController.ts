@@ -18,12 +18,12 @@ class UserController {
       return;
     }
 
-    const { email, firstname, lastname } = req.body;
+    const { email, fullName } = req.body;
     const userId = req.user?.id;
     const photo = req.file?.filename;
 
     const updatedUser = await UserModel.findByIdAndUpdate(userId, {
-      firstname, lastname, email, photo
+      fullName, email, photo
     }, {
       new: true,
       runValidators: true
