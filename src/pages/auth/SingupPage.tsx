@@ -134,14 +134,13 @@ const SignupPage: React.FC<void> = () => {
   return (
     <Grid container className={clsx(baseClasses.container, loginClasses.container)}>
       <Grid container className={clsx(baseClasses.container, loginClasses.subContainer)}>
-        <Grid item xs={12}>
+        <Grid item xs={8}>
           <Typography
             component="h1"
-            variant="h4"
+            variant="h3"
             className={clsx(baseClasses.title, loginClasses.title)}
-            gutterBottom
           >
-            Let&apos;s start!
+            Create account
           </Typography>
         </Grid>
       </Grid>

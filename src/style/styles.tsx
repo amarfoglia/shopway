@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { makeStyles } from '@material-ui/core';
 
+const shadow = '0 10px 30px rgba(0,37,132,.06)';
+
 const baseStyles = makeStyles((theme) => ({
   container: {
     display: 'flex',
@@ -38,13 +40,15 @@ const loginStyles = makeStyles((theme) => ({
   container: {
     alignItems: 'flex-start',
     justifyContent: 'space-between',
-    backgroundColor: 'blanchedalmond',
+    background: `url(${process.env.PUBLIC_URL}/background.png)`,
   },
   title: {
     textAlign: 'left',
-    padding: theme.spacing(4),
+    paddingLeft: theme.spacing(4),
+    color: 'white',
   },
   subContainer: {
+    minHeight: '28vh',
     justifyContent: 'space-around',
     paddingTop: theme.spacing(1),
   },
@@ -54,7 +58,7 @@ const roleStyles = makeStyles((theme) => ({
   imageRoleContainer: {
     borderRadius: 30,
     padding: theme.spacing(1),
-    boxShadow: '0 10px 30px rgba(0,37,132,.06)',
+    boxShadow: shadow,
   },
   unselectedRoleTitle: {
     fontWeight: 'normal',
@@ -80,6 +84,18 @@ const roleStyles = makeStyles((theme) => ({
   },
 }));
 
-export { homeStyles, loginStyles, roleStyles };
+const customerStyle = makeStyles({
+  avatarPreview: {
+    width: 100,
+    height: 100,
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat',
+    backgroundSize: 'cover',
+    borderRadius: 70,
+    boxShadow: shadow,
+  },
+});
+
+export { homeStyles, loginStyles, roleStyles, customerStyle };
 
 export default baseStyles;
