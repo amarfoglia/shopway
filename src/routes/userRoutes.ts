@@ -2,11 +2,14 @@ import express, { Router } from 'express';
 import AuthController from '../controllers/authController';
 import UserController from '../controllers/userController';
 import UserImageController from '../controllers/helpers/imageController';
+import storeRouter from './storeRoutes';
 
 const router: Router = express.Router();
 const userController = new UserController();
 const authController = new AuthController();
 const userImageController = new UserImageController();
+
+router.use('/users/:userId/stores', storeRouter);
 
 router.post('/signup', authController.signup);
 router.post('/login', authController.login);

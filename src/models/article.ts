@@ -5,7 +5,7 @@ interface StockArticle {
 
 interface RetailArticle{
   id?: any;
-  idArticle: any;
+  articleId: any;
   color: string;
   price: string;
   image: string;
@@ -15,7 +15,7 @@ interface RetailArticle{
 
 interface Article {
   id?: any;
-  idStore: any;
+  storeId: any;
   name: string;
   brand: string;
   description: string;

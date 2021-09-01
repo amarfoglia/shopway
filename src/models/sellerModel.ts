@@ -1,4 +1,3 @@
-import { ObjectId } from 'mongodb';
 import mongoose from 'mongoose';
 import Seller from './seller';
 import UserModel from './userModel';
@@ -9,10 +8,6 @@ const options = { discriminatorKey: 'role' };
 
 const sellerSchema = new mongoose.Schema({
   store: [{
-    _id: {
-      type: ObjectId,
-      default: () => new ObjectId()
-    },
     name: {
       type: String,
       required: [true, 'Please, provide the store name']

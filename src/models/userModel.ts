@@ -7,6 +7,8 @@ import User from './user';
 import { getDateFromNow, ONE_SEC_IN_MS } from '../utils/time';
 import Role from './role';
 
+const options = { discriminatorKey: 'role' };
+
 interface UserDoc extends Document, User {
   passwordMatch(
     candidatePassword: string,
@@ -65,7 +67,7 @@ const userSchema = new mongoose.Schema<UserDoc>({
     default: true,
     select: false
   }
-});
+}, options);
 
 userSchema.pre<UserDoc>('save', async function hashPassword(next) {
   if (this.isModified('password')) {
@@ -87,6 +89,7 @@ userSchema.pre<IUserModel>(/^find/, function _(next) {
   next();
 });
 
+/*
 userSchema.pre<UserDoc>(/^find/, function _(next) {
   const paramsToExclude = '-userId -__v';
   this.populate([
@@ -95,7 +98,7 @@ userSchema.pre<UserDoc>(/^find/, function _(next) {
   ]);
   next();
 });
-
+*/
 userSchema.methods.passwordMatch = async (
   candidatePassword: string,
   userPassword: string

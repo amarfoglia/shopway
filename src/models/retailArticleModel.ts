@@ -5,7 +5,7 @@ import { RetailArticle } from './article';
 interface RetailArticleDoc extends Document, RetailArticle {}
 
 const retailArticleSchema = new mongoose.Schema({
-  idArticle: {
+  articleId: {
     type: ObjectId,
     ref: 'Article',
     required: [true, 'Please, provide the article\'s id of the reatil article']

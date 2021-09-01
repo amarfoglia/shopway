@@ -10,8 +10,8 @@ const factory = new HandlerFactory<RetailArticleDoc>();
 class RetailArticleController {
   addRetailArticle = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const retailArticle = req.body as RetailArticle;
-    retailArticle.idArticle = req.params.idArticle;
-    if (!retailArticle.idArticle) {
+    retailArticle.articleId = req.params.articleId;
+    if (!retailArticle.articleId) {
       next(new AppError('the id of article is not defined', 500));
     }
     const newRetailArticle = await RetailArticleModel.create(retailArticle);

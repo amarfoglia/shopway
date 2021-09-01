@@ -1,6 +1,6 @@
-enum Role {
-  Customer = 'Customer',
-  Seller = 'Seller',
-}
+const Role = {
+  CUSTOMER: 'Customer',
+  SELLER: 'Seller'
+};
 
 export default Role;

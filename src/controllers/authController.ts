@@ -11,6 +11,7 @@ import sendEmail from '../utils/email';
 import { ONE_DAY_IN_MS } from '../utils/time';
 import CustomerModel from '../models/customerModel';
 import SellerModel from '../models/sellerModel';
+import Role from '../models/role';
 
 const getJwtSecret = () => (process.env.JWT_SECRET || 'invalid-token');
 
@@ -51,10 +52,10 @@ class AuthController {
     const { role } = req.body;
 
     switch (role) {
-      case 'customer':
+      case Role.CUSTOMER:
         newUser = await CustomerModel.create(req.body);
         break;
-      case 'seller':
+      case Role.SELLER:
         newUser = await SellerModel.create(req.body);
         break;
       default:
@@ -62,7 +63,7 @@ class AuthController {
         break;
     }
     if (!newUser) {
-      next(new AppError('Please provide a valid role [seller, customer]!', 400));
+      next(new AppError(`Please provide a valid role [${Role.CUSTOMER}, ${Role.SELLER}]!`, 400));
       return;
     }
     sendFreshToken(newUser, 201, res);
@@ -90,7 +91,7 @@ class AuthController {
     const { authorization, cookie } = req.headers;
     const token = new Cookies(cookie).get('jwt')
       ?? (authorization?.startsWith('Bearer') && authorization.split(' ')[1]);
-    console.log(`Received token: ${new Cookies(cookie).get('jwt')}`);
+    console.log(`Received token: ${token}`);
     if (!token) {
       next(new AppError('You are not logged in! Please log in to get access.', 401));
       return;

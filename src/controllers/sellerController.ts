@@ -10,7 +10,7 @@ const factory = new HandlerFactory<SellerDoc>();
 class SellerController {
   addStore = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const { store } = req.body as Seller;
-    const seller = await SellerModel.findById(req.params.id);
+    const seller = await SellerModel.findById(req.params.userId);
     if (!seller) {
       next(new AppError('No seller found with that ID', 404));
       return;

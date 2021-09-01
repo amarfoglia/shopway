@@ -10,8 +10,7 @@ const factory = new HandlerFactory<ArticleDoc>();
 class ArticleController {
   addArticle = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const article = req.body as Article;
-    article.idStore = req.params.idStore;
-    console.log(article);
+    article.storeId = req.params.storeId;
     const newArticle = await ArticleModel.create(article);
     if (!newArticle) {
       next(new AppError('Cannot create article', 500));

@@ -63,8 +63,8 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/stores', storeRouter);
-app.use('/api/v1', articleRouter);
-app.use('/api/v1', retailArticleRouter);
+app.use('/api/v1/articles', articleRouter);
+app.use('/api/v1/retails', retailArticleRouter);
 
 app.all('*', (req, _res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
