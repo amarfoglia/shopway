@@ -37,10 +37,6 @@ const userSchema = new mongoose.Schema<UserDoc>({
     lowercase: true,
     validate: [validator.isEmail, 'Please provide a valid email']
   },
-  photo: {
-    type: String,
-    default: 'default.jpg'
-  },
   password: {
     type: String,
     required: [true, 'Please provide a password'],
@@ -89,16 +85,6 @@ userSchema.pre<IUserModel>(/^find/, function _(next) {
   next();
 });
 
-/*
-userSchema.pre<UserDoc>(/^find/, function _(next) {
-  const paramsToExclude = '-userId -__v';
-  this.populate([
-    { path: 'seller', select: paramsToExclude },
-    { path: 'customer', select: paramsToExclude }
-  ]);
-  next();
-});
-*/
 userSchema.methods.passwordMatch = async (
   candidatePassword: string,
   userPassword: string

@@ -16,12 +16,10 @@ const fileFilter = (_: Request, file: Express.Multer.File, cb: FileFilterCallbac
 
 const upload = multer({ storage, fileFilter });
 
-//better to call MIDDLEWARE
 class UserImageController {
   uploadUserPhoto = upload.single('photo');
 
   resizeUserPhoto = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    // const customReq = req as any;
     if (req.file) {
       const { file } = req;
       file.filename = `user-${req.user?.id}-${Date.now()}.jpeg`;

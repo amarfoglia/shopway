@@ -11,7 +11,10 @@ const userImageController = new UserImageController();
 
 router.use('/users/:userId/stores', storeRouter);
 
-router.post('/signup', authController.signup);
+router.post('/signup',
+  userImageController.uploadUserPhoto,
+  userImageController.resizeUserPhoto,
+  authController.signup);
 router.post('/login', authController.login);
 
 router.post('/forgotPassword', authController.forgotPassword);
@@ -27,6 +30,7 @@ router.patch(
   userImageController.resizeUserPhoto,
   userController.updateMe
 );
+
 router.delete('/deleteMe', userController.deleteMe);
 
 router.use(authController.restrictTo('admin'));

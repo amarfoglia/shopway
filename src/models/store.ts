@@ -4,8 +4,7 @@ interface Store {
   name: string;
   city: string;
   address: string;
-  logo: string;
+  logo?: string;
   phone: string;
-  active: boolean;
 }
 export default Store;

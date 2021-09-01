@@ -3,7 +3,7 @@ import User from './user';
 
 interface Seller extends User {
   id?: any;
-  store: Store[];
+  stores: Store[];
 }
 
 export default Seller;

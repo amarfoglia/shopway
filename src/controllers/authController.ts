@@ -12,6 +12,7 @@ import { ONE_DAY_IN_MS } from '../utils/time';
 import CustomerModel from '../models/customerModel';
 import SellerModel from '../models/sellerModel';
 import Role from '../models/role';
+import Seller from '../models/seller';
 
 const getJwtSecret = () => (process.env.JWT_SECRET || 'invalid-token');
 
@@ -49,14 +50,17 @@ const verifyToken = (token: string) => jwt.verify(token, getJwtSecret());
 class AuthController {
   signup = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     let newUser: User | undefined;
+    let seller: Seller;
     const { role } = req.body;
-
+    const photo = req.file?.filename;
     switch (role) {
       case Role.CUSTOMER:
-        newUser = await CustomerModel.create(req.body);
+        newUser = await CustomerModel.create({ photo, ...req.body });
         break;
       case Role.SELLER:
-        newUser = await SellerModel.create(req.body);
+        seller = req.body;
+        seller.stores[0].logo = photo;
+        newUser = await SellerModel.create(seller);
         break;
       default:
         newUser = undefined;

@@ -7,7 +7,7 @@ interface SellerDoc extends Document, Seller {}
 const options = { discriminatorKey: 'role' };
 
 const sellerSchema = new mongoose.Schema({
-  store: [{
+  stores: [{
     name: {
       type: String,
       required: [true, 'Please, provide the store name']

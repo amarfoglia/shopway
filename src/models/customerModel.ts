@@ -11,6 +11,10 @@ const customerSchema = new mongoose.Schema({
   followerList: {
     type: [ObjectId],
     ref: 'Store'
+  },
+  photo: {
+    type: String,
+    default: 'default.jpg'
   }
 }, options);
 export { CustomerDoc };
