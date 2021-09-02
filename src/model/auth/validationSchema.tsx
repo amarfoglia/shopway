@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 import 'yup-phone';
-import { SignupFormModel, SellerFormModel } from '.';
+import { SignupFormModel, SellerFormModel, CustomerFormModel } from '.';
 import { Roles } from '../User';
 
 const {
@@ -8,8 +8,12 @@ const {
 } = SignupFormModel;
 
 const {
-  formField: { storeName, address, city, phone },
+  formField: { storeName, address, city, phone, logo },
 } = SellerFormModel;
+
+const {
+  formField: { photo },
+} = CustomerFormModel;
 
 const signupValidation = [
   Yup.object().shape({
@@ -29,9 +33,12 @@ const signupValidation = [
       .oneOf([Roles.CUSTOMER.value, Roles.SELLER.value])
       .required(`${role.requiredErrorMsg}`),
   }),
-  Yup.object().shape({}),
+  Yup.object().shape({
+    [photo.name]: Yup.mixed(),
+  }),
   Yup.object().shape({
     [storeName.name]: Yup.string().required(`${storeName.requiredErrorMsg}`),
+    [logo.name]: Yup.mixed(),
     [city.name]: Yup.string().required(`${city.requiredErrorMsg}`),
     [phone.name]: Yup.string().phone().required(`${phone.requiredErrorMsg}`),
     [address.name]: Yup.string().required(`${address.requiredErrorMsg}`),

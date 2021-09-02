@@ -1,4 +1,9 @@
 export default {
   formId: 'customerForm',
-  formField: {},
+  formField: {
+    photo: {
+      name: 'photo',
+      label: 'Customer photo',
+    },
+  },
 };

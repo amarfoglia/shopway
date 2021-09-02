@@ -6,8 +6,8 @@ const { formField: sellerFormField } = SellerFormModel;
 const { formField: customerFormField } = CustomerFormModel;
 
 const { email, password, passwordConfirm, role, fullName } = userFormField;
-const {} = customerFormField;
-const { storeName, address, city, phone } = sellerFormField;
+const { photo } = customerFormField;
+const { storeName, address, city, phone, logo } = sellerFormField;
 const { CUSTOMER } = Roles;
 
 const initialValues = {
@@ -16,6 +16,8 @@ const initialValues = {
   [fullName.name]: '',
   [passwordConfirm.name]: '',
   [role.name]: CUSTOMER.value,
+  [photo.name]: '',
+  [logo.name]: '',
   [phone.name]: '(+39)-',
   [storeName.name]: '',
   [address.name]: '',

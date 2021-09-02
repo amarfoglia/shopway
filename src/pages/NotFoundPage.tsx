@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import React from 'react';
 import Image from 'material-ui-image';
 import { Grid, Button, Typography, Box } from '@material-ui/core';
 import baseStyles, { homeStyles } from '../style/styles';
@@ -6,7 +6,7 @@ import { useHistory } from 'react-router-dom';
 import PATHS from '../utils/routes';
 import clsx from 'clsx';
 
-const NotFoundPage = (): ReactElement => {
+const NotFoundPage = (): React.ReactElement => {
   const baseclasses = baseStyles();
   const homeClasses = homeStyles();
   const history = useHistory();

@@ -1,11 +1,10 @@
 import * as React from 'react';
 import { Grid } from '@material-ui/core';
-import {
-  LocationCityOutlined,
-  LocationOnOutlined,
-  PhoneOutlined,
-  StorefrontOutlined,
-} from '@material-ui/icons';
+import LocationCityOutlined from '@material-ui/icons/LocationCityOutlined';
+import PhoneOutlined from '@material-ui/icons/PhoneOutlined';
+import LocationOnOutlined from '@material-ui/icons/LocationOnOutlined';
+import StorefrontOutlined from '@material-ui/icons/StorefrontOutlined';
+
 import { Field } from 'formik';
 import { InputField } from '../../../components/formFields';
 import { SellerFormModel } from '../../../model/auth';

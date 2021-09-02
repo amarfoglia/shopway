@@ -8,7 +8,7 @@ import { loginValidation } from '../../model/auth/validationSchema';
 import { useContext } from 'react';
 import AuthContext from '../../hooks/useAuth';
 import LoadButton from '../../components/formFields/LoadButton';
-import baseStyles, { loginStyles } from '../../style/styles';
+import baseStyles, { authStyles } from '../../style/styles';
 import clsx from 'clsx';
 
 const { formId, formField } = LoginFormModel;
@@ -23,7 +23,7 @@ type Values = typeof initialValues;
 const LoginPage: React.FC<void> = () => {
   const { login, error: loginError, isLoading } = useContext(AuthContext);
   const baseClasses = baseStyles();
-  const loginClasses = loginStyles();
+  const classes = authStyles();
 
   const _handleSubmit = (values: Values, helpers: FormikHelpers<Values>) => {
     const { email, password } = values;
@@ -32,12 +32,12 @@ const LoginPage: React.FC<void> = () => {
   };
 
   return (
-    <Grid container className={clsx(baseClasses.container, loginClasses.container)}>
+    <Grid container className={clsx(baseClasses.container, classes.container)}>
       <Grid item xs={6}>
         <Typography
           component="h1"
           variant="h4"
-          className={clsx(baseClasses.title, loginClasses.title)}
+          className={clsx(baseClasses.title, classes.title)}
           gutterBottom
         >
           Welcome Back

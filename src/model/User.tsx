@@ -3,7 +3,6 @@ export default interface User {
   fullName: string;
   role: string;
   email: string;
-  photo?: string;
   password?: string;
   passwordConfirm?: string;
   passwordChangedAt?: Date;

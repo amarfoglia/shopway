@@ -1,11 +1,10 @@
 import * as React from 'react';
 import { Grid } from '@material-ui/core';
-import {
-  CheckOutlined,
-  LockOutlined,
-  MailOutlineOutlined,
-  PermIdentityOutlined,
-} from '@material-ui/icons';
+import CheckOutlined from '@material-ui/icons/CheckOutlined';
+import LockOutlined from '@material-ui/icons/LockOutlined';
+import MailOutlineOutlined from '@material-ui/icons/MailOutlineOutlined';
+import PermIdentityOutlined from '@material-ui/icons/PermIdentityOutlined';
+
 import { Field } from 'formik';
 import { InputField } from '../../../components/formFields';
 import { SignupFormModel } from '../../../model/auth';

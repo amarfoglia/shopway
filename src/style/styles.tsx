@@ -2,6 +2,7 @@
 import { makeStyles } from '@material-ui/core';
 
 const shadow = '0 10px 30px rgba(0,37,132,.06)';
+const borderRadius = 30;
 
 const baseStyles = makeStyles((theme) => ({
   container: {
@@ -18,7 +19,7 @@ const baseStyles = makeStyles((theme) => ({
     textDecoration: 'none',
   },
   paperPopup: {
-    borderRadius: '30px 30px 0px 0px',
+    borderEndEndRadius: borderRadius,
     paddingBlock: theme.spacing(6),
     paddingInline: theme.spacing(4),
   },
@@ -26,6 +27,15 @@ const baseStyles = makeStyles((theme) => ({
     textAlign: 'left',
     paddingLeft: theme.spacing(4),
     height: 28,
+  },
+  avatarPreview: {
+    width: 100,
+    height: 100,
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat',
+    backgroundSize: 'cover',
+    borderRadius: 70,
+    boxShadow: shadow,
   },
 }));
 
@@ -36,10 +46,11 @@ const homeStyles = makeStyles({
   },
 });
 
-const loginStyles = makeStyles((theme) => ({
+const authStyles = makeStyles((theme) => ({
   container: {
     alignItems: 'flex-start',
     justifyContent: 'space-between',
+    backgroundRepeat: 'no-repeat',
     background: `url(${process.env.PUBLIC_URL}/background.png)`,
   },
   title: {
@@ -84,18 +95,6 @@ const roleStyles = makeStyles((theme) => ({
   },
 }));
 
-const customerStyle = makeStyles({
-  avatarPreview: {
-    width: 100,
-    height: 100,
-    backgroundPosition: 'center',
-    backgroundRepeat: 'no-repeat',
-    backgroundSize: 'cover',
-    borderRadius: 70,
-    boxShadow: shadow,
-  },
-});
-
-export { homeStyles, loginStyles, roleStyles, customerStyle };
+export { homeStyles, authStyles, roleStyles };
 
 export default baseStyles;

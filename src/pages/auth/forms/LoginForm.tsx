@@ -1,5 +1,6 @@
 import { Grid, makeStyles, Typography } from '@material-ui/core';
-import { LockOutlined, MailOutlineOutlined } from '@material-ui/icons';
+import MailOutlineOutlined from '@material-ui/icons/MailOutlineOutlined';
+import LockOutlined from '@material-ui/icons/LockOutlined';
 import { Field } from 'formik';
 import * as React from 'react';
 import { Link } from 'react-router-dom';

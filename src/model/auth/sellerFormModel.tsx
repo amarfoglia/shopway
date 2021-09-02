@@ -21,5 +21,9 @@ export default {
       label: 'Phone number',
       requiredErrorMsg: 'Phone number is required',
     },
+    logo: {
+      name: 'logo',
+      label: 'Logo',
+    },
   },
 };

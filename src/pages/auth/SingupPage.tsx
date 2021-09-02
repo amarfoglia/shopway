@@ -1,6 +1,8 @@
 import React, { useContext, useState } from 'react';
 import { Fab, Grid, Paper, Typography } from '@material-ui/core';
 import { Formik, Form, FormikHelpers } from 'formik';
+import { Link } from 'react-router-dom';
+import ArrowBackIosOutlined from '@material-ui/icons/ArrowBackIosOutlined';
 import clsx from 'clsx';
 
 import { SellerForm, CustomerForm, UserForm, RoleForm } from './forms';
@@ -10,10 +12,8 @@ import LoadButton from '../../components/formFields/LoadButton';
 import initialValues from '../../model/auth/initialFormValues';
 import { Roles } from '../../model/User';
 import PATHS from '../../utils/routes';
-import baseStyles, { loginStyles } from '../../style/styles';
+import baseStyles, { authStyles } from '../../style/styles';
 import AuthContext from '../../hooks/useAuth';
-import { Link } from 'react-router-dom';
-import { ArrowBackIosOutlined } from '@material-ui/icons';
 
 enum STEPS {
   STEP_1 = 0,
@@ -31,10 +31,10 @@ const { formField: sellerFormField } = SellerFormModel;
 const { formField: customerFormField } = CustomerFormModel;
 
 const formComponents = new Map([
-  [STEPS.STEP_1, <UserForm key={STEPS.STEP_1} formField={userFormField} />],
-  [STEPS.STEP_2, <RoleForm key={STEPS.STEP_2} formField={userFormField} />],
-  [STEPS.STEP_3C, <CustomerForm key={STEPS.STEP_3C} formField={customerFormField} />],
-  [STEPS.STEP_3S, <SellerForm key={STEPS.STEP_3S} formField={sellerFormField} />],
+  [STEPS.STEP_1, <UserForm key={`FormStep-${STEPS.STEP_1}`} formField={userFormField} />],
+  [STEPS.STEP_2, <RoleForm key={`FormStep-${STEPS.STEP_2}`} formField={userFormField} />],
+  [STEPS.STEP_3C, <CustomerForm key={`FormStep-${STEPS.STEP_3C}`} formField={customerFormField} />],
+  [STEPS.STEP_3S, <SellerForm key={`FormStep-${STEPS.STEP_3S}`} formField={sellerFormField} />],
 ]);
 
 type Values = typeof initialValues;
@@ -45,7 +45,7 @@ const SignupPage: React.FC<void> = () => {
   const currentValidationSchema = signupValidation[activeStep];
   const isLastStep = activeStep === STEPS.STEP_3C || activeStep === STEPS.STEP_3S;
   const baseClasses = baseStyles();
-  const loginClasses = loginStyles();
+  const classes = authStyles();
 
   const _submitForm = (values: Values) => {
     console.log(values);
@@ -132,24 +132,19 @@ const SignupPage: React.FC<void> = () => {
   };
 
   return (
-    <Grid container className={clsx(baseClasses.container, loginClasses.container)}>
-      <Grid container className={clsx(baseClasses.container, loginClasses.subContainer)}>
+    <Grid container className={clsx(baseClasses.container, classes.container)}>
+      <Grid container className={clsx(baseClasses.container, classes.subContainer)}>
         <Grid item xs={8}>
           <Typography
             component="h1"
             variant="h3"
-            className={clsx(baseClasses.title, loginClasses.title)}
+            className={clsx(baseClasses.title, classes.title)}
           >
             Create account
           </Typography>
         </Grid>
       </Grid>
-      <Grid
-        item
-        container
-        xs={12}
-        className={clsx(baseClasses.container, loginClasses.subContainer)}
-      >
+      <Grid item container xs={12} className={clsx(baseClasses.container, classes.subContainer)}>
         {renderBackButton()}
         <Grid item>
           <Paper elevation={3} className={baseClasses.paperPopup}>

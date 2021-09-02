@@ -1,19 +1,18 @@
 import { FormControl, Grid, IconButton, Box } from '@material-ui/core';
-import { AddAPhotoOutlined } from '@material-ui/icons';
+import AddAPhotoOutlined from '@material-ui/icons/AddAPhotoOutlined';
 import React, { useState } from 'react';
 import { CustomerFormModel } from '../../../model/auth';
-import baseStyles, { customerStyle } from '../../../style/styles';
+import baseStyles from '../../../style/styles';
 
 interface Props {
   formField: typeof CustomerFormModel.formField;
 }
 
-const getImageURL = (file?: File) => URL.createObjectURL(file);
+const getImageURL = (file?: File) => file && URL.createObjectURL(file);
 
-const CustomerForm: React.FC<Props> = ({ formField }) => {
+const CustomerForm: React.FC<Props> = ({ formField: { photo } }) => {
   const [file, setFile] = useState<File>();
   const classes = baseStyles();
-  const customerClasses = customerStyle();
 
   const ImageButton = () => (
     <label htmlFor="button-file">
@@ -28,7 +27,7 @@ const CustomerForm: React.FC<Props> = ({ formField }) => {
       display="flex"
       justifyContent="center"
       alignItems="center"
-      className={customerClasses.avatarPreview}
+      className={classes.avatarPreview}
       style={{ backgroundImage: `url(${getImageURL(file)})` }}
     >
       {!file && <ImageButton />}
@@ -43,11 +42,12 @@ const CustomerForm: React.FC<Props> = ({ formField }) => {
   return (
     <FormControl>
       <input
+        name={photo.name}
         accept="image/*"
         style={{ display: 'none' }}
         id="button-file"
-        multiple
         type="file"
+        multiple
         onChange={handleChange}
       />
       <Grid container spacing={2} className={classes.container}>
