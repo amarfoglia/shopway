@@ -4,7 +4,7 @@ enum PATHS {
   HOME = '/',
   SIGN_IN = '/signin',
   SIGN_UP = '/signup',
-  RESET_PASSWORD = '/resetPassword',
+  FORGOT_PASSWORD = '/forgotPassword',
   NOT_FOUND = '*',
 }
 

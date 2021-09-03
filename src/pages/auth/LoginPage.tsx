@@ -1,17 +1,17 @@
 import React from 'react';
-import { Grid, Typography, Paper } from '@material-ui/core';
-import { Formik, Form, FormikHelpers } from 'formik';
-import clsx from 'clsx';
+import { Typography } from '@material-ui/core';
+import { FormikHelpers } from 'formik';
 import { Link } from 'react-router-dom';
 
 import { LoginFormModel } from '../../model/auth';
-import LoginForm from './forms/LoginForm';
+import LoginFields from './forms/LoginFields';
 import { loginValidation } from '../../model/auth/validationSchema';
 import { useContext } from 'react';
 import AuthContext from '../../hooks/useAuth';
-import LoadButton from '../../components/formFields/LoadButton';
-import baseStyles, { authStyles } from '../../style/styles';
+import baseStyles from '../../style/styles';
 import PATHS from '../../utils/routes';
+import MyForm from '../../components/MyForm';
+import AuthPage from '../../components/AuthPage';
 
 const { formId, formField } = LoginFormModel;
 
@@ -25,74 +25,36 @@ type Values = typeof initialValues;
 const LoginPage: React.FC<void> = () => {
   const { login, error: loginError, isLoading } = useContext(AuthContext);
   const baseClasses = baseStyles();
-  const classes = authStyles();
 
-  const _handleSubmit = (values: Values, helpers: FormikHelpers<Values>) => {
+  const handleSubmit = (values: Values, helpers: FormikHelpers<Values>) => {
     const { email, password } = values;
-    login(email, password);
+    login({ email, password });
     helpers.setSubmitting(isLoading);
   };
 
-  const renderErrors = () =>
-    loginError && (
-      <Grid item xs={12}>
-        <Typography color="error" variant="body2" gutterBottom>
-          {loginError}
-        </Typography>
-      </Grid>
-    );
+  const FormFooter = (
+    <Typography variant="body2">
+      Don&apos;t have an account?&nbsp;
+      <Link to={PATHS.SIGN_UP} className={baseClasses.link}>
+        Sign up
+      </Link>
+    </Typography>
+  );
 
   return (
-    <Grid container className={clsx(baseClasses.container, classes.container)}>
-      <Grid container className={clsx(baseClasses.container, classes.subContainer)}>
-        <Grid item xs={8}>
-          <Typography
-            component="h1"
-            variant="h3"
-            className={clsx(baseClasses.title, classes.title)}
-          >
-            Welcome Back
-          </Typography>
-        </Grid>
-      </Grid>
-      <Grid item xs={12}>
-        <Paper elevation={3} className={baseClasses.paperPopup}>
-          <Formik
-            initialValues={initialValues}
-            validationSchema={loginValidation}
-            onSubmit={_handleSubmit}
-          >
-            {() => (
-              <Form id={formId}>
-                <Grid container spacing={3}>
-                  {renderErrors()}
-                  <Grid item xs={12}>
-                    <LoginForm formField={formField} />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <LoadButton
-                      isSubmitting={isLoading}
-                      text={'Confirm'}
-                      variant="contained"
-                      color="primary"
-                      fullWidth
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Typography variant="body2">
-                      Don&apos;t have an account?&nbsp;
-                      <Link to={PATHS.SIGN_UP} className={baseClasses.link}>
-                        Sign up
-                      </Link>
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </Form>
-            )}
-          </Formik>
-        </Paper>
-      </Grid>
-    </Grid>
+    <AuthPage title="Welcome back">
+      <MyForm
+        errors={loginError}
+        handleSubmit={handleSubmit}
+        validationSchema={loginValidation}
+        initialValues={initialValues}
+        footer={FormFooter}
+        formId={formId}
+        isSubmitting={isLoading}
+      >
+        <LoginFields formField={formField} />
+      </MyForm>
+    </AuthPage>
   );
 };
 

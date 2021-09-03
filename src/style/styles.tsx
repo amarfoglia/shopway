@@ -19,7 +19,8 @@ const baseStyles = makeStyles((theme) => ({
     textDecoration: 'none',
   },
   paperPopup: {
-    borderEndEndRadius: borderRadius,
+    borderTopLeftRadius: borderRadius,
+    borderTopRightRadius: borderRadius,
     paddingBlock: theme.spacing(6),
     paddingInline: theme.spacing(4),
   },
@@ -39,7 +40,7 @@ const baseStyles = makeStyles((theme) => ({
   },
 }));
 
-const homeStyles = makeStyles({
+const illustrationStyle = makeStyles({
   container: {
     alignItems: 'center',
     justifyContent: 'space-around',
@@ -67,7 +68,7 @@ const authStyles = makeStyles((theme) => ({
 
 const roleStyles = makeStyles((theme) => ({
   imageRoleContainer: {
-    borderRadius: 30,
+    borderRadius: borderRadius,
     padding: theme.spacing(1),
     boxShadow: shadow,
   },
@@ -95,6 +96,6 @@ const roleStyles = makeStyles((theme) => ({
   },
 }));
 
-export { homeStyles, authStyles, roleStyles };
+export { illustrationStyle, authStyles, roleStyles };
 
 export default baseStyles;

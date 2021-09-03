@@ -13,7 +13,7 @@ interface Props {
   formField: typeof SignupFormModel.formField;
 }
 
-const SignupForm: React.FC<Props> = ({
+const UserFields: React.FC<Props> = ({
   formField: { email, fullName, password, passwordConfirm },
 }) => {
   return (
@@ -72,4 +72,4 @@ const SignupForm: React.FC<Props> = ({
   );
 };
 
-export default SignupForm;
+export default UserFields;

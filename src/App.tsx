@@ -9,6 +9,7 @@ import SignupPage from './pages/auth/SingupPage';
 import NoAuthRoute from './components/NoAuthRoute';
 import PATHS from './utils/routes';
 import NotFoundPage from './pages/NotFoundPage';
+import ForgotPasswordPage from './pages/auth/ForgotPasswordPage';
 
 const useStyles = makeStyles({
   root: {
@@ -27,6 +28,7 @@ const renderContent = () => {
           <Route exact path={PATHS.HOME} component={Home} />
           <NoAuthRoute path={PATHS.SIGN_IN} component={Login} />
           <NoAuthRoute path={PATHS.SIGN_UP} component={SignupPage} />
+          <NoAuthRoute path={PATHS.FORGOT_PASSWORD} component={ForgotPasswordPage} />
           <AuthRoute path="/dashboard" component={Dashboard} />
           <Route path={PATHS.NOT_FOUND} component={NotFoundPage} />
         </Switch>

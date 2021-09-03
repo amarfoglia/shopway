@@ -13,12 +13,26 @@ interface UserPayload {
   user: User;
 }
 
+interface LoginProps {
+  email: string;
+  password: string;
+}
+
+interface ForgotPasswordProps {
+  email: string;
+}
+
 interface UserContext {
   user?: User;
   error?: string;
   isLoading: boolean;
-  register: (user: User) => void;
-  login: (email: string, password: string) => void;
+  register: (user: User, onData?: DataConsumer<UserPayload>, onError?: ErrorConsumer) => void;
+  login: (props: LoginProps, onData?: DataConsumer<UserPayload>, onError?: ErrorConsumer) => void;
+  forgotPassword: (
+    props: ForgotPasswordProps,
+    onData?: DataConsumer<void>,
+    onError?: ErrorConsumer,
+  ) => void;
   logout: () => void;
 }
 
@@ -27,6 +41,7 @@ const AuthContext = createContext<UserContext>({
   register: (_u) => {},
   login: (_e, _p) => {},
   logout: () => {},
+  forgotPassword: (_e) => {},
 });
 
 export type { UserContext };
@@ -40,32 +55,49 @@ export const AuthProvider = (props: Props): React.ReactElement => {
     checkUserLoggedIn();
   }, []);
 
-  function _authFun<T>(
+  async function _authFun<T>(
     promise: Promise<Response<T>>,
     onData: DataConsumer<T>,
     onError?: ErrorConsumer,
   ) {
     setError('');
     setIsLoading(true);
-    return promise
-      .then((res) => {
-        onData(res.data);
-        setIsLoading(false);
-      })
-      .catch((error: AppError) => {
-        setError(error.message);
-        onError?.(error);
-        setIsLoading(false);
-      });
+    try {
+      const res = await promise;
+      onData(res.data);
+      setIsLoading(false);
+    } catch (error) {
+      setError(error.message);
+      onError?.(error);
+      setIsLoading(false);
+    }
   }
 
-  const register = (user: User) =>
-    _authFun<UserPayload>(client.post(`/users/signup`, user), ({ data }) => setUser(data?.user));
-
-  const login = (email: string, password: string) =>
-    _authFun<UserPayload>(client.post(`/users/login`, { email, password }), ({ data }) =>
-      setUser(data?.user),
+  const register = (user: User, onData?: DataConsumer<UserPayload>, onError?: ErrorConsumer) =>
+    _authFun<UserPayload>(
+      client.post(`/users/signup`, user),
+      (res) => {
+        setUser(res?.data?.user);
+        onData?.(res);
+      },
+      onError,
     );
+
+  const login = (props: LoginProps, onData?: DataConsumer<UserPayload>, onError?: ErrorConsumer) =>
+    _authFun<UserPayload>(
+      client.post(`/users/login`, props),
+      (res) => {
+        setUser(res.data?.user);
+        onData?.(res);
+      },
+      onError,
+    );
+
+  const forgotPassword = (
+    props: ForgotPasswordProps,
+    onData?: DataConsumer<void>,
+    onError?: ErrorConsumer,
+  ) => _authFun<void>(client.post(`/users/forgotPassword`, props), (res) => onData?.(res), onError);
 
   const logout = () => console.log('logout');
 
@@ -73,7 +105,9 @@ export const AuthProvider = (props: Props): React.ReactElement => {
     _authFun<UserPayload>(client.get(`/users/me`), ({ data }) => setUser(data?.user));
 
   return (
-    <AuthContext.Provider value={{ user, error, isLoading, register, login, logout }}>
+    <AuthContext.Provider
+      value={{ user, error, isLoading, forgotPassword, register, login, logout }}
+    >
       {props.children}
     </AuthContext.Provider>
   );

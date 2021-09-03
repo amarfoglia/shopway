@@ -29,6 +29,9 @@ const theme = createTheme({
       fontWeight: 'bold',
       textTransform: 'capitalize',
     },
+    subtitle1: {
+      color: '#9a9a9a',
+    },
   },
   overrides: {
     MuiLink: {

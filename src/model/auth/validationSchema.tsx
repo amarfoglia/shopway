@@ -50,4 +50,8 @@ const loginValidation = Yup.object().shape({
   [password.name]: Yup.string().required(`${password.requiredErrorMsg}`),
 });
 
-export { signupValidation, loginValidation };
+const forgotPasswordValidation = Yup.object().shape({
+  [email.name]: Yup.string().email().required(`${email.requiredErrorMsg}`),
+});
+
+export { signupValidation, loginValidation, forgotPasswordValidation };

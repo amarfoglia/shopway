@@ -1,5 +1,5 @@
-import SellerForm from './SellerForm';
-import UserForm from './SignupForm';
-import CustomerForm from './CustomerForm';
-import RoleForm from './RoleForm';
-export { SellerForm, UserForm, CustomerForm, RoleForm };
+import SellerFields from './SellerFields';
+import UserFields from './UserFields';
+import CustomerFields from './CustomerFields';
+import RoleFields from './RoleFields';
+export { SellerFields, UserFields, CustomerFields, RoleFields };

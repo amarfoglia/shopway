@@ -74,7 +74,7 @@ const RoleGroup: React.FC<FieldProps & RadioProps> = ({ form, field, options, ..
   );
 };
 
-const SellerForm: React.FC<Props> = ({ formField: { role } }) => {
+const RoleFields: React.FC<Props> = ({ formField: { role } }) => {
   return (
     <Grid item xs={12}>
       <Field
@@ -87,4 +87,4 @@ const SellerForm: React.FC<Props> = ({ formField: { role } }) => {
   );
 };
 
-export default SellerForm;
+export default RoleFields;

@@ -10,7 +10,7 @@ interface Props {
 
 const getImageURL = (file?: File) => file && URL.createObjectURL(file);
 
-const CustomerForm: React.FC<Props> = ({ formField: { photo } }) => {
+const CustomerFields: React.FC<Props> = ({ formField: { photo } }) => {
   const [file, setFile] = useState<File>();
   const classes = baseStyles();
 
@@ -59,4 +59,4 @@ const CustomerForm: React.FC<Props> = ({ formField: { photo } }) => {
   );
 };
 
-export default CustomerForm;
+export default CustomerFields;
