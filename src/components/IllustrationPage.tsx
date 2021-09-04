@@ -14,6 +14,7 @@ export { Position };
 
 interface Props {
   imagePath: string;
+  imageAlt: string;
   title: string;
   imagePosition?: Position;
   subtitle?: string;
@@ -21,6 +22,7 @@ interface Props {
 
 const IllustrationPage: React.FC<Props & React.ReactNode> = ({
   imagePath,
+  imageAlt,
   title,
   imagePosition = Position.BOTTOM,
   subtitle,
@@ -31,7 +33,7 @@ const IllustrationPage: React.FC<Props & React.ReactNode> = ({
   const ImageItem = (
     <Grid item xs={12}>
       <Box width="80vw">
-        <Image src={process.env.PUBLIC_URL + imagePath} cover={true} />
+        <Image src={process.env.PUBLIC_URL + imagePath} alt={imageAlt} cover={true} />
       </Box>
     </Grid>
   );

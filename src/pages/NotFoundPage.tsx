@@ -7,7 +7,12 @@ import IllustrationPage, { Position } from '../components/IllustrationPage';
 const NotFoundPage = (): React.ReactElement => {
   const history = useHistory();
   return (
-    <IllustrationPage title="404 not found" imagePath="/404.svg" imagePosition={Position.CENTER}>
+    <IllustrationPage
+      title="404 not found"
+      imagePath="/404.svg"
+      imageAlt="Page not found"
+      imagePosition={Position.CENTER}
+    >
       <Button variant="contained" color="primary" onClick={() => history.push(PATHS.HOME)}>
         Return home
       </Button>

@@ -22,7 +22,7 @@ const initialValues = {
 
 type Values = typeof initialValues;
 
-const LoginPage: React.FC<void> = () => {
+const LoginPage: React.FC = () => {
   const { login, error: loginError, isLoading } = useContext(AuthContext);
   const baseClasses = baseStyles();
 
@@ -51,9 +51,8 @@ const LoginPage: React.FC<void> = () => {
         footer={FormFooter}
         formId={formId}
         isSubmitting={isLoading}
-      >
-        <LoginFields formField={formField} />
-      </MyForm>
+        form={(h) => <LoginFields formField={formField} onChange={h} />}
+      />
     </AuthPage>
   );
 };

@@ -1,10 +1,9 @@
-import React, { useContext, useState } from 'react';
+import React, { lazy, useContext, useState } from 'react';
 import { Fab, Grid, Typography } from '@material-ui/core';
 import { FormikHelpers } from 'formik';
 import { Link } from 'react-router-dom';
 import ArrowBackIosOutlined from '@material-ui/icons/ArrowBackIosOutlined';
 
-import { SellerFields, CustomerFields, UserFields, RoleFields } from './forms';
 import { CustomerFormModel, SellerFormModel, SignupFormModel } from '../../model/auth';
 import { signupValidation } from '../../model/auth/validationSchema';
 import initialValues from '../../model/auth/initialFormValues';
@@ -14,6 +13,11 @@ import baseStyles from '../../style/styles';
 import AuthContext from '../../hooks/useAuth';
 import AuthPage from '../../components/AuthPage';
 import MyForm from '../../components/MyForm';
+
+const SellerFields = lazy(() => import('./forms/SellerFields'));
+const CustomerFields = lazy(() => import('./forms/CustomerFields'));
+const UserFields = lazy(() => import('./forms/UserFields'));
+const RoleFields = lazy(() => import('./forms/RoleFields'));
 
 enum STEPS {
   STEP_1 = 0,
@@ -30,16 +34,38 @@ const { formId, formField: userFormField } = SignupFormModel;
 const { formField: sellerFormField } = SellerFormModel;
 const { formField: customerFormField } = CustomerFormModel;
 
+type ChangeHandler = (e: React.ChangeEvent<string>) => void;
+
 const formComponents = new Map([
-  [STEPS.STEP_1, <UserFields key="UserFields" formField={userFormField} />],
-  [STEPS.STEP_2, <RoleFields key="RoleFields" formField={userFormField} />],
-  [STEPS.STEP_3C, <CustomerFields key="CustomerFields" formField={customerFormField} />],
-  [STEPS.STEP_3S, <SellerFields key="SellerFields" formField={sellerFormField} />],
+  [
+    STEPS.STEP_1,
+    (onChange: ChangeHandler) => (
+      <UserFields key="UserFields" onChange={onChange} formField={userFormField} />
+    ),
+  ],
+  [
+    STEPS.STEP_2,
+    (onChange: ChangeHandler) => (
+      <RoleFields key="RoleFields" onChange={onChange} formField={userFormField} />
+    ),
+  ],
+  [
+    STEPS.STEP_3C,
+    (onChange: ChangeHandler) => (
+      <CustomerFields key="CustomerFields" onChange={onChange} formField={customerFormField} />
+    ),
+  ],
+  [
+    STEPS.STEP_3S,
+    (onChange: ChangeHandler) => (
+      <SellerFields key="SellerFields" onChange={onChange} formField={sellerFormField} />
+    ),
+  ],
 ]);
 
 type Values = typeof initialValues;
 
-const SignupPage: React.FC<void> = () => {
+const SignupPage: React.FC = () => {
   const { register, error: signupError, isLoading } = useContext(AuthContext);
   const [activeStep, setActiveStep] = useState(STEPS.STEP_1);
   const currentValidationSchema = signupValidation[activeStep];
@@ -115,9 +141,12 @@ const SignupPage: React.FC<void> = () => {
         formId={formId}
         submitText={isLastStep ? 'Confirm' : 'Next'}
         isSubmitting={isLoading}
-      >
-        {formComponents.get(activeStep)}
-      </MyForm>
+        form={(h) => (
+          <React.Suspense fallback={<p>Loading...</p>}>
+            {formComponents.get(activeStep)?.(h)}
+          </React.Suspense>
+        )}
+      />
     </AuthPage>
   );
 };

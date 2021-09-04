@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import {
   FormControl,
   FormControlLabel,
@@ -9,7 +9,7 @@ import {
   RadioGroup,
   Typography,
 } from '@material-ui/core';
-import { Field, FieldProps, getIn } from 'formik';
+import { FastField, FieldProps, getIn } from 'formik';
 import { useState } from 'react';
 import { SignupFormModel } from '../../../model/auth';
 import { Roles } from '../../../model/User';
@@ -17,6 +17,7 @@ import { roleStyles } from '../../../style/styles';
 
 interface Props {
   formField: typeof SignupFormModel.formField;
+  onChange: (e: React.ChangeEvent<string>) => void;
 }
 
 const { CUSTOMER, SELLER } = Roles;
@@ -40,6 +41,7 @@ const RoleGroup: React.FC<FieldProps & RadioProps> = ({ form, field, options, ..
       <img
         src={process.env.PUBLIC_URL + `/${role}.png`}
         className={isSelected ? classes.selectedRoleImage : classes.unselectedRoleImage}
+        alt={role}
       />
       <Typography
         variant="subtitle2"
@@ -77,7 +79,8 @@ const RoleGroup: React.FC<FieldProps & RadioProps> = ({ form, field, options, ..
 const RoleFields: React.FC<Props> = ({ formField: { role } }) => {
   return (
     <Grid item xs={12}>
-      <Field
+      <FastField
+        key={role.name}
         name={role.name}
         aria-label={role.label}
         options={[CUSTOMER, SELLER]}

@@ -1,36 +1,40 @@
+import React from 'react';
 import { Grid, Typography } from '@material-ui/core';
 import MailOutlineOutlined from '@material-ui/icons/MailOutlineOutlined';
 import LockOutlined from '@material-ui/icons/LockOutlined';
-import { Field } from 'formik';
-import * as React from 'react';
+import { FastField } from 'formik';
 import { Link } from 'react-router-dom';
-import { InputField } from '../../../components/formFields';
 import { LoginFormModel } from '../../../model/auth';
 import PATHS from '../../../utils/routes';
 import baseStyles from '../../../style/styles';
+import DebouncedInput from '../../../components/formFields/DebouncedInput';
 
 interface Props {
   formField: typeof LoginFormModel.formField;
+  onChange: (e: React.ChangeEvent<string>) => void;
 }
 
-const LoginFields: React.FC<Props> = ({ formField: { email, password } }) => {
+const LoginFields: React.FC<Props> = ({ formField: { email, password }, onChange }) => {
   const classes = baseStyles();
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
-        <Field
+        <FastField
+          key={email.name}
           name={email.name}
           placeholder={email.label}
           aria-label={email.label}
           Icon={MailOutlineOutlined}
           autoComplete={email.name}
           variant="outlined"
-          component={InputField}
+          onChange={onChange}
           fullWidth
+          component={DebouncedInput}
         />
       </Grid>
       <Grid item xs={12}>
-        <Field
+        <FastField
+          key={password.name}
           name={password.name}
           placeholder={password.label}
           aria-label={password.label}
@@ -38,7 +42,8 @@ const LoginFields: React.FC<Props> = ({ formField: { email, password } }) => {
           autoComplete={password.name}
           variant="outlined"
           type="password"
-          component={InputField}
+          onChange={onChange}
+          component={DebouncedInput}
           fullWidth
         />
       </Grid>

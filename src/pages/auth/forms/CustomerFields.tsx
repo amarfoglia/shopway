@@ -1,61 +1,21 @@
-import { FormControl, Grid, IconButton, Box } from '@material-ui/core';
-import AddAPhotoOutlined from '@material-ui/icons/AddAPhotoOutlined';
-import React, { useState } from 'react';
+import { useFormikContext } from 'formik';
+import React from 'react';
+import ImageUploader from '../../../components/ImageUploader';
 import { CustomerFormModel } from '../../../model/auth';
-import baseStyles from '../../../style/styles';
 
 interface Props {
   formField: typeof CustomerFormModel.formField;
+  onChange: (e: React.ChangeEvent<string>) => void;
 }
 
-const getImageURL = (file?: File) => file && URL.createObjectURL(file);
-
 const CustomerFields: React.FC<Props> = ({ formField: { photo } }) => {
-  const [file, setFile] = useState<File>();
-  const classes = baseStyles();
-
-  const ImageButton = () => (
-    <label htmlFor="button-file">
-      <IconButton color="primary" component="span">
-        <AddAPhotoOutlined />
-      </IconButton>
-    </label>
-  );
-
-  const AvatarPaper = () => (
-    <Box
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-      className={classes.avatarPreview}
-      style={{ backgroundImage: `url(${getImageURL(file)})` }}
-    >
-      {!file && <ImageButton />}
-    </Box>
-  );
-
-  const handleChange = (event: React.FormEvent<HTMLInputElement>) => {
-    const image = event.currentTarget?.files?.item(0);
-    image && setFile(image);
-  };
-
+  const { setFieldValue } = useFormikContext();
   return (
-    <FormControl>
-      <input
-        name={photo.name}
-        accept="image/*"
-        style={{ display: 'none' }}
-        id="button-file"
-        type="file"
-        multiple
-        onChange={handleChange}
-      />
-      <Grid container spacing={2} className={classes.container}>
-        <Grid item xs={12}>
-          <AvatarPaper />
-        </Grid>
-      </Grid>
-    </FormControl>
+    <ImageUploader
+      id="CustomerImageUploader"
+      inputName={photo.name}
+      onImageUpload={(image) => setFieldValue(photo.name, image)}
+    />
   );
 };
 

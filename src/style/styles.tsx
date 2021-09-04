@@ -29,7 +29,7 @@ const baseStyles = makeStyles((theme) => ({
     paddingLeft: theme.spacing(4),
     height: 28,
   },
-  avatarPreview: {
+  photoPreview: {
     width: 100,
     height: 100,
     backgroundPosition: 'center',

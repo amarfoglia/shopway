@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
 import { AuthProvider } from './hooks/useAuth';
 import { ThemeProvider } from '@material-ui/core';
+import './index.css';
+import App from './App';
 import theme from './style/theme';
 
 ReactDOM.render(

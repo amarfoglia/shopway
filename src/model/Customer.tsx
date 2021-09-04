@@ -1,4 +1,6 @@
-interface Customer {
+import User from './User';
+
+interface Customer extends User {
   photo?: string;
 }
 

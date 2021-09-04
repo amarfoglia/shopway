@@ -21,16 +21,33 @@ const theme = createTheme({
       light: secondaryLight,
       dark: secondaryDark,
     },
+    error: {
+      main: '#c62828',
+      dark: '#8e0000',
+      light: '#ff5f52',
+    },
   },
   typography: {
-    fontFamily: 'DM Sans, sans-serif',
+    fontFamily: [
+      'DMSans',
+      '-apple-system',
+      'BlinkMacSystemFont',
+      '"Segoe UI"',
+      'Roboto',
+      '"Helvetica Neue"',
+      'Arial',
+      'sans-serif',
+      '"Apple Color Emoji"',
+      '"Segoe UI Emoji"',
+      '"Segoe UI Symbol"',
+    ].join(','),
     h4: {
       color: primary,
       fontWeight: 'bold',
       textTransform: 'capitalize',
     },
     subtitle1: {
-      color: '#9a9a9a',
+      color: '#757575',
     },
   },
   overrides: {

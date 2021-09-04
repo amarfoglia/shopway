@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { lazy } from 'react';
 import { Button } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 import PATHS from '../utils/routes';
-import IllustrationPage, { Position } from '../components/IllustrationPage';
+import { Position } from '../components/IllustrationPage';
+
+const IllustrationPage = lazy(() => import('../components/IllustrationPage'));
 
 const Home = (): React.ReactElement => {
   const history = useHistory();
@@ -11,6 +13,7 @@ const Home = (): React.ReactElement => {
       title="Get local fashion from home"
       subtitle="Best way to buy retail products."
       imagePath="/home.svg"
+      imageAlt="Landing image"
       imagePosition={Position.TOP}
     >
       <Button variant="contained" color="primary" onClick={() => history.push(PATHS.SIGN_IN)}>

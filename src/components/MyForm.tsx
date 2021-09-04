@@ -4,6 +4,8 @@ import { Form, Formik, FormikHelpers, FormikValues } from 'formik';
 import { ReactNode } from 'react';
 import LoadButton from './formFields/LoadButton';
 
+type ChangeHandler = (e: React.ChangeEvent<string>) => void;
+
 interface Props {
   errors?: string;
   handleSubmit: (values: FormikValues, helpers: FormikHelpers<FormikValues>) => void;
@@ -13,6 +15,7 @@ interface Props {
   isSubmitting: boolean;
   formId: string;
   footer?: ReactNode;
+  form: (handleChange: ChangeHandler) => ReactNode;
 }
 
 const renderErrors = (errors: string) => (
@@ -56,15 +59,20 @@ const renderForm = (
 );
 
 const MyForm: React.FC<Props & ReactNode> = (props) => {
-  const { errors, children, footer, submitText = 'Confirm', formId, isSubmitting } = props;
+  const { errors, footer, submitText = 'Confirm', formId, isSubmitting, form } = props;
 
   return (
     <Formik
       initialValues={props.initialValues}
       validationSchema={props.validationSchema}
+      validateOnChange={false}
+      validateOnBlur={false}
       onSubmit={props.handleSubmit}
     >
-      {() => renderForm(formId, children, submitText, isSubmitting, footer, errors)}
+      {({ handleChange, values }) => {
+        console.log(values);
+        return renderForm(formId, form(handleChange), submitText, isSubmitting, footer, errors);
+      }}
     </Formik>
   );
 };
