@@ -1,10 +1,11 @@
 import React, { lazy, ReactElement } from 'react';
-import './App.css';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import { CircularProgress, Container, makeStyles } from '@material-ui/core';
+import { Container } from '@material-ui/core';
 // import AuthRoute from './components/AuthRoute';
 import NoAuthRoute from './components/NoAuthRoute';
 import PATHS from './utils/routes';
+import baseStyles from './style/styles';
+import Loader from './components/Loader';
 
 const SignupPage = lazy(() => import('./pages/auth/SingupPage'));
 const Home = lazy(() => import('./pages/HomePage'));
@@ -12,20 +13,13 @@ const LoginPage = lazy(() => import('./pages/auth/LoginPage'));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 const ForgotPasswordPage = lazy(() => import('./pages/auth/ForgotPasswordPage'));
 
-const useStyles = makeStyles({
-  root: {
-    height: '100vh',
-    padding: 0,
-  },
-});
-
 const renderContent = () => {
-  const classes = useStyles();
+  const classes = baseStyles();
   return (
     <Router>
       {/* <NavBar /> */}
       <Container className={classes.root} maxWidth="md">
-        <React.Suspense fallback={<CircularProgress size={24} />}>
+        <React.Suspense fallback={<Loader />}>
           <Switch>
             <Route exact path={PATHS.HOME} render={() => <Home />} />
             <NoAuthRoute path={PATHS.SIGN_IN} render={() => <LoginPage />} />

@@ -18,7 +18,7 @@ const initialValues = {
   [role.name]: CUSTOMER.value,
   [photo.name]: '',
   [logo.name]: '',
-  [phone.name]: '(+39)-',
+  [phone.name]: '',
   [storeName.name]: '',
   [address.name]: '',
   [city.name]: '',

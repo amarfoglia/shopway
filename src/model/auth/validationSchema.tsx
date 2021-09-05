@@ -40,7 +40,7 @@ const signupValidation = [
     [storeName.name]: Yup.string().required(`${storeName.requiredErrorMsg}`),
     [logo.name]: Yup.mixed(),
     [city.name]: Yup.string().required(`${city.requiredErrorMsg}`),
-    [phone.name]: Yup.string().phone().required(`${phone.requiredErrorMsg}`),
+    [phone.name]: Yup.string().phone('+39').required(`${phone.requiredErrorMsg}`),
     [address.name]: Yup.string().required(`${address.requiredErrorMsg}`),
   }),
 ];

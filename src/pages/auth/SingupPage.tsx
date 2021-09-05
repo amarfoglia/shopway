@@ -1,5 +1,5 @@
 import React, { lazy, useContext, useState } from 'react';
-import { Fab, Grid, Typography } from '@material-ui/core';
+import { Fab, Grid, LinearProgress, Typography } from '@material-ui/core';
 import { FormikHelpers } from 'formik';
 import { Link } from 'react-router-dom';
 import ArrowBackIosOutlined from '@material-ui/icons/ArrowBackIosOutlined';
@@ -13,6 +13,7 @@ import baseStyles from '../../style/styles';
 import AuthContext from '../../hooks/useAuth';
 import AuthPage from '../../components/AuthPage';
 import MyForm from '../../components/MyForm';
+import { AppError } from '../../model/http';
 
 const SellerFields = lazy(() => import('./forms/SellerFields'));
 const CustomerFields = lazy(() => import('./forms/CustomerFields'));
@@ -66,7 +67,8 @@ const formComponents = new Map([
 type Values = typeof initialValues;
 
 const SignupPage: React.FC = () => {
-  const { register, error: signupError, isLoading } = useContext(AuthContext);
+  const { register, isLoading } = useContext(AuthContext);
+  const [error, setError] = useState<AppError>();
   const [activeStep, setActiveStep] = useState(STEPS.STEP_1);
   const currentValidationSchema = signupValidation[activeStep];
   const isLastStep = activeStep === STEPS.STEP_3C || activeStep === STEPS.STEP_3S;
@@ -83,7 +85,7 @@ const SignupPage: React.FC = () => {
       role,
       store,
     };
-    register(user);
+    register(user, undefined, (e) => setError(e));
   };
 
   const FormFooter = (
@@ -133,7 +135,7 @@ const SignupPage: React.FC = () => {
   return (
     <AuthPage title="Welcome back" header={renderBackButton()}>
       <MyForm
-        errors={signupError}
+        errors={error?.message}
         handleSubmit={handleSubmit}
         validationSchema={currentValidationSchema}
         initialValues={initialValues}
@@ -142,7 +144,7 @@ const SignupPage: React.FC = () => {
         submitText={isLastStep ? 'Confirm' : 'Next'}
         isSubmitting={isLoading}
         form={(h) => (
-          <React.Suspense fallback={<p>Loading...</p>}>
+          <React.Suspense fallback={<LinearProgress />}>
             {formComponents.get(activeStep)?.(h)}
           </React.Suspense>
         )}

@@ -34,9 +34,11 @@ const renderForm = (
 ) => (
   <Form id={formId}>
     <Grid container spacing={3}>
-      <Grid item xs={12}>
-        {errors && renderErrors(errors)}
-      </Grid>
+      {errors && (
+        <Grid item xs={12}>
+          {errors && renderErrors(errors)}
+        </Grid>
+      )}
       <Grid item xs={12}>
         {FormFields}
       </Grid>

@@ -5,9 +5,14 @@ const shadow = '0 10px 30px rgba(0,37,132,.06)';
 const borderRadius = 30;
 
 const baseStyles = makeStyles((theme) => ({
+  root: {
+    height: '100vh',
+    padding: 0,
+  },
   container: {
     display: 'flex',
     minHeight: '100%',
+    textAlign: 'center',
     flexDirection: 'column',
   },
   title: {
@@ -21,8 +26,8 @@ const baseStyles = makeStyles((theme) => ({
   paperPopup: {
     borderTopLeftRadius: borderRadius,
     borderTopRightRadius: borderRadius,
-    paddingBlock: theme.spacing(6),
-    paddingInline: theme.spacing(4),
+    padding: `${theme.spacing(5)}px ${theme.spacing(4)}px`,
+    minHeight: 150,
   },
   backFabGrid: {
     textAlign: 'left',
@@ -68,25 +73,19 @@ const authStyles = makeStyles((theme) => ({
 
 const roleStyles = makeStyles((theme) => ({
   imageRoleContainer: {
-    borderRadius: borderRadius,
+    borderRadius: 15,
     padding: theme.spacing(1),
     boxShadow: shadow,
+    width: '25vw',
   },
-  unselectedRoleTitle: {
-    fontWeight: 'normal',
+  roleTitle: {
     textTransform: 'capitalize',
   },
-  selectedRoleTitle: {
-    fontWeight: 'bold',
-    textTransform: 'capitalize',
-  },
-  selectedRoleImage: {
-    width: '100%',
+  selectedRolePaper: {
     opacity: 1,
   },
-  unselectedRoleImage: {
-    width: '90%',
-    opacity: 0.6,
+  unselectedRolePaper: {
+    opacity: 0.5,
   },
   radio: {
     display: 'none',

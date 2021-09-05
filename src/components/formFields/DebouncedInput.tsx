@@ -9,7 +9,7 @@ interface Props {
   Icon?: SvgIconComponent;
 }
 
-const TIME_OUT = 400;
+const TIME_OUT = 200;
 
 const DebouncedInput: React.FC<FieldProps & TextFieldProps & Props> = ({
   value,

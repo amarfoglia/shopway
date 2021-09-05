@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Typography } from '@material-ui/core';
 import { FormikHelpers } from 'formik';
 import { Link } from 'react-router-dom';
@@ -12,6 +12,7 @@ import baseStyles from '../../style/styles';
 import PATHS from '../../utils/routes';
 import MyForm from '../../components/MyForm';
 import AuthPage from '../../components/AuthPage';
+import { AppError } from '../../model/http';
 
 const { formId, formField } = LoginFormModel;
 
@@ -23,12 +24,13 @@ const initialValues = {
 type Values = typeof initialValues;
 
 const LoginPage: React.FC = () => {
-  const { login, error: loginError, isLoading } = useContext(AuthContext);
+  const { login, isLoading } = useContext(AuthContext);
+  const [error, setError] = useState<AppError>();
   const baseClasses = baseStyles();
 
   const handleSubmit = (values: Values, helpers: FormikHelpers<Values>) => {
     const { email, password } = values;
-    login({ email, password });
+    login({ email, password }, undefined, (e) => setError(e));
     helpers.setSubmitting(isLoading);
   };
 
@@ -44,7 +46,7 @@ const LoginPage: React.FC = () => {
   return (
     <AuthPage title="Welcome back">
       <MyForm
-        errors={loginError}
+        errors={error?.message}
         handleSubmit={handleSubmit}
         validationSchema={loginValidation}
         initialValues={initialValues}
