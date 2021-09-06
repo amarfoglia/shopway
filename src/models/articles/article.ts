@@ -1,16 +1,19 @@
-interface StockArticle {
+import Category from '../category';
+
+interface ArticleStock {
   quantity: number;
   size: string;
 }
 
-interface RetailArticle{
+interface ArticleDetails{
   id?: any;
   articleId: any;
   color: string;
   price: string;
   image: string;
   discount?: string;
-  stockArticles: StockArticle[];
+  stockArticles: ArticleStock[];
+  dateArticleAdded: Date;
 }
 
 interface Article {
@@ -19,7 +22,9 @@ interface Article {
   name: string;
   brand: string;
   description: string;
-  retailArticles: RetailArticle[];
+  retailArticles: ArticleDetails[];
+  previewPhoto: string;
+  category: Category;
 }
-export { StockArticle, RetailArticle };
+export { ArticleStock, ArticleDetails };
 export default Article;

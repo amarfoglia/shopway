@@ -4,15 +4,15 @@ import crypto from 'crypto';
 import Cookies from 'universal-cookie';
 import Promisify from '../utils/promisify';
 import catchAsync from '../utils/catchAsync';
-import UserModel from '../models/userModel';
-import User from '../models/user';
+import UserModel from '../models/users/userModel';
+import User from '../models/users/user';
 import AppError from '../utils/appError';
 import sendEmail from '../utils/email';
 import { ONE_DAY_IN_MS } from '../utils/time';
-import CustomerModel from '../models/customerModel';
-import SellerModel from '../models/sellerModel';
+import CustomerModel from '../models/users/customerModel';
+import SellerModel from '../models/users/sellerModel';
 import Role from '../models/role';
-import Seller from '../models/seller';
+import Seller from '../models/users/seller';
 
 const getJwtSecret = () => (process.env.JWT_SECRET || 'invalid-token');
 
@@ -122,6 +122,7 @@ class AuthController {
   });
 
   restrictTo = (...roles: string[]) => (req: Request, res: Response, next: NextFunction) => {
+    console.log(roles, req.user?.role);
     if (!roles.includes(req.user?.role)) {
       next(new AppError('You do not have permission to perform this action', 403));
     }

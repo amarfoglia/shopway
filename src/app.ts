@@ -15,7 +15,8 @@ import AppError from './utils/appError';
 import userRouter from './routes/userRoutes';
 import storeRouter from './routes/storeRoutes';
 import articleRouter from './routes/articleRoutes';
-import retailArticleRouter from './routes/retailArticleRoutes';
+import articleDetailsRouter from './routes/articleDetailsRoutes';
+import orderRouter from './routes/orderRoutes';
 import globalErrorHandler from './controllers/helpers/errorController';
 import { ONE_HOUR_IN_MS } from './utils/time';
 
@@ -64,8 +65,8 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/stores', storeRouter);
 app.use('/api/v1/articles', articleRouter);
-app.use('/api/v1/retails', retailArticleRouter);
-
+app.use('/api/v1/details', articleDetailsRouter);
+app.use('/api/v1/orders', orderRouter);
 app.all('*', (req, _res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 });

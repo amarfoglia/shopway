@@ -4,8 +4,8 @@ import validator from 'validator';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 import User from './user';
-import { getDateFromNow, ONE_SEC_IN_MS } from '../utils/time';
-import Role from './role';
+import { getDateFromNow, ONE_SEC_IN_MS } from '../../utils/time';
+import Role from '../role';
 
 const options = { discriminatorKey: 'role' };
 

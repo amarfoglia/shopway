@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import UserModel, { UserDoc } from '../models/userModel';
+import UserModel, { UserDoc } from '../models/users/userModel';
 import AppError from '../utils/appError';
 import catchAsync from '../utils/catchAsync';
 import HandlerFactory from './helpers/handlerFactory';

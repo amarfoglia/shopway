@@ -21,6 +21,16 @@ const articleSchema = new mongoose.Schema({
   description: {
     type: String,
     required: [true, 'Please, provide the description of the article']
+  },
+  category: {
+    categoryArticle: {
+      type: String,
+      required: [true, 'Please, provide the category of the article']
+    },
+    categoryType: {
+      type: String,
+      required: [true, 'Please, provide the categoryType of the article']
+    }
   }
 });
 

@@ -34,7 +34,7 @@ class HandlerFactory<T> {
 
       res.status(200).json({
         status: 'success',
-        data: { data: doc }
+        data: { doc }
       });
     }
   );
@@ -45,16 +45,16 @@ class HandlerFactory<T> {
 
       res.status(201).json({
         status: 'success',
-        data: { data: doc }
+        data: { doc }
       });
     }
   );
 
-  getOne = (model: Model<T>, popOptions?: Object) => catchAsync(
+  getOne = (model: Model<T>, popOptions?: string[]) => catchAsync(
     async (req: Request, res: Response, next: NextFunction) => {
       const query = model.findById(req.params.id);
       const doc = await query.populate(popOptions);
-
+      console.log(doc);
       if (!doc) {
         next(new AppError('No document found with that ID', 404));
         return;
@@ -62,7 +62,7 @@ class HandlerFactory<T> {
 
       res.status(200).json({
         status: 'success',
-        data: { data: doc }
+        data: { doc }
       });
     }
   );
@@ -80,7 +80,7 @@ class HandlerFactory<T> {
       res.status(200).json({
         status: 'success',
         results: doc.length,
-        data: { data: doc }
+        data: { doc }
       });
     }
   );

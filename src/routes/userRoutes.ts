@@ -3,13 +3,15 @@ import AuthController from '../controllers/authController';
 import UserController from '../controllers/userController';
 import UserImageController from '../controllers/helpers/imageController';
 import storeRouter from './storeRoutes';
+import orderRouter from './orderRoutes';
 
 const router: Router = express.Router();
 const userController = new UserController();
 const authController = new AuthController();
 const userImageController = new UserImageController();
 
-router.use('/users/:userId/stores', storeRouter);
+router.use('/:id/stores', storeRouter);
+router.use('/:id/orders', orderRouter);
 
 router.post('/signup',
   userImageController.uploadUserPhoto,

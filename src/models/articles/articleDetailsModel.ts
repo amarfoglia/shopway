@@ -1,10 +1,11 @@
 import { ObjectId } from 'mongodb';
 import mongoose from 'mongoose';
-import { RetailArticle } from './article';
+import { ONE_SEC_IN_MS } from '../../utils/time';
+import { ArticleDetails } from './article';
 
-interface RetailArticleDoc extends Document, RetailArticle {}
+interface ArticleDetailsDoc extends Document, ArticleDetails {}
 
-const retailArticleSchema = new mongoose.Schema({
+const articleDetailsSchema = new mongoose.Schema({
   articleId: {
     type: ObjectId,
     ref: 'Article',
@@ -32,11 +33,16 @@ const retailArticleSchema = new mongoose.Schema({
     },
     size: {
       type: String,
-      required: [true, 'Please, provide the size of the stock article']
+      required: [true, 'Please, provide the size of the stock article'],
+      unique: true
     }
-  }]
+  }],
+  dateArticleAdded: {
+    type: Date,
+    default: () => new Date(Date.now() - ONE_SEC_IN_MS)
+  }
 });
 
-export { RetailArticleDoc };
+export { ArticleDetailsDoc };
 
-export default mongoose.model<RetailArticleDoc>('RetailArticle', retailArticleSchema);
+export default mongoose.model<ArticleDetailsDoc>('ArticleDetails', articleDetailsSchema);
