@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
   categoryPaper: {
     padding: theme.spacing(2),
     boxShadow: '0 5px 5px rgb(0 37 132 / 6%)',
-    borderRadius: 16,
+    borderRadius: theme.spacing(2),
     width: 70,
     textAlign: 'center',
     '& .MuiBox-root': {

@@ -8,7 +8,7 @@ interface Props {
   subtitle?: string;
   sections: {
     node: JSX.Element;
-    title: string;
+    title?: string;
   }[];
 }
 
@@ -59,7 +59,7 @@ const CorePage: React.FC<Props & React.ReactNode> = ({ title, subtitle, sections
       </Grid>
       {sections.map((s, i) => (
         <Grid item key={`${s.title}-${i}`} xs={12}>
-          <TitleSection title={s.title} />
+          {s.title && <TitleSection title={s.title} />}
           {s.node}
         </Grid>
       ))}

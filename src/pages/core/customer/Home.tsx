@@ -1,16 +1,14 @@
-import React from 'react';
-import { Avatar, Box, Grid } from '@material-ui/core';
+import React, { useContext } from 'react';
+import { Box, Grid } from '@material-ui/core';
 import baseStyles from '../../../style/styles';
 import CorePage from '../../../components/CorePage';
-import { useContext } from 'react';
 import AuthContext from '../../../hooks/useAuth';
-import Notifications from '@material-ui/icons/Notifications';
+import CategoryPaper from '../../../components/CategoryPaper';
+import ProductPaper from '../../../components/ProductPaper';
+import TopSection, { USER } from '../../../components/TopSection';
 
 const Categories = ['tshirt', 'jacket', 'jeans', 'shoe', 'shorts', 'swimsuit', 'clothes'];
 const clothes = ['jacket', 'tshirt2', 'sweatshirt2', 'tshirt2'];
-
-import CategoryPaper from '../../../components/CategoryPaper';
-import ProductPaper from '../../../components/ProductPaper';
 
 const categoriesPath = process.env.PUBLIC_URL + '/categories';
 const clothesPath = process.env.PUBLIC_URL + '/clothes';
@@ -58,26 +56,7 @@ const CustomerHome = (): React.ReactElement => {
   return (
     <React.Fragment>
       <Grid container spacing={2} direction="column">
-        <Grid item xs={12}>
-          <Grid
-            container
-            spacing={2}
-            justifyContent="space-between"
-            direction="row"
-            alignItems="center"
-          >
-            <Grid item>
-              <Avatar
-                className={baseClasses.mediumAvatar}
-                alt={user?.fullName}
-                src={`${process.env.PUBLIC_URL}/avatar.png`}
-              />
-            </Grid>
-            <Grid item>
-              <Notifications style={{ fontSize: 30 }} />
-            </Grid>
-          </Grid>
-        </Grid>
+        <TopSection variant={USER} userName={user?.fullName} />
         <Grid item xs={12}>
           <CorePage
             title="Shopway"

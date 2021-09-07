@@ -13,26 +13,14 @@ interface ProductProps {
 }
 
 const useStyles = makeStyles((theme) => ({
-  categoryPaper: {
-    padding: theme.spacing(2),
-    boxShadow: '0 5px 5px rgb(0 37 132 / 6%)',
-    borderRadius: 16,
-    width: 70,
-    textAlign: 'center',
-    '& .MuiBox-root': {
-      width: 30,
-      margin: 'auto',
-      paddingBottom: theme.spacing(1),
-    },
-  },
-  categoryName: {
+  productName: {
     fontWeight: 'bold',
     textTransform: 'capitalize',
   },
   productPaper: {
     padding: theme.spacing(1.5),
     boxShadow: '0 5px 5px rgb(0 37 132 / 6%)',
-    borderRadius: 16,
+    borderRadius: theme.spacing(2),
   },
   discount: {
     textDecorationLine: 'line-through',
@@ -89,7 +77,7 @@ const ProductPaper: React.FC<ProductProps> = ({
           <Image src={productImage} alt={productName} />
         </Grid>
         <Grid item xs={12}>
-          <Typography variant="body2" className={classes.categoryName}>
+          <Typography variant="body2" className={classes.productName}>
             {productName}
           </Typography>
         </Grid>
