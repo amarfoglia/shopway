@@ -1,30 +1,40 @@
 import React, { lazy, ReactElement } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { Container } from '@material-ui/core';
-// import AuthRoute from './components/AuthRoute';
-import NoAuthRoute from './components/NoAuthRoute';
+import AuthRoute from './components/AuthRoute';
 import PATHS from './utils/routes';
 import baseStyles from './style/styles';
 import Loader from './components/Loader';
+import { Roles } from './model/User';
 
 const SignupPage = lazy(() => import('./pages/auth/SingupPage'));
 const Home = lazy(() => import('./pages/HomePage'));
 const LoginPage = lazy(() => import('./pages/auth/LoginPage'));
+const CustomerPage = lazy(() => import('./pages/core/customer/MainPage'));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
+const NotAuthorized = lazy(() => import('./pages/NotAuthorized'));
 const ForgotPasswordPage = lazy(() => import('./pages/auth/ForgotPasswordPage'));
 
 const renderContent = () => {
   const classes = baseStyles();
+  const { CUSTOMER, SELLER } = Roles;
+
   return (
     <Router>
       {/* <NavBar /> */}
-      <Container className={classes.root} maxWidth="md">
+      <Container className={classes.root} disableGutters maxWidth="md">
         <React.Suspense fallback={<Loader />}>
           <Switch>
             <Route exact path={PATHS.HOME} render={() => <Home />} />
-            <NoAuthRoute path={PATHS.SIGN_IN} render={() => <LoginPage />} />
-            <NoAuthRoute path={PATHS.SIGN_UP} render={() => <SignupPage />} />
-            <NoAuthRoute path={PATHS.FORGOT_PASSWORD} render={() => <ForgotPasswordPage />} />
+            <AuthRoute mustBeNotLoggedIn path={PATHS.SIGN_IN} render={() => <LoginPage />} />
+            <AuthRoute mustBeNotLoggedIn path={PATHS.SIGN_UP} render={() => <SignupPage />} />
+            <AuthRoute
+              mustBeNotLoggedIn
+              path={PATHS.FORGOT_PASSWORD}
+              render={() => <ForgotPasswordPage />}
+            />
+            <AuthRoute path={PATHS.CUSTOMER_MAIN} render={() => <CustomerPage />} />
+            <Route path={PATHS.NOT_AUTHORIZED} render={() => <NotAuthorized />} />
             <Route path={PATHS.NOT_FOUND} render={() => <NotFoundPage />} />
           </Switch>
         </React.Suspense>

@@ -7,13 +7,22 @@ const borderRadius = 30;
 const baseStyles = makeStyles((theme) => ({
   root: {
     height: '100vh',
-    padding: 0,
   },
   container: {
     display: 'flex',
     minHeight: '100%',
     textAlign: 'center',
     flexDirection: 'column',
+  },
+  horizontalScroll: {
+    overflow: 'auto',
+    display: 'flex',
+    width: '100%',
+    paddingLeft: 2,
+    paddingBottom: theme.spacing(1),
+    '& > div:first-child': {
+      marginLeft: 0,
+    },
   },
   title: {
     fontWeight: 'bold',
@@ -22,6 +31,7 @@ const baseStyles = makeStyles((theme) => ({
   },
   link: {
     textDecoration: 'none',
+    color: theme.palette.primary.main,
   },
   paperPopup: {
     borderTopLeftRadius: borderRadius,
@@ -95,6 +105,6 @@ const roleStyles = makeStyles((theme) => ({
   },
 }));
 
-export { illustrationStyle, authStyles, roleStyles };
+export { illustrationStyle, authStyles, roleStyles, shadow };
 
 export default baseStyles;

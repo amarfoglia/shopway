@@ -2,14 +2,38 @@ import React, { useContext } from 'react';
 import { Route } from 'react-router';
 import { Redirect, RouteProps } from 'react-router-dom';
 import AuthContext from '../hooks/useAuth';
+import User from '../model/User';
+import PATHS from '../utils/routes';
 
-export type AuthRouteProps = RouteProps;
+const NotAuthorized = () => <Redirect to={{ pathname: PATHS.NOT_AUTHORIZED }} />;
+const Home = () => <Redirect to={{ pathname: PATHS.HOME }} />;
 
-const renderComponent = () => <Redirect to={{ pathname: '/login' }} />;
+interface Props {
+  mustBeLoggedIn?: boolean;
+  mustBeNotLoggedIn?: boolean;
+  mustBe?: string;
+}
 
-export const AuthRoute: React.FC<AuthRouteProps> = (props) => {
-  const ctx = useContext(AuthContext);
-  return ctx?.user ? <Route {...props} /> : <Route {...props} component={renderComponent} />;
+type AuthRouteProps = RouteProps & Props;
+
+const _isRoleNotValid = (user?: User, role?: string) => role && user?.role !== role;
+const _isNotLoggedIn = (user?: User, mustBeLoggedIn?: boolean) => mustBeLoggedIn && !user;
+
+export const AuthRoute: React.FC<AuthRouteProps> = ({
+  mustBe,
+  mustBeLoggedIn,
+  mustBeNotLoggedIn,
+  ...props
+}) => {
+  const user = useContext(AuthContext)?.user;
+  const component =
+    _isRoleNotValid(user, mustBe) || _isNotLoggedIn(user, mustBeLoggedIn)
+      ? NotAuthorized
+      : mustBeNotLoggedIn && user
+      ? Home
+      : undefined;
+
+  return <Route {...props} component={component} />;
 };
 
 export default AuthRoute;

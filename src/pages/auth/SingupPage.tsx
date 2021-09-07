@@ -133,7 +133,7 @@ const SignupPage: React.FC = () => {
   };
 
   return (
-    <AuthPage title="Welcome back" header={renderBackButton()}>
+    <AuthPage title="Create account" header={renderBackButton()}>
       <MyForm
         errors={error?.message}
         handleSubmit={handleSubmit}

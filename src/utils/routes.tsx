@@ -5,6 +5,13 @@ enum PATHS {
   SIGN_IN = '/signin',
   SIGN_UP = '/signup',
   FORGOT_PASSWORD = '/forgotPassword',
+  CUSTOMER_MAIN = '/customer',
+  CUSTOMER_HOME = '/customer/',
+  CUSTOMER_PROFILE = '/customer/profile',
+  CUSTOMER_FOLLOWING = '/customer/following',
+  CUSTOMER_ORDERS = '/customer/orders',
+  CUSTOMER_SETTINGS = '/customer/settings',
+  NOT_AUTHORIZED = '/notAuthorized',
   NOT_FOUND = '*',
 }
 
