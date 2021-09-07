@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
   },
   container: {
-    padding: `${theme.spacing(5)}px ${theme.spacing(4)}px`,
+    padding: `${theme.spacing(4)}px ${theme.spacing(3)}px`,
     backgroundColor: '#f9f9f9',
     height: `calc(100vh - 72px)`,
     overflowY: 'auto',
