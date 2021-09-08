@@ -1,5 +1,5 @@
-import React, { lazy } from 'react';
-import { Container, makeStyles, Paper, Tabs, Tab, AppBar } from '@material-ui/core';
+import React, { lazy, useContext } from 'react';
+import { Container, makeStyles, Paper, Tabs, Tab, AppBar, Grid } from '@material-ui/core';
 import { Switch, Route, useHistory } from 'react-router-dom';
 import PATHS from '../../../utils/routes';
 import Loader from '../../../components/Loader';
@@ -7,6 +7,8 @@ import SettingsOutlined from '@material-ui/icons/SettingsOutlined';
 import ExploreOutlined from '@material-ui/icons/ExploreOutlined';
 import FavoriteBorderOutlined from '@material-ui/icons/FavoriteBorderOutlined';
 import ConfirmationNumberOutlined from '@material-ui/icons/ConfirmationNumberOutlined';
+import TopSection from '../../../components/TopSection';
+import AuthContext from '../../../hooks/useAuth';
 
 const Home = lazy(() => import('./Home'));
 const Orders = lazy(() => import('./Orders'));
@@ -42,9 +44,10 @@ const MainPage = (): React.ReactElement => {
   const classes = useStyles();
   const history = useHistory();
   const [value, setValue] = React.useState<string>(PATHS.CUSTOMER_HOME);
+  const { user } = useContext(AuthContext);
 
   // eslint-disable-next-line @typescript-eslint/ban-types
-  const handleChange = (event: React.ChangeEvent<{}>, newValue: string) => {
+  const handleChange = async (event: React.ChangeEvent<{}>, newValue: string) => {
     setValue(newValue);
     history.push(newValue);
   };
@@ -65,7 +68,7 @@ const MainPage = (): React.ReactElement => {
         className={classes.tabs}
       >
         <Tab icon={<ExploreOutlined />} label="Explore" value={PATHS.CUSTOMER_HOME} />
-        <Tab icon={<FavoriteBorderOutlined />} label="Favorites" value={PATHS.CUSTOMER_FOLLOWING} />
+        <Tab icon={<FavoriteBorderOutlined />} label="Followed" value={PATHS.CUSTOMER_FOLLOWING} />
         <Tab icon={<ConfirmationNumberOutlined />} label="Orders" value={PATHS.CUSTOMER_ORDERS} />
         <Tab icon={<SettingsOutlined />} label="Settings" value={PATHS.CUSTOMER_SETTINGS} />
       </Tabs>
@@ -73,20 +76,28 @@ const MainPage = (): React.ReactElement => {
   );
 
   return (
-    <React.Suspense fallback={<Loader />}>
+    <React.Fragment>
       <Container maxWidth="md" className={classes.container}>
-        <Switch>
-          <Route exact path={PATHS.CUSTOMER_HOME} render={() => <Home />} />
-          <Route path={PATHS.CUSTOMER_FOLLOWING} render={() => <Following />} />
-          <Route path={PATHS.CUSTOMER_ORDERS} render={() => <Orders />} />
-          <Route path={PATHS.CUSTOMER_SETTINGS} render={() => <Settings />} />
-        </Switch>
+        <Grid container direction="column" spacing={2}>
+          <Grid item xs={12}>
+            <TopSection variant="user" userName={user?.fullName} />
+          </Grid>
+          <Grid item xs={12}>
+            <React.Suspense fallback={<Loader />}>
+              <Switch>
+                <Route exact path={PATHS.CUSTOMER_HOME} render={() => <Home />} />
+                <Route path={PATHS.CUSTOMER_FOLLOWING} render={() => <Following />} />
+                <Route path={PATHS.CUSTOMER_ORDERS} render={() => <Orders />} />
+                <Route path={PATHS.CUSTOMER_SETTINGS} render={() => <Settings />} />
+              </Switch>
+            </React.Suspense>
+          </Grid>
+        </Grid>
       </Container>
-
       <AppBar position="fixed" className={classes.appBar}>
         <BottomTabs />
       </AppBar>
-    </React.Suspense>
+    </React.Fragment>
   );
 };
 

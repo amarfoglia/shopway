@@ -1,8 +1,6 @@
-import React, { useContext } from 'react';
-import { Grid, List, ListItem } from '@material-ui/core';
+import React from 'react';
+import { List, ListItem } from '@material-ui/core';
 import CorePage from '../../../components/CorePage';
-import AuthContext from '../../../hooks/useAuth';
-import TopSection from '../../../components/TopSection';
 import OrderCard from '../../../components/OrderCard';
 
 const product = {
@@ -11,7 +9,7 @@ const product = {
   quantity: 1,
   size: 'M',
   color: 'red',
-  imagePath: `${process.env.PUBLIC_URL}/clothes/tshirt1.png`,
+  imagePath: `${process.env.PUBLIC_URL}/clothes/tshirt.jpg`,
 };
 
 const order = {
@@ -23,8 +21,6 @@ const order = {
 };
 
 const CustomerOrders = (): React.ReactElement => {
-  const { user } = useContext(AuthContext);
-
   const OrdersSection = () => (
     <List disablePadding>
       <ListItem disableGutters>
@@ -35,16 +31,7 @@ const CustomerOrders = (): React.ReactElement => {
 
   const sections = [{ node: <OrdersSection /> }];
 
-  return (
-    <Grid container spacing={2} direction="column">
-      <Grid item xs={12}>
-        <TopSection variant="user" userName={user?.fullName} />
-      </Grid>
-      <Grid item xs={12}>
-        <CorePage title="Orders" sections={sections} />
-      </Grid>
-    </Grid>
-  );
+  return <CorePage title="Orders" sections={sections} />;
 };
 
 export default CustomerOrders;

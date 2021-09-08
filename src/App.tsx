@@ -31,7 +31,7 @@ const renderContent = () => {
               path={PATHS.FORGOT_PASSWORD}
               render={() => <ForgotPasswordPage />}
             />
-            <AuthRoute exact path={PATHS.CUSTOMER_MAIN} render={() => <CustomerPage />} />
+            <AuthRoute path={PATHS.CUSTOMER_MAIN} render={() => <CustomerPage />} />
             <Route path={PATHS.CUSTOMER_PROFILE} render={() => <CustomerProfile />} />;
             <AuthRoute path={PATHS.STORE_PAGE} render={() => <StorePage />} />
             <Route path={PATHS.NOT_AUTHORIZED} render={() => <NotAuthorized />} />

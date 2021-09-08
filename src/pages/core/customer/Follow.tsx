@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import {
   Grid,
   Paper,
@@ -15,9 +15,7 @@ import {
 } from '@material-ui/core';
 import FavoriteOutlined from '@material-ui/icons/FavoriteOutlined';
 import CorePage from '../../../components/CorePage';
-import AuthContext from '../../../hooks/useAuth';
 import ProductPaper from '../../../components/ProductPaper';
-import TopSection from '../../../components/TopSection';
 
 const clothes = ['jacket', 'tshirt2', 'sweatshirt2', 'tshirt2'];
 const clothesPath = process.env.PUBLIC_URL + '/clothes';
@@ -38,7 +36,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const CustomerFollow = (): React.ReactElement => {
-  const { user } = useContext(AuthContext);
   const classes = useStyles();
 
   const FollowedStoresSection = () => (
@@ -86,16 +83,7 @@ const CustomerFollow = (): React.ReactElement => {
     },
   ];
 
-  return (
-    <Grid container spacing={2} direction="column">
-      <Grid item xs={12}>
-        <TopSection variant="user" userName={user?.fullName} />
-      </Grid>
-      <Grid item xs={12}>
-        <CorePage title="Followed" sections={sections} />
-      </Grid>
-    </Grid>
-  );
+  return <CorePage title="Followed" sections={sections} />;
 };
 
 export default CustomerFollow;
