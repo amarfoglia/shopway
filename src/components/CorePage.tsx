@@ -63,8 +63,14 @@ const CorePage: React.FC<Props & React.ReactNode> = ({ title, subtitle, sections
       )}
       {sections.map((s, i) => (
         <Grid item key={`${s.title}-${i}`} xs={12}>
-          {s.title && <TitleSection title={s.title} />}
-          {s.node}
+          <Grid container spacing={1}>
+            <Grid item xs={12}>
+              {s.title && <TitleSection title={s.title} />}
+            </Grid>
+            <Grid item xs={12}>
+              {s.node}
+            </Grid>
+          </Grid>
         </Grid>
       ))}
     </Grid>

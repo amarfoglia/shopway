@@ -1,4 +1,4 @@
-import React, { lazy, useContext } from 'react';
+import React, { lazy, useContext, useState } from 'react';
 import { Container, makeStyles, Paper, Tabs, Tab, AppBar, Grid } from '@material-ui/core';
 import { Switch, Route, useHistory } from 'react-router-dom';
 import PATHS from '../../../utils/routes';
@@ -13,7 +13,7 @@ import AuthContext from '../../../hooks/useAuth';
 const Home = lazy(() => import('./Home'));
 const Orders = lazy(() => import('./Orders'));
 const Following = lazy(() => import('./Follow'));
-const Settings = lazy(() => import('../../NotFoundPage'));
+const Settings = lazy(() => import('./Settings'));
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -43,8 +43,9 @@ const useStyles = makeStyles((theme) => ({
 const MainPage = (): React.ReactElement => {
   const classes = useStyles();
   const history = useHistory();
-  const [value, setValue] = React.useState<string>(PATHS.CUSTOMER_HOME);
+  const [value, setValue] = useState<string>(PATHS.CUSTOMER_HOME);
   const { user } = useContext(AuthContext);
+  const [topSection, setTopSection] = useState(true);
 
   // eslint-disable-next-line @typescript-eslint/ban-types
   const handleChange = async (event: React.ChangeEvent<{}>, newValue: string) => {
@@ -75,20 +76,35 @@ const MainPage = (): React.ReactElement => {
     </Paper>
   );
 
+  const noTopSection = (child: React.ReactNode) => {
+    setTopSection(false);
+    return child;
+  };
+
+  const withTopSection = (child: React.ReactNode) => {
+    setTopSection(true);
+    return child;
+  };
+
   return (
     <React.Fragment>
       <Container maxWidth="md" className={classes.container}>
         <Grid container direction="column" spacing={2}>
-          <Grid item xs={12}>
-            <TopSection variant="user" userName={user?.fullName} />
-          </Grid>
+          {topSection && (
+            <Grid item xs={12}>
+              <TopSection variant="user" userName={user?.fullName} />
+            </Grid>
+          )}
           <Grid item xs={12}>
             <React.Suspense fallback={<Loader />}>
               <Switch>
-                <Route exact path={PATHS.CUSTOMER_HOME} render={() => <Home />} />
-                <Route path={PATHS.CUSTOMER_FOLLOWING} render={() => <Following />} />
-                <Route path={PATHS.CUSTOMER_ORDERS} render={() => <Orders />} />
-                <Route path={PATHS.CUSTOMER_SETTINGS} render={() => <Settings />} />
+                <Route exact path={PATHS.CUSTOMER_HOME} render={() => withTopSection(<Home />)} />
+                <Route
+                  path={PATHS.CUSTOMER_FOLLOWING}
+                  render={() => withTopSection(<Following />)}
+                />
+                <Route path={PATHS.CUSTOMER_ORDERS} render={() => withTopSection(<Orders />)} />
+                <Route path={PATHS.CUSTOMER_SETTINGS} render={() => noTopSection(<Settings />)} />
               </Switch>
             </React.Suspense>
           </Grid>

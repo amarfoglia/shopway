@@ -1,8 +1,9 @@
 import React from 'react';
-import { Grid, makeStyles, Paper, Typography } from '@material-ui/core';
+import { Grid, makeStyles, Typography } from '@material-ui/core';
 import Image from 'material-ui-image';
 import StoreAvatar from './MyAvatar';
 import { Skeleton } from '@material-ui/lab';
+import MyPaper from './MyPaper';
 
 interface ProductProps {
   productName: string;
@@ -17,11 +18,6 @@ const useStyles = makeStyles((theme) => ({
   productName: {
     fontWeight: 'bold',
     textTransform: 'capitalize',
-  },
-  productPaper: {
-    padding: theme.spacing(1.5),
-    boxShadow: '0 5px 5px rgb(0 37 132 / 6%)',
-    borderRadius: theme.spacing(2),
   },
   discount: {
     textDecorationLine: 'line-through',
@@ -57,7 +53,7 @@ const ProductPaper: React.FC<ProductProps> = ({
     );
 
   return (
-    <Paper className={classes.productPaper}>
+    <MyPaper>
       <Grid container spacing={1}>
         <Grid item xs={12}>
           <Grid container spacing={1} alignItems={'center'}>
@@ -92,7 +88,7 @@ const ProductPaper: React.FC<ProductProps> = ({
           {renderPrice(price, discountPrice)}
         </Grid>
       </Grid>
-    </Paper>
+    </MyPaper>
   );
 };
 
