@@ -1,6 +1,7 @@
 import React from 'react';
 import { makeStyles, Paper, Typography, Box } from '@material-ui/core';
 import Image from 'material-ui-image';
+import { Skeleton } from '@material-ui/lab';
 
 interface CateogryProps {
   name: string;
@@ -37,7 +38,13 @@ const CategoryPaper: React.FC<CateogryProps> = ({ name, iconPath }) => {
     <div className={classes.categoryContainer}>
       <Paper className={classes.categoryPaper}>
         <Box>
-          <Image src={iconPath} alt={`category - ${name}`} />
+          <Image
+            src={iconPath}
+            alt={`category - ${name}`}
+            loading={
+              <Skeleton animation="wave" variant="circle" width={'inherit'} height={'inherit'} />
+            }
+          />
         </Box>
         <Typography variant="body1" className={classes.categoryName}>
           {name}

@@ -17,7 +17,7 @@ import FavoriteOutlined from '@material-ui/icons/FavoriteOutlined';
 import CorePage from '../../../components/CorePage';
 import AuthContext from '../../../hooks/useAuth';
 import ProductPaper from '../../../components/ProductPaper';
-import TopSection, { USER } from '../../../components/TopSection';
+import TopSection from '../../../components/TopSection';
 
 const clothes = ['jacket', 'tshirt2', 'sweatshirt2', 'tshirt2'];
 const clothesPath = process.env.PUBLIC_URL + '/clothes';
@@ -79,9 +79,7 @@ const CustomerFollow = (): React.ReactElement => {
   );
 
   const sections = [
-    {
-      node: <FollowedStoresSection />,
-    },
+    { node: <FollowedStoresSection /> },
     {
       node: <NewProductsSection />,
       title: 'New Products',
@@ -91,7 +89,7 @@ const CustomerFollow = (): React.ReactElement => {
   return (
     <React.Fragment>
       <Grid container spacing={2} direction="column">
-        <TopSection variant={USER} userName={user?.fullName} />
+        <TopSection variant="user" userName={user?.fullName} />
         <Grid item xs={12}>
           <CorePage title="Followed" sections={sections} />
         </Grid>

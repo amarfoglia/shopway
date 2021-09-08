@@ -85,7 +85,11 @@ const SignupPage: React.FC = () => {
       role,
       store,
     };
-    register(user, undefined, (e) => setError(e));
+    register(
+      user,
+      (_) => setError(undefined),
+      (e) => setError(e),
+    );
   };
 
   const FormFooter = (

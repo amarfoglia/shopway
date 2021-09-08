@@ -5,7 +5,7 @@ import CorePage from '../../../components/CorePage';
 import AuthContext from '../../../hooks/useAuth';
 import CategoryPaper from '../../../components/CategoryPaper';
 import ProductPaper from '../../../components/ProductPaper';
-import TopSection, { USER } from '../../../components/TopSection';
+import TopSection from '../../../components/TopSection';
 
 const Categories = ['tshirt', 'jacket', 'jeans', 'shoe', 'shorts', 'swimsuit', 'clothes'];
 const clothes = ['jacket', 'tshirt2', 'sweatshirt2', 'tshirt2'];
@@ -56,7 +56,7 @@ const CustomerHome = (): React.ReactElement => {
   return (
     <React.Fragment>
       <Grid container spacing={2} direction="column">
-        <TopSection variant={USER} userName={user?.fullName} />
+        <TopSection variant="user" userName={user?.fullName} />
         <Grid item xs={12}>
           <CorePage
             title="Shopway"

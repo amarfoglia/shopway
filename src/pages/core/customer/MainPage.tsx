@@ -9,7 +9,7 @@ import FavoriteBorderOutlined from '@material-ui/icons/FavoriteBorderOutlined';
 import ConfirmationNumberOutlined from '@material-ui/icons/ConfirmationNumberOutlined';
 
 const Home = lazy(() => import('./Home'));
-const Orders = lazy(() => import('./Follow'));
+const Orders = lazy(() => import('./Orders'));
 const Following = lazy(() => import('./Follow'));
 const Settings = lazy(() => import('../../NotFoundPage'));
 

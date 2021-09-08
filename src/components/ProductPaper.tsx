@@ -1,7 +1,8 @@
 import React from 'react';
-import { Avatar, Grid, makeStyles, Paper, Typography } from '@material-ui/core';
+import { Grid, makeStyles, Paper, Typography } from '@material-ui/core';
 import Image from 'material-ui-image';
-import baseStyles from '../style/styles';
+import StoreAvatar from './MyAvatar';
+import { Skeleton } from '@material-ui/lab';
 
 interface ProductProps {
   productName: string;
@@ -38,7 +39,6 @@ const ProductPaper: React.FC<ProductProps> = ({
   storeLogo,
 }) => {
   const classes = useStyles();
-  const baseClasses = baseStyles();
 
   const renderPrice = (price: string, discountPrice?: string) =>
     discountPrice ? (
@@ -62,10 +62,11 @@ const ProductPaper: React.FC<ProductProps> = ({
         <Grid item xs={12}>
           <Grid container spacing={1} alignItems={'center'}>
             <Grid item>
-              <Avatar
-                className={baseClasses.smallAvatar}
-                alt={`${storeName} - store logo`}
-                src={storeLogo}
+              <StoreAvatar
+                size={'small'}
+                imagePath={storeLogo}
+                text={storeName}
+                alt={`logo of store ${storeName}`}
               />
             </Grid>
             <Grid item>
@@ -74,7 +75,13 @@ const ProductPaper: React.FC<ProductProps> = ({
           </Grid>
         </Grid>
         <Grid item xs={12}>
-          <Image src={productImage} alt={productName} />
+          <Image
+            src={productImage}
+            alt={productName}
+            loading={
+              <Skeleton variant="rect" animation="wave" width={'inherit'} height={'inherit'} />
+            }
+          />
         </Grid>
         <Grid item xs={12}>
           <Typography variant="body2" className={classes.productName}>

@@ -1,8 +1,9 @@
 import React from 'react';
-import { Grid, Typography } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import { Form, Formik, FormikHelpers, FormikValues } from 'formik';
 import { ReactNode } from 'react';
 import LoadButton from './formFields/LoadButton';
+import { Alert, AlertTitle } from '@material-ui/lab';
 
 type ChangeHandler = (e: React.ChangeEvent<string>) => void;
 
@@ -19,9 +20,10 @@ interface Props {
 }
 
 const renderErrors = (errors: string) => (
-  <Typography variant="body2" color="error">
+  <Alert severity="error" style={{ textAlign: 'left', borderRadius: 16 }}>
+    <AlertTitle>Error</AlertTitle>
     {errors}
-  </Typography>
+  </Alert>
 );
 
 const renderForm = (

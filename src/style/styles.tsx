@@ -53,14 +53,6 @@ const baseStyles = makeStyles((theme) => ({
     borderRadius: 70,
     boxShadow: shadow,
   },
-  smallAvatar: {
-    width: theme.spacing(3),
-    height: theme.spacing(3),
-  },
-  mediumAvatar: {
-    width: theme.spacing(5),
-    height: theme.spacing(5),
-  },
 }));
 
 const illustrationStyle = makeStyles({

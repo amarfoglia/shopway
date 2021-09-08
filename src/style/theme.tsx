@@ -76,7 +76,7 @@ const theme = createTheme({
     },
     MuiCard: {
       root: {
-        borderRadius: 30,
+        borderRadius: 16,
         boxShadow: '0 10px 30px rgba(0,37,132,.06)',
       },
     },

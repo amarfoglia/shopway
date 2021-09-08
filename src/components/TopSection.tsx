@@ -1,42 +1,37 @@
 import React from 'react';
-import { Grid, Avatar } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import Notifications from '@material-ui/icons/Notifications';
-import baseStyles from '../style/styles';
+import UserAvatar from './MyAvatar';
 
-enum Variants {
-  SIMPLE = 'simple',
-  USER = 'user',
-}
-
-const { SIMPLE, USER } = Variants;
-
-export { SIMPLE, USER };
+type Variants = 'simple' | 'user';
 
 interface Props {
   leftChild?: React.ReactNode;
   rightChild?: React.ReactNode;
   variant: Variants;
   userName?: string;
+  userImagePath?: string;
 }
 
 const TopSection: React.FC<Props> = ({
   leftChild,
   rightChild,
-  variant = Variants.SIMPLE,
+  variant = 'simple',
   userName,
+  userImagePath,
 }) => {
-  const baseClasses = baseStyles();
-
-  const UserAvatar = () => (
-    <Avatar
-      className={baseClasses.mediumAvatar}
-      alt={userName}
-      src={`${process.env.PUBLIC_URL}/avatar.png`}
-    />
-  );
-
-  const LeftNode = variant === USER ? <UserAvatar /> : leftChild;
-  const RightNode = variant === USER ? <Notifications style={{ fontSize: 30 }} /> : rightChild;
+  const LeftNode =
+    variant === 'user' ? (
+      <UserAvatar
+        text={userName}
+        imagePath={userImagePath}
+        size={'large'}
+        alt={`avatar of user ${userName}`}
+      />
+    ) : (
+      leftChild
+    );
+  const RightNode = variant === 'user' ? <Notifications style={{ fontSize: 30 }} /> : rightChild;
 
   return (
     <Grid item xs={12}>

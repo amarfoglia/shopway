@@ -30,7 +30,11 @@ const LoginPage: React.FC = () => {
 
   const handleSubmit = (values: Values, helpers: FormikHelpers<Values>) => {
     const { email, password } = values;
-    login({ email, password }, undefined, (e) => setError(e));
+    login(
+      { email, password },
+      (_) => setError(undefined),
+      (e) => setError(e),
+    );
     helpers.setSubmitting(isLoading);
   };
 

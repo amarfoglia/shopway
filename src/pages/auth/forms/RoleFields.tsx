@@ -61,7 +61,7 @@ const RoleGroup: React.FC<FieldProps & RadioProps> = ({ form, field, options, ..
   );
 
   return (
-    <FormControl error={!!errorText} component="fieldset" fullWidth>
+    <FormControl error={!!errorText} component="fieldset">
       <RadioGroup {...field} {...rest} value={selectedRole}>
         <Grid container spacing={2}>
           {renderRole(role1?.value)}
@@ -81,7 +81,6 @@ const RoleFields: React.FC<Props> = ({ formField: { role } }) => {
       aria-label={role.label}
       options={[CUSTOMER, SELLER]}
       component={RoleGroup}
-      fullWidth
     />
   );
 };

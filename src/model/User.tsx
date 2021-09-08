@@ -12,12 +12,12 @@ export default interface User {
 
 const Roles = {
   CUSTOMER: {
-    value: 'customer',
+    value: 'Customer',
     label: 'Customer',
     index: 0,
   },
   SELLER: {
-    value: 'seller',
+    value: 'Seller',
     label: 'Seller',
     index: 1,
   },

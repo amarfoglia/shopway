@@ -10,7 +10,7 @@ interface Props {
 }
 
 interface UserPayload {
-  user: User;
+  data: User;
 }
 
 interface LoginProps {
@@ -64,6 +64,7 @@ export const AuthProvider = (props: Props): React.ReactElement => {
     setIsLoading(true);
     try {
       const res = await promise;
+      console.log(res.data);
       onData(res.data);
       setIsLoading(false);
     } catch (error) {
@@ -77,7 +78,7 @@ export const AuthProvider = (props: Props): React.ReactElement => {
     _authFun<UserPayload>(
       client.post(`/users/signup`, user),
       (res) => {
-        setUser(res?.data?.user);
+        setUser(res?.data?.data);
         onData?.(res);
       },
       onError,
@@ -87,7 +88,7 @@ export const AuthProvider = (props: Props): React.ReactElement => {
     _authFun<UserPayload>(
       client.post(`/users/login`, props),
       (res) => {
-        setUser(res.data?.user);
+        setUser(res.data?.data);
         onData?.(res);
       },
       onError,
@@ -102,7 +103,7 @@ export const AuthProvider = (props: Props): React.ReactElement => {
   const logout = () => console.log('logout');
 
   const checkUserLoggedIn = () =>
-    _authFun<UserPayload>(client.get(`/users/me`), ({ data }) => setUser(data?.user));
+    _authFun<UserPayload>(client.get(`/users/me`), ({ data }) => setUser(data?.data));
 
   return (
     <AuthContext.Provider
