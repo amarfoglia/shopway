@@ -36,16 +36,14 @@ const CustomerOrders = (): React.ReactElement => {
   const sections = [{ node: <OrdersSection /> }];
 
   return (
-    <React.Fragment>
-      <Grid container spacing={2} direction="column">
-        <Grid item xs={12}>
-          <TopSection variant="user" userName={user?.fullName} />
-        </Grid>
-        <Grid item xs={12}>
-          <CorePage title="Orders" sections={sections} />
-        </Grid>
+    <Grid container spacing={2} direction="column">
+      <Grid item xs={12}>
+        <TopSection variant="user" userName={user?.fullName} />
       </Grid>
-    </React.Fragment>
+      <Grid item xs={12}>
+        <CorePage title="Orders" sections={sections} />
+      </Grid>
+    </Grid>
   );
 };
 

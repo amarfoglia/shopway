@@ -14,6 +14,7 @@ const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 const NotAuthorized = lazy(() => import('./pages/NotAuthorized'));
 const ForgotPasswordPage = lazy(() => import('./pages/auth/ForgotPasswordPage'));
 const StorePage = lazy(() => import('./pages/core/common/StorePage'));
+const CustomerProfile = lazy(() => import('./pages/core/customer/CustomerProfile'));
 
 const renderContent = () => {
   const classes = baseStyles();
@@ -30,7 +31,8 @@ const renderContent = () => {
               path={PATHS.FORGOT_PASSWORD}
               render={() => <ForgotPasswordPage />}
             />
-            <AuthRoute path={PATHS.CUSTOMER_MAIN} render={() => <CustomerPage />} />
+            <AuthRoute exact path={PATHS.CUSTOMER_MAIN} render={() => <CustomerPage />} />
+            <Route path={PATHS.CUSTOMER_PROFILE} render={() => <CustomerProfile />} />;
             <AuthRoute path={PATHS.STORE_PAGE} render={() => <StorePage />} />
             <Route path={PATHS.NOT_AUTHORIZED} render={() => <NotAuthorized />} />
             <Route path={PATHS.NOT_FOUND} render={() => <NotFoundPage />} />

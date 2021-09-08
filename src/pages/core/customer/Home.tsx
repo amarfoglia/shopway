@@ -54,18 +54,18 @@ const CustomerHome = (): React.ReactElement => {
   ];
 
   return (
-    <React.Fragment>
-      <Grid container spacing={2} direction="column">
+    <Grid container direction="column" spacing={2}>
+      <Grid item xs={12}>
         <TopSection variant="user" userName={user?.fullName} />
-        <Grid item xs={12}>
-          <CorePage
-            title="Shopway"
-            subtitle="Get popular products from local stores."
-            sections={sections}
-          />
-        </Grid>
       </Grid>
-    </React.Fragment>
+      <Grid item xs={12}>
+        <CorePage
+          title="Shopway"
+          subtitle="Get popular products from local stores."
+          sections={sections}
+        />
+      </Grid>
+    </Grid>
   );
 };
 

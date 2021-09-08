@@ -55,17 +55,26 @@ const MyAvatar: React.FC<AvatarProps> = ({ text, imagePath, size, alt }) => {
       : size === 'xl'
       ? classes.xlAvatar
       : classes.mediumAvatar;
-  return imagePath ? (
-    <Image
-      src={imagePath}
-      className={clsx(sizeClass, classes.imgAvatar)}
-      loading={<Skeleton variant="circle" animation="wave" width={'inherit'} height={'inherit'} />}
-    />
-  ) : (
+
+  const renderImageAvatar = (path: string) => (
+    <div className={clsx(sizeClass, classes.imgAvatar)}>
+      <Image
+        src={path}
+        alt={alt}
+        loading={
+          <Skeleton variant="circle" animation="wave" width={'inherit'} height={'inherit'} />
+        }
+      />
+    </div>
+  );
+
+  const renderTextAvatar = () => (
     <Avatar className={clsx(sizeClass, classes.textAvatar)} alt={alt}>
       <Typography variant={'body2'}>{text?.charAt(0)}</Typography>
     </Avatar>
   );
+
+  return imagePath ? renderImageAvatar(imagePath) : renderTextAvatar();
 };
 
 export default MyAvatar;

@@ -82,6 +82,7 @@ const MainPage = (): React.ReactElement => {
           <Route path={PATHS.CUSTOMER_SETTINGS} render={() => <Settings />} />
         </Switch>
       </Container>
+
       <AppBar position="fixed" className={classes.appBar}>
         <BottomTabs />
       </AppBar>
