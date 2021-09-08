@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import Image from 'material-ui-image';
 import { Skeleton } from '@material-ui/lab';
 
-type Sizes = 'small' | 'medium' | 'large';
+type Sizes = 'small' | 'medium' | 'large' | 'xl';
 
 interface AvatarProps {
   imagePath?: string;
@@ -36,6 +36,13 @@ const useStyles = makeStyles((theme) => ({
     height: theme.spacing(5),
     fontSize: theme.spacing(3),
   },
+  xlAvatar: {
+    width: theme.spacing(9),
+    height: theme.spacing(9),
+    '& > p': {
+      fontSize: theme.spacing(5),
+    },
+  },
 }));
 
 const MyAvatar: React.FC<AvatarProps> = ({ text, imagePath, size, alt }) => {
@@ -45,6 +52,8 @@ const MyAvatar: React.FC<AvatarProps> = ({ text, imagePath, size, alt }) => {
       ? classes.smallAvatar
       : size === 'large'
       ? classes.largeAvatar
+      : size === 'xl'
+      ? classes.xlAvatar
       : classes.mediumAvatar;
   return imagePath ? (
     <Image

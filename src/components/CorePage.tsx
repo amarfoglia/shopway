@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import baseStyles from '../style/styles';
 
 interface Props {
-  title: string;
+  title?: string;
   subtitle?: string;
   sections: {
     node: JSX.Element;
@@ -13,7 +13,7 @@ interface Props {
 }
 
 interface TitleSectionProps {
-  title: string;
+  title?: string;
   seeAllPath?: string;
 }
 
@@ -30,11 +30,13 @@ const CorePage: React.FC<Props & React.ReactNode> = ({ title, subtitle, sections
 
   const TitleSection: React.FC<TitleSectionProps> = ({ title, seeAllPath }) => (
     <Grid container className={classes.sectionTitle}>
-      <Grid item>
-        <Typography variant="h6" component="h3" gutterBottom>
-          {title}
-        </Typography>
-      </Grid>
+      {title && (
+        <Grid item>
+          <Typography variant="h6" component="h3" gutterBottom>
+            {title}
+          </Typography>
+        </Grid>
+      )}
       <Grid item>
         {seeAllPath && (
           <Link to={seeAllPath} className={baseClasses.link}>
@@ -47,16 +49,18 @@ const CorePage: React.FC<Props & React.ReactNode> = ({ title, subtitle, sections
 
   return (
     <Grid container spacing={4}>
-      <Grid item xs={12}>
-        <Typography variant="h4" component="h1" gutterBottom>
-          {title}
-        </Typography>
-        {subtitle && (
-          <Typography variant="subtitle1" component="h2">
-            {subtitle}
+      {title && (
+        <Grid item xs={12}>
+          <Typography variant="h4" component="h1" gutterBottom>
+            {title}
           </Typography>
-        )}
-      </Grid>
+          {subtitle && (
+            <Typography variant="subtitle1" component="h2">
+              {subtitle}
+            </Typography>
+          )}
+        </Grid>
+      )}
       {sections.map((s, i) => (
         <Grid item key={`${s.title}-${i}`} xs={12}>
           {s.title && <TitleSection title={s.title} />}

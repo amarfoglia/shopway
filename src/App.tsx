@@ -5,7 +5,6 @@ import AuthRoute from './components/AuthRoute';
 import PATHS from './utils/routes';
 import baseStyles from './style/styles';
 import Loader from './components/Loader';
-import { Roles } from './model/User';
 
 const SignupPage = lazy(() => import('./pages/auth/SingupPage'));
 const Home = lazy(() => import('./pages/HomePage'));
@@ -14,14 +13,12 @@ const CustomerPage = lazy(() => import('./pages/core/customer/MainPage'));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 const NotAuthorized = lazy(() => import('./pages/NotAuthorized'));
 const ForgotPasswordPage = lazy(() => import('./pages/auth/ForgotPasswordPage'));
+const StorePage = lazy(() => import('./pages/core/common/StorePage'));
 
 const renderContent = () => {
   const classes = baseStyles();
-  const { CUSTOMER, SELLER } = Roles;
-
   return (
     <Router>
-      {/* <NavBar /> */}
       <Container className={classes.root} disableGutters maxWidth="md">
         <React.Suspense fallback={<Loader />}>
           <Switch>
@@ -34,6 +31,7 @@ const renderContent = () => {
               render={() => <ForgotPasswordPage />}
             />
             <AuthRoute path={PATHS.CUSTOMER_MAIN} render={() => <CustomerPage />} />
+            <AuthRoute path={PATHS.STORE_PAGE} render={() => <StorePage />} />
             <Route path={PATHS.NOT_AUTHORIZED} render={() => <NotAuthorized />} />
             <Route path={PATHS.NOT_FOUND} render={() => <NotFoundPage />} />
           </Switch>

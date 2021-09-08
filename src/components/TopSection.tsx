@@ -34,17 +34,9 @@ const TopSection: React.FC<Props> = ({
   const RightNode = variant === 'user' ? <Notifications style={{ fontSize: 30 }} /> : rightChild;
 
   return (
-    <Grid item xs={12}>
-      <Grid
-        container
-        spacing={2}
-        justifyContent="space-between"
-        direction="row"
-        alignItems="center"
-      >
-        <Grid item>{LeftNode}</Grid>
-        <Grid item>{RightNode}</Grid>
-      </Grid>
+    <Grid container spacing={2} justifyContent="space-between" direction="row" alignItems="center">
+      <Grid item>{LeftNode}</Grid>
+      <Grid item>{RightNode}</Grid>
     </Grid>
   );
 };

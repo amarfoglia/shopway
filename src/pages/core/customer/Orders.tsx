@@ -38,7 +38,9 @@ const CustomerOrders = (): React.ReactElement => {
   return (
     <React.Fragment>
       <Grid container spacing={2} direction="column">
-        <TopSection variant="user" userName={user?.fullName} />
+        <Grid item xs={12}>
+          <TopSection variant="user" userName={user?.fullName} />
+        </Grid>
         <Grid item xs={12}>
           <CorePage title="Orders" sections={sections} />
         </Grid>
