@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import Cookies from 'universal-cookie';
+import { ObjectId } from 'mongodb';
 import Promisify from '../utils/promisify';
 import catchAsync from '../utils/catchAsync';
 import UserModel from '../models/users/userModel';
@@ -13,6 +14,8 @@ import CustomerModel from '../models/users/customerModel';
 import SellerModel from '../models/users/sellerModel';
 import Role from '../models/role';
 import Seller from '../models/users/seller';
+import Store from '../models/store';
+import StoreModel from '../models/storeModel';
 
 const getJwtSecret = () => (process.env.JWT_SECRET || 'invalid-token');
 
@@ -23,7 +26,7 @@ const generateToken = (id: string): string => jwt.sign(
 );
 
 const sendFreshToken = (user: User, statusCode: number, res: Response) => {
-  const token = generateToken(user.id);
+  const token = generateToken(user.id ?? 'invalid-id');
   const cookieOptions = {
     expires: new Date(Date.now() + Number(process.env.JWT_COOKIE_EXPIRES_IN) * ONE_DAY_IN_MS),
     httpOnly: true, // prevent cross-site scripting attack
@@ -50,17 +53,14 @@ const verifyToken = (token: string) => jwt.verify(token, getJwtSecret());
 class AuthController {
   signup = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     let newUser: User | undefined;
-    let seller: Seller;
-    const { role } = req.body;
+    const { role } = req.body.user;
     const photo = req.file?.filename;
     switch (role) {
       case Role.CUSTOMER:
-        newUser = await CustomerModel.create({ photo, ...req.body });
+        newUser = await CustomerModel.create({ photo, ...req.body.user });
         break;
       case Role.SELLER:
-        seller = req.body;
-        seller.stores[0].logo = photo;
-        newUser = await SellerModel.create(seller);
+        newUser = await this.createSellerWithStore(req, next);
         break;
       default:
         newUser = undefined;
@@ -72,6 +72,18 @@ class AuthController {
     }
     sendFreshToken(newUser, 201, res);
   });
+
+  createSellerWithStore = async (req: Request, next: NextFunction) => {
+    const seller: Seller = req.body.user;
+    const { store } = req.body;
+    const newStore = await StoreModel.create(store);
+    const storeId = newStore.id ?? 'invalid-id';
+    if (storeId === 'invalid-id') { next(new AppError('invalid store id', 500)); }
+    seller.stores = [];
+    seller.stores.push(storeId);
+    const newUser = await SellerModel.create(seller);
+    return newUser;
+  }
 
   login = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const { email, password } = req.body;
