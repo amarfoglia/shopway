@@ -1,4 +1,4 @@
- import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import catchAsync from '../utils/catchAsync';
 import HandlerFactory from './helpers/handlerFactory';
 import ArticleModel, { ArticleDoc } from '../models/articles/articleModel';
