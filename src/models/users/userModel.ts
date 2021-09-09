@@ -115,6 +115,6 @@ userSchema.methods.createPasswordResetToken = function _() {
   return resetToken;
 };
 
-export { UserDoc, IUserModel };
+export { UserDoc, IUserModel, options };
 
 export default <IUserModel>mongoose.model<UserDoc>('User', userSchema);

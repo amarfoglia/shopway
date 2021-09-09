@@ -1,10 +1,11 @@
-import Store from '../store';
+import { ObjectId } from 'mongodb';
 import User from './user';
 
 interface Customer extends User {
-  id?: any;
+  id?: string;
   photo: string;
-  followerList: Store[];
+  followerList: string[];
 }
 
+function getObjectId(this: Customer): ObjectId { return new ObjectId(this.id); }
 export default Customer;

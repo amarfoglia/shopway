@@ -1,16 +1,15 @@
 import { ObjectId } from 'mongodb';
-import mongoose from 'mongoose';
-import UserModel from './userModel';
+import mongoose, { PopulatedDoc } from 'mongoose';
+import UserModel, { options } from './userModel';
 import Customer from './customer';
 
 interface CustomerDoc extends Document, Customer {}
 
-const options = { discriminatorKey: 'role' };
-
 const customerSchema = new mongoose.Schema({
   followerList: {
     type: [ObjectId],
-    ref: 'Store'
+    ref: 'Store',
+    default: []
   },
   photo: {
     type: String,

@@ -1,6 +1,6 @@
 interface Category {
-  categoryArticle: String;
-  categoryType: String;
+  categoryArticle: string;
+  categoryType: string;
 }
 
 const categoryArticle = {
@@ -21,12 +21,19 @@ const categoryArticle = {
 };
 
 const categoryType = {
-  TYPE: {
-    MAN: 'Uomo',
-    WOMAN: 'Donna',
-    CHILD: 'Bambino'
-  }
+  MAN: 'Uomo',
+  WOMAN: 'Donna',
+  CHILD: 'Bambino'
 };
 
-export { categoryArticle, categoryType };
+function isCategoryArticle(elem: string): boolean {
+  return Object.values(categoryArticle).includes(elem);
+}
+function isCategoryType(elem: string): boolean {
+  return Object.values(categoryType).includes(elem);
+}
+
+export {
+  categoryArticle, categoryType, isCategoryArticle, isCategoryType
+};
 export default Category;

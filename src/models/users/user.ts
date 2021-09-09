@@ -1,3 +1,5 @@
+import { ObjectId } from 'mongodb';
+
 /* eslint-disable no-unused-vars */
 interface User {
   id?: any;

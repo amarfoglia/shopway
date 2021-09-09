@@ -1,9 +1,11 @@
-import Store from '../store';
+import { ObjectId } from 'mongodb';
 import User from './user';
 
 interface Seller extends User {
-  id?: any;
-  stores: Store[];
+  id?: string;
+  stores: string[];
 }
+
+function getObjectId(this: Seller): ObjectId { return new ObjectId(this.id); }
 
 export default Seller;

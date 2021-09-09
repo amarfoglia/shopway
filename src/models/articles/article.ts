@@ -1,3 +1,4 @@
+import { ObjectId } from 'mongodb';
 import Category from '../category';
 
 interface ArticleStock {
@@ -7,7 +8,7 @@ interface ArticleStock {
 
 interface ArticleDetails{
   id?: any;
-  articleId: any;
+  articleId: string;
   color: string;
   price: string;
   image: string;
@@ -17,8 +18,8 @@ interface ArticleDetails{
 }
 
 interface Article {
-  id?: any;
-  storeId: any;
+  id?: string;
+  storeId: string;
   name: string;
   brand: string;
   description: string;

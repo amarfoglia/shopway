@@ -1,13 +1,12 @@
-import { ArticleDetails } from './articles/article';
-import Customer from './users/customer';
+import { ObjectId } from 'mongodb';
 
 interface Order {
   id?: string;
   customerId: string;
   articleDetailsId: string;
-  sellerId: string;
+  storeId: string;
+  size: string;
   bookDate: Date;
   orderExpireAt: Date;
 }
-
 export default Order;
