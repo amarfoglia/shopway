@@ -19,5 +19,6 @@ router.get('/', orderController.getAllOrders);
 router.get('/:id', orderController.getOrder);
 // add order to customer
 router.post('/', orderController.addOrder);
+router.delete('/:id', orderController.deleteOrder);
 
 export default router;

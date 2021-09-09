@@ -13,10 +13,13 @@ import dotenv from 'dotenv';
 
 import AppError from './utils/appError';
 import userRouter from './routes/userRoutes';
-import storeRouter from './routes/storeRoutes';
+import sellerRouter from './routes/sellerRoutes';
 import articleRouter from './routes/articleRoutes';
+import customerRouter from './routes/customerRoutes';
 import articleDetailsRouter from './routes/articleDetailsRoutes';
+import categoryRouter from './routes/categoriesRoutes';
 import orderRouter from './routes/orderRoutes';
+import storeRouter from './routes/storeRoutes';
 import globalErrorHandler from './controllers/helpers/errorController';
 import { ONE_HOUR_IN_MS } from './utils/time';
 
@@ -67,6 +70,9 @@ app.use('/api/v1/stores', storeRouter);
 app.use('/api/v1/articles', articleRouter);
 app.use('/api/v1/details', articleDetailsRouter);
 app.use('/api/v1/orders', orderRouter);
+app.use('/api/v1/customers', customerRouter);
+app.use('/api/v1/sellers', sellerRouter);
+app.use('/api/v1/categories', categoryRouter);
 app.all('*', (req, _res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 });
