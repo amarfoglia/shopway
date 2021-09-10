@@ -7,7 +7,7 @@ interface ArticleDetailsDoc extends Document, ArticleDetails {}
 
 const articleDetailsSchema = new mongoose.Schema({
   articleId: {
-    type: ObjectId,
+    type: mongoose.Types.ObjectId,
     ref: 'Article',
     required: [true, 'Please, provide the article\'s id of the reatil article']
   },
@@ -20,7 +20,7 @@ const articleDetailsSchema = new mongoose.Schema({
     default: './public/images/' // DEFAULT PATH FOR IMAGE IF MISSING
   },
   price: {
-    type: String,
+    type: Number,
     required: [true, 'Please, provide the price of the retail article']
   },
   discount: {
@@ -33,8 +33,7 @@ const articleDetailsSchema = new mongoose.Schema({
     },
     size: {
       type: String,
-      required: [true, 'Please, provide the size of the stock article'],
-      unique: true
+      required: [true, 'Please, provide the size of the stock article']
     }
   }],
   dateArticleAdded: {

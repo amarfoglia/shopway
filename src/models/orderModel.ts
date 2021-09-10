@@ -1,5 +1,4 @@
 import mongoose, { PopulatedDoc, UpdateWriteOpResult } from 'mongoose';
-import { ObjectId } from 'mongodb';
 import AppError from '../utils/appError';
 import Order from './order';
 import { ONE_SEC_IN_MS } from '../utils/time';
@@ -16,17 +15,17 @@ interface OrderDoc extends Document, Order {
 interface IOrderModel extends mongoose.Model<OrderDoc> {}
 const orderSchema = new mongoose.Schema({
   customer: {
-    type: ObjectId,
+    type: mongoose.Types.ObjectId,
     required: [true, 'A customer must belong to an Order'],
     ref: 'Customer'
   },
   store: {
-    type: ObjectId,
+    type: mongoose.Types.ObjectId,
     required: [true, 'A store must belong to an Order'],
     ref: 'Store'
   },
   articleDetails: {
-    type: ObjectId,
+    type: mongoose.Types.ObjectId,
     required: [true, 'An Article Details must belong to an Order'],
     ref: 'ArticleDetails'
   },
@@ -78,6 +77,7 @@ orderSchema.pre<OrderDoc>('save', async function _(next) {
       next(new AppError('Product not avaiable', 400));
       return;
     }
+    console.log(result);
   }
   next();
 });

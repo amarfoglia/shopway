@@ -17,7 +17,8 @@ router.use('/:id/articles', articleRouter);
 router.use(authController.checkUserToken);
 router.get('/', storeController.getAllStores);
 router.get('/:id', storeController.getStore);
-router.get('/:id/stats', orderController.getStoreStats);
+router.get('/:id/stats', orderController.getStoreSalesPerDay);
+router.get('/:id/stats/mostpopular', orderController.getStorePopularProducts);
 // restrict to Seller
 router.use(authController.restrictTo(Role.SELLER), userController.getMe);
 router.patch('/:id', storeController.updateStore);
