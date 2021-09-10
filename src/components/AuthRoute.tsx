@@ -8,15 +8,18 @@ import PATHS from '../utils/routes';
 const NotAuthorized = () => <Redirect to={{ pathname: PATHS.NOT_AUTHORIZED }} />;
 const Home = () => <Redirect to={{ pathname: PATHS.HOME }} />;
 
+type role = 'Customer' | 'Seller';
+
 interface Props {
   mustBeLoggedIn?: boolean;
   mustBeNotLoggedIn?: boolean;
-  mustBe?: string;
+  mustBe?: role;
 }
 
 type AuthRouteProps = RouteProps & Props;
 
-const _isRoleNotValid = (user?: User, role?: string) => role && user?.role !== role;
+const _isRoleNotValid = (user?: User, role?: string) => role && (!user || user.role !== role);
+
 const _isNotLoggedIn = (user?: User, mustBeLoggedIn?: boolean) => mustBeLoggedIn && !user;
 
 export const AuthRoute: React.FC<AuthRouteProps> = ({
@@ -27,7 +30,7 @@ export const AuthRoute: React.FC<AuthRouteProps> = ({
 }) => {
   const user = useContext(AuthContext)?.user;
   const component =
-    _isRoleNotValid(user, mustBe) || _isNotLoggedIn(user, mustBeLoggedIn)
+    _isNotLoggedIn(user, mustBeLoggedIn) || _isRoleNotValid(user, mustBe)
       ? NotAuthorized
       : mustBeNotLoggedIn && user
       ? Home

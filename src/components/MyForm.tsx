@@ -10,12 +10,14 @@ type ChangeHandler = (e: React.ChangeEvent<string>) => void;
 interface Props {
   errors?: string;
   handleSubmit: (values: FormikValues, helpers: FormikHelpers<FormikValues>) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   validationSchema: any;
   initialValues: FormikValues;
   submitText?: string;
   isSubmitting: boolean;
   formId: string;
   footer?: ReactNode;
+  validateOnBlur?: boolean;
   form: (handleChange: ChangeHandler) => ReactNode;
 }
 
@@ -62,19 +64,27 @@ const renderForm = (
   </Form>
 );
 
-const MyForm: React.FC<Props & ReactNode> = (props) => {
-  const { errors, footer, submitText = 'Confirm', formId, isSubmitting, form } = props;
-
+const MyForm: React.FC<Props & ReactNode> = ({
+  errors,
+  footer,
+  submitText = 'Confirm',
+  formId,
+  isSubmitting,
+  form,
+  initialValues,
+  validationSchema,
+  validateOnBlur = true,
+  handleSubmit,
+}) => {
   return (
     <Formik
-      initialValues={props.initialValues}
-      validationSchema={props.validationSchema}
+      initialValues={initialValues}
+      validationSchema={validationSchema}
       validateOnChange={false}
-      validateOnBlur={false}
-      onSubmit={props.handleSubmit}
+      validateOnBlur={validateOnBlur}
+      onSubmit={handleSubmit}
     >
-      {({ handleChange, values }) => {
-        console.log(values);
+      {({ handleChange }) => {
         return renderForm(formId, form(handleChange), submitText, isSubmitting, footer, errors);
       }}
     </Formik>

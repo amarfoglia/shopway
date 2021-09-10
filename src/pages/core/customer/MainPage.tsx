@@ -40,6 +40,21 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const articleDetails = {
+  article: {
+    name: 'Air 50',
+    brand: 'NIKE',
+    description:
+      "Nike's athletic footwear products are designed primarily for specific athletic use, although a large percentage of the products are worn for casual or leisure",
+    sizes: ['38', '40', '41', '42', '43'],
+    colors: ['red', 'white', 'black', 'green'],
+    price: 79,
+  },
+  store: {
+    name: 'Nike Store',
+  },
+};
+
 const validPaths = [
   PATHS.CUSTOMER_HOME.toString(),
   PATHS.CUSTOMER_FOLLOWING.toString(),
@@ -56,7 +71,6 @@ const MainPage = (): React.ReactElement => {
   const [currentTab, setCurrentTab] = useState(
     checkPath(location.pathname) ? location.pathname : PATHS.CUSTOMER_HOME,
   );
-  console.log(currentTab);
   const { user } = useContext(AuthContext);
 
   // eslint-disable-next-line @typescript-eslint/ban-types
@@ -87,21 +101,6 @@ const MainPage = (): React.ReactElement => {
       </Tabs>
     </Paper>
   );
-
-  const articleDetails = {
-    article: {
-      name: 'Air 50',
-      brand: 'Nike',
-      description:
-        "Nike's athletic footwear products are designed primarily for specific athletic use, although a large percentage of the products are worn for casual or leisure",
-      sizes: ['38', '40', '41', '42', '43'],
-      colors: ['red', 'white', 'black', 'green'],
-      price: 79,
-    },
-    store: {
-      name: 'Nike Store',
-    },
-  };
 
   return (
     <React.Fragment>

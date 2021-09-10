@@ -32,7 +32,10 @@ const LoginPage: React.FC = () => {
     const { email, password } = values;
     login(
       { email, password },
-      (_) => setError(undefined),
+      (d) => {
+        setError(undefined);
+        console.log(d);
+      },
       (e) => setError(e),
     );
     helpers.setSubmitting(isLoading);

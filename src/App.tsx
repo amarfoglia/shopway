@@ -32,7 +32,7 @@ const renderContent = () => {
               render={() => <ForgotPasswordPage />}
             />
             <AuthRoute path={PATHS.CUSTOMER_MAIN} render={() => <CustomerPage />} />
-            <Route path={PATHS.CUSTOMER_PROFILE} render={() => <CustomerProfile />} />;
+            <AuthRoute path={PATHS.CUSTOMER_PROFILE} render={() => <CustomerProfile />} />
             <AuthRoute path={PATHS.STORE_PAGE} render={() => <StorePage />} />
             <Route path={PATHS.NOT_AUTHORIZED} render={() => <NotAuthorized />} />
             <Route path={PATHS.NOT_FOUND} render={() => <NotFoundPage />} />

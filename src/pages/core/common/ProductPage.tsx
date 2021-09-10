@@ -31,6 +31,9 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: '#f9f9f9',
     height: '100%',
   },
+  corePage: {
+    marginTop: '35vh',
+  },
   imageCover: {
     position: 'absolute',
     top: 0,
@@ -43,7 +46,6 @@ const ProductPage: React.FC<Props> = ({ article, store }): React.ReactElement =>
   const history = useHistory();
   const classes = useStyles();
   const { id } = useParams<{ id: string }>();
-  const imageHeight = '35vh';
   const [color, setColor] = useState('');
   const [size, setSize] = useState('');
   const [quantity, setQuantity] = useState(1);
@@ -58,7 +60,7 @@ const ProductPage: React.FC<Props> = ({ article, store }): React.ReactElement =>
           src={article.image ?? 'not found'}
           alt={`product image of ${article.name}`}
           cover
-          style={{ paddingTop: imageHeight }}
+          style={{ paddingTop: '34vh' }}
         />
       </div>
       <Grid container direction="column">
@@ -73,7 +75,7 @@ const ProductPage: React.FC<Props> = ({ article, store }): React.ReactElement =>
             }
           />
         </Grid>
-        <Grid item xs={12} style={{ marginTop: imageHeight }}>
+        <Grid item xs={12} className={classes.corePage}>
           <CorePage
             sections={[
               {

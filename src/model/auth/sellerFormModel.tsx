@@ -2,7 +2,7 @@ export default {
   formId: 'signupForm',
   formField: {
     storeName: {
-      name: 'name',
+      name: 'storeName',
       label: 'Store name',
       requiredErrorMsg: 'Store name is required',
     },

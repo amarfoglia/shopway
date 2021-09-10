@@ -9,7 +9,7 @@ import {
   RadioGroup,
   Typography,
 } from '@material-ui/core';
-import { FastField, FieldProps, getIn } from 'formik';
+import { Field, FieldProps, getIn, useFormikContext } from 'formik';
 import { useState } from 'react';
 import { SignupFormModel } from '../../../model/auth';
 import { Roles } from '../../../model/User';
@@ -17,8 +17,10 @@ import { roleStyles } from '../../../style/styles';
 import Image from 'material-ui-image';
 import clsx from 'clsx';
 
+type SignupFields = typeof SignupFormModel.formField;
+
 interface Props {
-  formField: typeof SignupFormModel.formField;
+  formField: SignupFields;
   onChange: (e: React.ChangeEvent<string>) => void;
 }
 
@@ -74,13 +76,15 @@ const RoleGroup: React.FC<FieldProps & RadioProps> = ({ form, field, options, ..
 };
 
 const RoleFields: React.FC<Props> = ({ formField: { role } }) => {
+  const { values } = useFormikContext<SignupFields>();
   return (
-    <FastField
+    <Field
       key={role.name}
       name={role.name}
       aria-label={role.label}
       options={[CUSTOMER, SELLER]}
       component={RoleGroup}
+      value={values.role}
     />
   );
 };

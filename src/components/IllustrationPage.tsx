@@ -32,7 +32,7 @@ const IllustrationPage: React.FC<Props & React.ReactNode> = ({
   const homeClasses = illustrationStyle();
   const ImageItem = (
     <Grid item xs={12}>
-      <Box width="80vw">
+      <Box width="80vw" maxWidth="400px">
         <Image src={process.env.PUBLIC_URL + imagePath} alt={imageAlt} cover={true} />
       </Box>
     </Grid>

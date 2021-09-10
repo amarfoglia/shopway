@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { FormControl, Grid, IconButton, Box } from '@material-ui/core';
 import AddAPhotoOutlined from '@material-ui/icons/AddAPhotoOutlined';
 import baseStyles from '../style/styles';
-import { FastField } from 'formik';
 
 interface Props {
+  image?: File;
   inputName: string;
   onImageUpload?: (image: File) => void;
   id: string;
@@ -12,12 +12,12 @@ interface Props {
 
 const getImageURL = (file?: File) => file && URL.createObjectURL(file);
 
-const ImageUploader: React.FC<Props> = ({ inputName, onImageUpload, id }) => {
+const ImageUploader: React.FC<Props> = ({ inputName, onImageUpload, id, image }) => {
   const [file, setFile] = useState<File>();
   const classes = baseStyles();
 
   const ImageButton = () => (
-    <label htmlFor="button-file">
+    <label htmlFor={id}>
       <IconButton color="primary" component="span">
         <AddAPhotoOutlined />
       </IconButton>
@@ -30,9 +30,9 @@ const ImageUploader: React.FC<Props> = ({ inputName, onImageUpload, id }) => {
       justifyContent="center"
       alignItems="center"
       className={classes.photoPreview}
-      style={{ backgroundImage: `url(${getImageURL(file)})` }}
+      style={{ backgroundImage: `url(${file ? getImageURL(file) : getImageURL(image)})` }}
     >
-      {!file && <ImageButton />}
+      {!file && !image && <ImageButton />}
     </Box>
   );
 
@@ -45,13 +45,12 @@ const ImageUploader: React.FC<Props> = ({ inputName, onImageUpload, id }) => {
 
   return (
     <FormControl>
-      <FastField
+      <input
         name={inputName}
         accept="image/*"
         style={{ display: 'none' }}
         id={id}
         type="file"
-        multiple
         onChange={handleChange}
       />
       <Grid container spacing={2} className={classes.container}>

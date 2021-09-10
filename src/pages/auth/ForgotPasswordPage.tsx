@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { Typography } from '@material-ui/core';
-import { FastField, FormikHelpers } from 'formik';
+import { Field, FormikHelpers } from 'formik';
 import { Link, useHistory } from 'react-router-dom';
 import MailOutlineOutlined from '@material-ui/icons/MailOutlineOutlined';
 
@@ -32,7 +32,7 @@ interface Props {
 }
 
 const EmailField: React.FC<Props> = ({ email, onChange }) => (
-  <FastField
+  <Field
     name={email.name}
     placeholder={email.label}
     aria-label={email.label}

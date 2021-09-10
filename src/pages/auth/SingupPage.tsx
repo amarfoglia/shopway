@@ -75,7 +75,6 @@ const SignupPage: React.FC = () => {
   const baseClasses = baseStyles();
 
   const submitForm = (values: Values) => {
-    console.log(values);
     const { fullName, password, passwordConfirm, email, role, ...store } = values;
     const user = {
       fullName,
@@ -87,7 +86,10 @@ const SignupPage: React.FC = () => {
     };
     register(
       user,
-      (_) => setError(undefined),
+      (d) => {
+        setError(undefined);
+        console.log(d);
+      },
       (e) => setError(e),
     );
   };
@@ -101,12 +103,15 @@ const SignupPage: React.FC = () => {
     </Typography>
   );
 
-  const handleBack = () => setActiveStep(activeStep - getStepOffset(activeStep));
+  const handleBack = () => {
+    setActiveStep(activeStep - getStepOffset(activeStep));
+    console.log('active step: ' + activeStep);
+  };
 
   const BackButton = (
     <Grid item className={baseClasses.backFabGrid}>
-      <Fab color="primary" aria-label="back">
-        <ArrowBackIosOutlined onClick={handleBack} />
+      <Fab color="primary" aria-label="back" onClick={handleBack}>
+        <ArrowBackIosOutlined />
       </Fab>
     </Grid>
   );
@@ -147,6 +152,7 @@ const SignupPage: React.FC = () => {
         formId={formId}
         submitText={isLastStep ? 'Confirm' : 'Next'}
         isSubmitting={isLoading}
+        validateOnBlur={false}
         form={(h) => (
           <React.Suspense fallback={<LinearProgress />}>
             {formComponents.get(activeStep)?.(h)}

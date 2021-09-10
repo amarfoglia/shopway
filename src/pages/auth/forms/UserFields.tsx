@@ -5,23 +5,26 @@ import LockOutlined from '@material-ui/icons/LockOutlined';
 import MailOutlineOutlined from '@material-ui/icons/MailOutlineOutlined';
 import PermIdentityOutlined from '@material-ui/icons/PermIdentityOutlined';
 
-import { FastField } from 'formik';
+import { Field, useFormikContext } from 'formik';
 import { SignupFormModel } from '../../../model/auth';
 import { TextFieldProps } from 'material-ui';
 import DebouncedInput from '../../../components/formFields/DebouncedInput';
 
+type SignupFields = typeof SignupFormModel.formField;
+
 interface Props {
-  formField: typeof SignupFormModel.formField;
+  formField: SignupFields;
 }
 
 const UserFields: React.FC<Props & TextFieldProps> = ({
   formField: { email, fullName, password, passwordConfirm },
   onChange,
 }) => {
+  const { values } = useFormikContext<SignupFields>();
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
-        <FastField
+        <Field
           key={email.name}
           name={email.name}
           placeholder={email.label}
@@ -31,11 +34,12 @@ const UserFields: React.FC<Props & TextFieldProps> = ({
           variant="outlined"
           onChange={onChange}
           component={DebouncedInput}
+          value={values.email}
           fullWidth
         />
       </Grid>
       <Grid item xs={12}>
-        <FastField
+        <Field
           key={fullName.name}
           name={fullName.name}
           placeholder={fullName.label}
@@ -45,11 +49,12 @@ const UserFields: React.FC<Props & TextFieldProps> = ({
           variant="outlined"
           onChange={onChange}
           component={DebouncedInput}
+          value={values.fullName}
           fullWidth
         />
       </Grid>
       <Grid item xs={12}>
-        <FastField
+        <Field
           key={password.name}
           name={password.name}
           placeholder={password.label}
@@ -60,11 +65,12 @@ const UserFields: React.FC<Props & TextFieldProps> = ({
           type="password"
           onChange={onChange}
           component={DebouncedInput}
+          value={values.password}
           fullWidth
         />
       </Grid>
       <Grid item xs={12}>
-        <FastField
+        <Field
           key={passwordConfirm.name}
           name={passwordConfirm.name}
           placeholder={passwordConfirm.label}
@@ -75,6 +81,7 @@ const UserFields: React.FC<Props & TextFieldProps> = ({
           type="password"
           onChange={onChange}
           component={DebouncedInput}
+          value={values.passwordConfirm}
           fullWidth
         />
       </Grid>

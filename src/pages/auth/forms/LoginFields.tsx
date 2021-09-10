@@ -2,7 +2,7 @@ import React from 'react';
 import { Grid, Typography } from '@material-ui/core';
 import MailOutlineOutlined from '@material-ui/icons/MailOutlineOutlined';
 import LockOutlined from '@material-ui/icons/LockOutlined';
-import { FastField } from 'formik';
+import { Field } from 'formik';
 import { Link } from 'react-router-dom';
 import { LoginFormModel } from '../../../model/auth';
 import PATHS from '../../../utils/routes';
@@ -19,7 +19,7 @@ const LoginFields: React.FC<Props> = ({ formField: { email, password }, onChange
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
-        <FastField
+        <Field
           key={email.name}
           name={email.name}
           placeholder={email.label}
@@ -33,7 +33,7 @@ const LoginFields: React.FC<Props> = ({ formField: { email, password }, onChange
         />
       </Grid>
       <Grid item xs={12}>
-        <FastField
+        <Field
           key={password.name}
           name={password.name}
           placeholder={password.label}
