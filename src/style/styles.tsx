@@ -37,7 +37,6 @@ const baseStyles = makeStyles((theme) => ({
     borderTopLeftRadius: borderRadius,
     borderTopRightRadius: borderRadius,
     padding: `${theme.spacing(5)}px ${theme.spacing(4)}px`,
-    minHeight: 150,
   },
   backFabGrid: {
     textAlign: 'left',

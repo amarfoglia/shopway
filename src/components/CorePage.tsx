@@ -13,7 +13,7 @@ interface Props {
 }
 
 interface TitleSectionProps {
-  title?: string;
+  title: string;
   seeAllPath?: string;
 }
 
@@ -30,20 +30,18 @@ const CorePage: React.FC<Props & React.ReactNode> = ({ title, subtitle, sections
 
   const TitleSection: React.FC<TitleSectionProps> = ({ title, seeAllPath }) => (
     <Grid container className={classes.sectionTitle}>
-      {title && (
-        <Grid item>
-          <Typography variant="h6" component="h3" gutterBottom>
-            {title}
-          </Typography>
-        </Grid>
-      )}
       <Grid item>
-        {seeAllPath && (
+        <Typography variant="h6" component="h3" gutterBottom>
+          {title}
+        </Typography>
+      </Grid>
+      {seeAllPath && (
+        <Grid item>
           <Link to={seeAllPath} className={baseClasses.link}>
             See all
           </Link>
-        )}
-      </Grid>
+        </Grid>
+      )}
     </Grid>
   );
 
@@ -64,9 +62,11 @@ const CorePage: React.FC<Props & React.ReactNode> = ({ title, subtitle, sections
       {sections.map((s, i) => (
         <Grid item key={`${s.title}-${i}`} xs={12}>
           <Grid container spacing={1}>
-            <Grid item xs={12}>
-              {s.title && <TitleSection title={s.title} />}
-            </Grid>
+            {s.title && (
+              <Grid item xs={12}>
+                <TitleSection title={s.title} />
+              </Grid>
+            )}
             <Grid item xs={12}>
               {s.node}
             </Grid>

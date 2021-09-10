@@ -1,6 +1,6 @@
 import React, { lazy, useContext, useState } from 'react';
 import { Container, makeStyles, Paper, Tabs, Tab, AppBar, Grid } from '@material-ui/core';
-import { Switch, Route, useHistory } from 'react-router-dom';
+import { Switch, Route, useHistory, useLocation } from 'react-router-dom';
 import PATHS from '../../../utils/routes';
 import Loader from '../../../components/Loader';
 import SettingsOutlined from '@material-ui/icons/SettingsOutlined';
@@ -13,7 +13,7 @@ import AuthContext from '../../../hooks/useAuth';
 const Home = lazy(() => import('./Home'));
 const Orders = lazy(() => import('./Orders'));
 const Following = lazy(() => import('./Follow'));
-const Settings = lazy(() => import('./Settings'));
+const Settings = lazy(() => import('../common/ProductPage'));
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -40,23 +40,35 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const validPaths = [
+  PATHS.CUSTOMER_HOME.toString(),
+  PATHS.CUSTOMER_FOLLOWING.toString(),
+  PATHS.CUSTOMER_SETTINGS.toString(),
+  PATHS.CUSTOMER_ORDERS.toString(),
+];
+
+const checkPath = (url: string) => validPaths.includes(url);
+
 const MainPage = (): React.ReactElement => {
   const classes = useStyles();
   const history = useHistory();
-  const [value, setValue] = useState<string>(PATHS.CUSTOMER_HOME);
+  const location = useLocation();
+  const [currentTab, setCurrentTab] = useState(
+    checkPath(location.pathname) ? location.pathname : PATHS.CUSTOMER_HOME,
+  );
+  console.log(currentTab);
   const { user } = useContext(AuthContext);
-  const [topSection, setTopSection] = useState(true);
 
   // eslint-disable-next-line @typescript-eslint/ban-types
   const handleChange = async (event: React.ChangeEvent<{}>, newValue: string) => {
-    setValue(newValue);
+    setCurrentTab(newValue);
     history.push(newValue);
   };
 
   const BottomTabs = () => (
     <Paper square>
       <Tabs
-        value={value}
+        value={currentTab}
         onChange={handleChange}
         variant="fullWidth"
         TabIndicatorProps={{
@@ -76,21 +88,26 @@ const MainPage = (): React.ReactElement => {
     </Paper>
   );
 
-  const noTopSection = (child: React.ReactNode) => {
-    setTopSection(false);
-    return child;
-  };
-
-  const withTopSection = (child: React.ReactNode) => {
-    setTopSection(true);
-    return child;
+  const articleDetails = {
+    article: {
+      name: 'Air 50',
+      brand: 'Nike',
+      description:
+        "Nike's athletic footwear products are designed primarily for specific athletic use, although a large percentage of the products are worn for casual or leisure",
+      sizes: ['38', '40', '41', '42', '43'],
+      colors: ['red', 'white', 'black', 'green'],
+      price: 79,
+    },
+    store: {
+      name: 'Nike Store',
+    },
   };
 
   return (
     <React.Fragment>
       <Container maxWidth="md" className={classes.container}>
         <Grid container direction="column" spacing={2}>
-          {topSection && (
+          {currentTab !== PATHS.CUSTOMER_SETTINGS && (
             <Grid item xs={12}>
               <TopSection variant="user" userName={user?.fullName} />
             </Grid>
@@ -98,13 +115,13 @@ const MainPage = (): React.ReactElement => {
           <Grid item xs={12}>
             <React.Suspense fallback={<Loader />}>
               <Switch>
-                <Route exact path={PATHS.CUSTOMER_HOME} render={() => withTopSection(<Home />)} />
+                <Route path={PATHS.CUSTOMER_FOLLOWING} render={() => <Following />} />
+                <Route path={PATHS.CUSTOMER_ORDERS} render={() => <Orders />} />
                 <Route
-                  path={PATHS.CUSTOMER_FOLLOWING}
-                  render={() => withTopSection(<Following />)}
+                  path={PATHS.CUSTOMER_SETTINGS}
+                  render={() => <Settings {...articleDetails} />}
                 />
-                <Route path={PATHS.CUSTOMER_ORDERS} render={() => withTopSection(<Orders />)} />
-                <Route path={PATHS.CUSTOMER_SETTINGS} render={() => noTopSection(<Settings />)} />
+                <Route path={PATHS.CUSTOMER_HOME} render={() => <Home />} />
               </Switch>
             </React.Suspense>
           </Grid>

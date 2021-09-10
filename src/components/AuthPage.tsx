@@ -27,7 +27,7 @@ const AuthPage: React.FC<Props & ReactNode> = (props) => {
           </Typography>
         </Grid>
       </Grid>
-      <Grid item container xs={12} className={clsx(classes.container)}>
+      <Grid item container xs={12} className={classes.container}>
         {header && header}
         <Grid item>
           <Paper elevation={3} className={classes.paperPopup}>

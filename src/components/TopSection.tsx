@@ -4,6 +4,7 @@ import Notifications from '@material-ui/icons/Notifications';
 import UserAvatar from './MyAvatar';
 
 type Variants = 'simple' | 'user';
+type Position = 'fixed' | 'sticky' | 'absolute' | 'inherit';
 
 interface Props {
   leftChild?: React.ReactNode;
@@ -11,6 +12,7 @@ interface Props {
   variant: Variants;
   userName?: string;
   userImagePath?: string;
+  position?: Position;
 }
 
 const TopSection: React.FC<Props> = ({
@@ -19,6 +21,7 @@ const TopSection: React.FC<Props> = ({
   variant = 'simple',
   userName,
   userImagePath,
+  position = 'inherit',
 }) => {
   const LeftNode =
     variant === 'user' ? (
@@ -34,7 +37,14 @@ const TopSection: React.FC<Props> = ({
   const RightNode = variant === 'user' ? <Notifications style={{ fontSize: 30 }} /> : rightChild;
 
   return (
-    <Grid container spacing={2} justifyContent="space-between" direction="row" alignItems="center">
+    <Grid
+      container
+      spacing={2}
+      justifyContent="space-between"
+      direction="row"
+      alignItems="center"
+      style={{ position: position }}
+    >
       <Grid item>{LeftNode}</Grid>
       <Grid item>{RightNode}</Grid>
     </Grid>
