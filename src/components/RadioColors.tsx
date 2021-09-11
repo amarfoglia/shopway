@@ -26,16 +26,15 @@ const useStyles = makeStyles<Theme>((theme) => ({
 const spanStyles = makeStyles<Theme, ItemProps>((theme) => ({
   icon: {
     fontSize: theme.spacing(2),
-    height: theme.spacing(4),
-    width: theme.spacing(4),
+    height: (props) => `calc(${theme.spacing(4)}px - ${props.checked ? 2 : 0}px)`,
+    width: (props) => `calc(${theme.spacing(4)}px - ${props.checked ? 2 : 0}px)`,
     borderRadius: 30,
     backgroundColor: (props) => props.color,
     border: (props) => (props.checked ? `2px solid ${theme.palette.primary.main}` : ''),
   },
   span: {
-    '& > svg': {
-      verticalAlign: '-moz-middle-with-baseline',
-    },
+    display: 'inline-grid',
+    verticalAlign: '-webkit-baseline-middle',
     color: (props) => (props.checked ? theme.palette.primary.main : 'black'),
   },
 }));

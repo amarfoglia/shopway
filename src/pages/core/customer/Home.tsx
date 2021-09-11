@@ -4,8 +4,8 @@ import baseStyles from '../../../style/styles';
 import CorePage from '../../../components/CorePage';
 import CategoryPaper from '../../../components/CategoryPaper';
 import ProductPaper from '../../../components/ProductPaper';
+import { Categories } from '../../../model/Categories';
 
-const Categories = ['tshirt', 'jacket', 'jeans', 'shoe', 'shorts', 'swimsuit', 'clothes'];
 const clothes = ['jacket', 'tshirt2', 'sweatshirt2', 'tshirt2'];
 
 const categoriesPath = process.env.PUBLIC_URL + '/categories';
@@ -17,7 +17,13 @@ const CustomerHome = (): React.ReactElement => {
   const CategoriesSection = () => (
     <Box className={baseClasses.horizontalScroll}>
       {Categories.map((c) => (
-        <CategoryPaper key={c} name={c} iconPath={`${categoriesPath}/${c}.png`} />
+        <CategoryPaper
+          key={c}
+          name={c}
+          iconPath={`${categoriesPath}/${c}.png`}
+          variant="fixed"
+          width="75px"
+        />
       ))}
     </Box>
   );

@@ -25,7 +25,8 @@ const spanStyles = makeStyles<Theme, StyleProps>((theme) => ({
     border: (props) => (props.checked ? `2px solid ${theme.palette.primary.main}` : ''),
   },
   span: {
-    verticalAlign: '-moz-middle-with-baseline',
+    display: 'inline-block',
+    verticalAlign: 'sub',
     color: (props) => (props.checked ? theme.palette.primary.main : 'black'),
   },
 }));

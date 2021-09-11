@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid } from '@material-ui/core';
+import { Grid, Typography } from '@material-ui/core';
 import Notifications from '@material-ui/icons/Notifications';
 import UserAvatar from './MyAvatar';
 
@@ -10,6 +10,7 @@ interface Props {
   leftChild?: React.ReactNode;
   rightChild?: React.ReactNode;
   variant: Variants;
+  centerTitle?: string;
   userName?: string;
   userImagePath?: string;
   position?: Position;
@@ -18,6 +19,7 @@ interface Props {
 const TopSection: React.FC<Props> = ({
   leftChild,
   rightChild,
+  centerTitle,
   variant = 'simple',
   userName,
   userImagePath,
@@ -45,8 +47,19 @@ const TopSection: React.FC<Props> = ({
       alignItems="center"
       style={{ position: position }}
     >
-      <Grid item>{LeftNode}</Grid>
-      <Grid item>{RightNode}</Grid>
+      <Grid item xs={4}>
+        {LeftNode}
+      </Grid>
+      {centerTitle && (
+        <Grid item xs={4}>
+          <Typography variant="h6" align="center">
+            {centerTitle}
+          </Typography>
+        </Grid>
+      )}
+      <Grid item xs={4} style={{ textAlign: 'right' }}>
+        {RightNode}
+      </Grid>
     </Grid>
   );
 };

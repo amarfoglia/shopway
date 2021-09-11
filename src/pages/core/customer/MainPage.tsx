@@ -1,6 +1,6 @@
 import React, { lazy, useContext, useState } from 'react';
 import { Container, makeStyles, Paper, Tabs, Tab, AppBar, Grid } from '@material-ui/core';
-import { Switch, Route, useHistory, useLocation } from 'react-router-dom';
+// import { Switch, Route, useHistory, useLocation } from 'react-router-dom';
 import PATHS from '../../../utils/routes';
 import Loader from '../../../components/Loader';
 import SettingsOutlined from '@material-ui/icons/SettingsOutlined';
@@ -9,6 +9,7 @@ import FavoriteBorderOutlined from '@material-ui/icons/FavoriteBorderOutlined';
 import ConfirmationNumberOutlined from '@material-ui/icons/ConfirmationNumberOutlined';
 import TopSection from '../../../components/TopSection';
 import AuthContext from '../../../hooks/useAuth';
+import TabPanel from '../../../components/TabPanel';
 
 const Home = lazy(() => import('./Home'));
 const Orders = lazy(() => import('./Orders'));
@@ -20,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
   },
   container: {
-    padding: `${theme.spacing(4)}px ${theme.spacing(3)}px`,
+    padding: `${theme.spacing(3)}px ${theme.spacing(3)}px`,
     backgroundColor: '#f9f9f9',
     height: `calc(100vh - 72px)`,
     overflowY: 'auto',
@@ -55,28 +56,28 @@ const articleDetails = {
   },
 };
 
-const validPaths = [
-  PATHS.CUSTOMER_HOME.toString(),
-  PATHS.CUSTOMER_FOLLOWING.toString(),
-  PATHS.CUSTOMER_SETTINGS.toString(),
-  PATHS.CUSTOMER_ORDERS.toString(),
-];
+// const validPaths = [
+//   PATHS.CUSTOMER_HOME.toString(),
+//   PATHS.CUSTOMER_FOLLOWING.toString(),
+//   PATHS.CUSTOMER_SETTINGS.toString(),
+//   PATHS.CUSTOMER_ORDERS.toString(),
+// ];
 
-const checkPath = (url: string) => validPaths.includes(url);
+// const checkPath = (url: string) => validPaths.includes(url);
 
 const MainPage = (): React.ReactElement => {
   const classes = useStyles();
-  const history = useHistory();
-  const location = useLocation();
-  const [currentTab, setCurrentTab] = useState(
-    checkPath(location.pathname) ? location.pathname : PATHS.CUSTOMER_HOME,
-  );
+  // const history = useHistory();
+  // const location = useLocation();
+  const [currentTab, setCurrentTab] = useState(PATHS.CUSTOMER_HOME.toString());
+  //   checkPath(location.pathname) ? location.pathname : PATHS.CUSTOMER_HOME,
+  // );
   const { user } = useContext(AuthContext);
 
   // eslint-disable-next-line @typescript-eslint/ban-types
   const handleChange = async (event: React.ChangeEvent<{}>, newValue: string) => {
     setCurrentTab(newValue);
-    history.push(newValue);
+    //history.push(newValue);
   };
 
   const BottomTabs = () => (
@@ -85,11 +86,7 @@ const MainPage = (): React.ReactElement => {
         value={currentTab}
         onChange={handleChange}
         variant="fullWidth"
-        TabIndicatorProps={{
-          style: {
-            display: 'none',
-          },
-        }}
+        TabIndicatorProps={{ style: { display: 'none' } }}
         textColor="primary"
         aria-label="customer tabs"
         className={classes.tabs}
@@ -102,9 +99,26 @@ const MainPage = (): React.ReactElement => {
     </Paper>
   );
 
+  const TabsPanel = () => (
+    <React.Fragment>
+      <TabPanel value={currentTab} index={PATHS.CUSTOMER_HOME}>
+        <Home />
+      </TabPanel>
+      <TabPanel value={currentTab} index={PATHS.CUSTOMER_FOLLOWING}>
+        <Following />
+      </TabPanel>
+      <TabPanel value={currentTab} index={PATHS.CUSTOMER_ORDERS}>
+        <Orders />
+      </TabPanel>
+      <TabPanel value={currentTab} index={PATHS.CUSTOMER_SETTINGS}>
+        <Settings {...articleDetails} />
+      </TabPanel>
+    </React.Fragment>
+  );
+
   return (
     <React.Fragment>
-      <Container maxWidth="md" className={classes.container}>
+      {/* <Container maxWidth="md" className={classes.container}>
         <Grid container direction="column" spacing={2}>
           {currentTab !== PATHS.CUSTOMER_SETTINGS && (
             <Grid item xs={12}>
@@ -122,6 +136,20 @@ const MainPage = (): React.ReactElement => {
                 />
                 <Route path={PATHS.CUSTOMER_HOME} render={() => <Home />} />
               </Switch>
+            </React.Suspense>
+          </Grid>
+        </Grid>
+      </Container> */}
+      <Container maxWidth="md" className={classes.container}>
+        <Grid container direction="column" spacing={2}>
+          {currentTab !== PATHS.CUSTOMER_SETTINGS && (
+            <Grid item xs={12}>
+              <TopSection variant="user" userName={user?.fullName} />
+            </Grid>
+          )}
+          <Grid item xs={12}>
+            <React.Suspense fallback={<Loader />}>
+              <TabsPanel />
             </React.Suspense>
           </Grid>
         </Grid>
