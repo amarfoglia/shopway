@@ -63,18 +63,20 @@ const CustomerSettings = (): React.ReactElement => {
         </Grid>
         <Grid item xs={12}>
           <MyPaper>
-            <ListItem>
-              <ListItemText primary={'Edit profile'} />
-              <ListItemSecondaryAction>
-                <Switch
-                  checked={isNotifiesOn}
-                  onChange={handleNotifies}
-                  color="primary"
-                  name="checkedNotifies"
-                  inputProps={{ 'aria-label': 'notifies checkbox' }}
-                />
-              </ListItemSecondaryAction>
-            </ListItem>
+            <List disablePadding>
+              <ListItem>
+                <ListItemText primary={'Edit profile'} />
+                <ListItemSecondaryAction>
+                  <Switch
+                    checked={isNotifiesOn}
+                    onChange={handleNotifies}
+                    color="primary"
+                    name="checkedNotifies"
+                    inputProps={{ 'aria-label': 'notifies checkbox' }}
+                  />
+                </ListItemSecondaryAction>
+              </ListItem>
+            </List>
           </MyPaper>
         </Grid>
       </Grid>

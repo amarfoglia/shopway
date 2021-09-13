@@ -31,9 +31,16 @@ const DetailsSection: React.FC<Props> = ({
   handleColorChange,
   handleSizeChange,
 }) => (
-  <Grid container direction="column" spacing={3}>
-    <Grid item container xs={12} spacing={2} direction="column">
-      <Grid item container justifyContent="space-between" direction="row" alignItems="center">
+  <Grid container spacing={3}>
+    <Grid item container xs={12} spacing={2}>
+      <Grid
+        item
+        container
+        justifyContent="space-between"
+        direction="row"
+        alignItems="center"
+        xs={12}
+      >
         <Grid item>
           <Typography variant="h5">{name}</Typography>
         </Grid>
@@ -44,7 +51,7 @@ const DetailsSection: React.FC<Props> = ({
         </Grid>
       </Grid>
       <Grid item xs={12}>
-        <Typography variant="body1" align="justify">
+        <Typography variant="body2" align="justify">
           {description}
         </Typography>
       </Grid>
@@ -64,7 +71,7 @@ const DetailsSection: React.FC<Props> = ({
         </Grid>
       </Grid>
     </Grid>
-    <Grid item container xs={12} spacing={1} direction="column">
+    <Grid item container xs={12} spacing={1}>
       <Grid item xs={12}>
         <RadioSizes selectedSize={selectedSize} handleSizeChange={handleSizeChange} sizes={sizes} />
       </Grid>

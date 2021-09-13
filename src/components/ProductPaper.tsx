@@ -8,10 +8,10 @@ import MyPaper from './MyPaper';
 interface ProductProps {
   productName: string;
   price: string;
-  productImage: string;
+  productImage?: string;
   discountPrice?: string;
   storeName: string;
-  storeLogo: string;
+  storeLogo?: string;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -72,7 +72,7 @@ const ProductPaper: React.FC<ProductProps> = ({
         </Grid>
         <Grid item xs={12}>
           <Image
-            src={productImage}
+            src={productImage ?? 'not found'}
             alt={productName}
             loading={
               <Skeleton variant="rect" animation="wave" width={'inherit'} height={'inherit'} />

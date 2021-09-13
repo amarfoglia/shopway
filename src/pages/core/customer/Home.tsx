@@ -1,15 +1,13 @@
 import React from 'react';
-import { Box, Grid } from '@material-ui/core';
+import { Box } from '@material-ui/core';
 import baseStyles from '../../../style/styles';
 import CorePage from '../../../components/CorePage';
 import CategoryPaper from '../../../components/CategoryPaper';
-import ProductPaper from '../../../components/ProductPaper';
 import { Categories } from '../../../model/Categories';
-
-const clothes = ['jacket', 'tshirt2', 'sweatshirt2', 'tshirt2'];
+import ProductsSection from '../common/ProductsGrid';
+import { product } from '../../../model/ToRemove';
 
 const categoriesPath = process.env.PUBLIC_URL + '/categories';
-const clothesPath = process.env.PUBLIC_URL + '/clothes';
 
 const CustomerHome = (): React.ReactElement => {
   const baseClasses = baseStyles();
@@ -28,30 +26,13 @@ const CustomerHome = (): React.ReactElement => {
     </Box>
   );
 
-  const ProductsSection = () => (
-    <Grid container spacing={2}>
-      {clothes.map((c, i) => (
-        <Grid item key={`${c}-${i}`} xs={6}>
-          <ProductPaper
-            productName={c}
-            price={'18.50'}
-            discountPrice={'15.00'}
-            productImage={`${clothesPath}/${c}.png`}
-            storeName={'store name'}
-            storeLogo={`${process.env.PUBLIC_URL}/logo192.png`}
-          />
-        </Grid>
-      ))}
-    </Grid>
-  );
-
   const sections = [
     {
       node: <CategoriesSection />,
       title: 'Categories',
     },
     {
-      node: <ProductsSection />,
+      node: <ProductsSection clothes={[product, product, product, product]} />,
       title: 'Popular Products',
     },
   ];

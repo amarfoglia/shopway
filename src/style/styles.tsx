@@ -61,25 +61,6 @@ const illustrationStyle = makeStyles({
   },
 });
 
-const authStyles = makeStyles((theme) => ({
-  container: {
-    alignItems: 'flex-start',
-    justifyContent: 'space-between',
-    backgroundRepeat: 'no-repeat',
-    background: `url(${process.env.PUBLIC_URL}/background.png)`,
-  },
-  title: {
-    textAlign: 'left',
-    paddingLeft: theme.spacing(4),
-    color: 'white',
-  },
-  subContainer: {
-    minHeight: '28vh',
-    justifyContent: 'space-around',
-    paddingTop: theme.spacing(1),
-  },
-}));
-
 const roleStyles = makeStyles((theme) => ({
   imageRoleContainer: {
     borderRadius: 15,
@@ -104,6 +85,6 @@ const roleStyles = makeStyles((theme) => ({
   },
 }));
 
-export { illustrationStyle, authStyles, roleStyles, shadow };
+export { illustrationStyle, roleStyles, shadow };
 
 export default baseStyles;

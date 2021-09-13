@@ -1,17 +1,37 @@
 import React from 'react';
-import { Grid, Paper, Typography } from '@material-ui/core';
+import { Grid, makeStyles, Paper, Typography } from '@material-ui/core';
 import clsx from 'clsx';
 import { ReactNode } from 'react';
-import baseStyles, { authStyles } from '../style/styles';
+import baseStyles from '../style/styles';
 
 interface Props {
   title: string;
   header?: ReactNode;
 }
 
+const useStyles = makeStyles((theme) => ({
+  container: {
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+    backgroundSize: 'cover',
+    backgroundRepeat: 'no-repeat',
+    background: `url(${process.env.PUBLIC_URL}/background.png)`,
+  },
+  title: {
+    textAlign: 'left',
+    paddingLeft: theme.spacing(4),
+    color: 'white',
+  },
+  subContainer: {
+    minHeight: '28vh',
+    justifyContent: 'space-around',
+    paddingTop: theme.spacing(1),
+  },
+}));
+
 const AuthPage: React.FC<Props & ReactNode> = (props) => {
   const classes = baseStyles();
-  const authClasses = authStyles();
+  const authClasses = useStyles();
   const { title, header } = props;
 
   return (

@@ -26,6 +26,9 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
   button: {
     width: ({ width }) => (width ? width + 20 : '100%'),
     padding: 0,
+    '& > span': {
+      display: 'block',
+    },
   },
   categoryPaper: {
     padding: theme.spacing(2),
@@ -53,8 +56,8 @@ const CategoryPaper: React.FC<CateogryProps> = ({
 }) => {
   const classes = useStyles({ variant, width });
   return (
-    <IconButton className={classes.button}>
-      <div className={classes.categoryContainer}>
+    <div className={classes.categoryContainer}>
+      <IconButton className={classes.button}>
         <Paper className={classes.categoryPaper}>
           <Box>
             <Image
@@ -69,8 +72,8 @@ const CategoryPaper: React.FC<CateogryProps> = ({
             {name}
           </Typography>
         </Paper>
-      </div>
-    </IconButton>
+      </IconButton>
+    </div>
   );
 };
 

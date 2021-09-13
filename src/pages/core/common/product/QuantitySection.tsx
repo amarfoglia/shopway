@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from 'react';
+import React, { Dispatch, SetStateAction, useState } from 'react';
 import { Grid, makeStyles, Paper, Typography, IconButton } from '@material-ui/core';
 import RemoveOutlined from '@material-ui/icons/RemoveOutlined';
 import AddOutlined from '@material-ui/icons/AddOutlined';
@@ -43,7 +43,8 @@ const QuantitySection: React.FC<Props> = ({
 }) => {
   const baseClasses = baseStyles();
   const classes = quantityStyles();
-  const basePrice = Object.assign({}, price);
+
+  const [basePrice] = useState(price);
 
   const decQuantity = () => {
     if (quantity > 1) {

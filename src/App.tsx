@@ -5,6 +5,8 @@ import AuthRoute from './components/AuthRoute';
 import PATHS from './utils/routes';
 import baseStyles from './style/styles';
 import Loader from './components/Loader';
+import ProductPage from './pages/core/common/ProductPage';
+import { articleDetails } from './model/ToRemove';
 
 const SignupPage = lazy(() => import('./pages/auth/SingupPage'));
 const Home = lazy(() => import('./pages/HomePage'));
@@ -15,7 +17,7 @@ const NotAuthorized = lazy(() => import('./pages/NotAuthorized'));
 const ForgotPasswordPage = lazy(() => import('./pages/auth/ForgotPasswordPage'));
 const StorePage = lazy(() => import('./pages/core/common/StorePage'));
 const CustomerProfile = lazy(() => import('./pages/core/customer/CustomerProfile'));
-const SearchPage = lazy(() => import('./pages/core/common/SearchPage'));
+const SearchPage = lazy(() => import('./pages/core/search/SearchPage'));
 
 const renderContent = () => {
   const classes = baseStyles();
@@ -34,7 +36,11 @@ const renderContent = () => {
             />
             <AuthRoute path={PATHS.CUSTOMER_MAIN} render={() => <CustomerPage />} />
             <AuthRoute path={PATHS.CUSTOMER_PROFILE} render={() => <CustomerProfile />} />
-            <AuthRoute path={PATHS.SEARCH_PRODUCT} render={() => <SearchPage />} />
+            <AuthRoute path={PATHS.SEARCH_ARTICLE} render={() => <SearchPage />} />
+            <AuthRoute
+              path={PATHS.ARTICLE_DETAILS}
+              render={() => <ProductPage {...articleDetails} />}
+            />
             <AuthRoute path={PATHS.STORE_PAGE} render={() => <StorePage />} />
             <Route path={PATHS.NOT_AUTHORIZED} render={() => <NotAuthorized />} />
             <Route path={PATHS.NOT_FOUND} render={() => <NotFoundPage />} />

@@ -12,7 +12,8 @@ enum PATHS {
   CUSTOMER_ORDERS = '/customer/orders',
   CUSTOMER_SETTINGS = '/customer/settings',
   STORE_PAGE = '/stores/:id',
-  SEARCH_PRODUCT = '/search',
+  SEARCH_ARTICLE = '/search',
+  ARTICLE_DETAILS = '/articles/:id',
   NOT_AUTHORIZED = '/notAuthorized',
   NOT_FOUND = '*',
 }
