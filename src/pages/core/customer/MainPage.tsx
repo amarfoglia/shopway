@@ -63,17 +63,14 @@ const MainPage = (): React.ReactElement => {
     </Paper>
   );
 
-  const LazyTabsPanel = lazy(() => import('./main/TabPanels'));
+  const LazyTabsPanel = lazy(() => import('./TabPanels'));
 
   return (
     <div className={classes.root}>
-      {currentTab !== PATHS.CUSTOMER_SETTINGS && (
-        <Grid item xs={12}>
-          <TopBar variant="user" userName={user?.fullName} />
-        </Grid>
-      )}
       <Container maxWidth="md" className={classes.container}>
-        <Grid container direction="column" spacing={2}>
+        <TopBar variant="user" userName={user?.fullName} position="relative" p={0} />
+        <Grid container spacing={2}>
+          {currentTab !== PATHS.CUSTOMER_SETTINGS && <Grid item xs={12}></Grid>}
           <Grid item xs={12}>
             <React.Suspense fallback={<Loader />}>
               <LazyTabsPanel currentTab={currentTab} />

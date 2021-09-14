@@ -18,13 +18,18 @@ interface Props {
   userName?: string;
   userImagePath?: string;
   position?: Position;
+  p?: number;
 }
 
-const useStyles = makeStyles((theme: Theme) =>
+interface StyleProps {
+  p?: number;
+}
+
+const useStyles = makeStyles<Theme, StyleProps>((theme: Theme) =>
   createStyles({
     root: {
       flexGrow: 1,
-      padding: `${theme.spacing(2)}px ${theme.spacing(3)}px`,
+      padding: ({ p }) => p ?? `${theme.spacing(2)}px ${theme.spacing(3)}px`,
       paddingBottom: 0,
     },
     title: {
@@ -42,8 +47,9 @@ const TopBar: React.FC<Props> = ({
   userName,
   userImagePath,
   position = 'fixed',
+  p,
 }) => {
-  const classes = useStyles();
+  const classes = useStyles({ p });
   const LeftNode =
     variant === 'user' ? (
       <UserAvatar

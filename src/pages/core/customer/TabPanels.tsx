@@ -1,11 +1,11 @@
 import React, { lazy } from 'react';
-import TabPanel from '../../../../components/TabPanel';
-import PATHS from '../../../../utils/routes';
+import TabPanel from '../../../components/TabPanel';
+import PATHS from '../../../utils/routes';
 
-const Home = lazy(() => import('../Home'));
-const Orders = lazy(() => import('../Orders'));
-const Following = lazy(() => import('../Follow'));
-const Settings = lazy(() => import('../Settings'));
+const Home = lazy(() => import('./Home'));
+const Orders = lazy(() => import('./Orders'));
+const Following = lazy(() => import('./Follow'));
+const Settings = lazy(() => import('./Settings'));
 
 interface TabProps {
   currentTab: string;

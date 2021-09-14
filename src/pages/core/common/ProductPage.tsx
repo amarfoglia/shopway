@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Grid, makeStyles, IconButton } from '@material-ui/core';
 import ArrowBackIosOutlined from '@material-ui/icons/ArrowBackIosOutlined';
 import { useHistory, useParams } from 'react-router-dom';
-import TopSection from '../../../components/TopBar';
+import TopBar from '../../../components/TopBar';
 import Image from 'material-ui-image';
 import DetailsSection from './product/DetailSection';
 import QuantitySection from './product/QuantitySection';
@@ -26,7 +26,7 @@ interface Props {
 
 const useStyles = makeStyles((theme) => ({
   container: {
-    padding: `${theme.spacing(3)}px ${theme.spacing(3)}px`,
+    padding: `${theme.spacing(2)}px ${theme.spacing(3)}px`,
     backgroundColor: theme.palette.background.default,
   },
 }));
@@ -65,7 +65,7 @@ const ProductPage: React.FC<Props> = ({ article, store }): React.ReactElement =>
 
   return (
     <React.Fragment>
-      <TopSection
+      <TopBar
         variant="simple"
         leftChild={
           <IconButton onClick={history.goBack}>
