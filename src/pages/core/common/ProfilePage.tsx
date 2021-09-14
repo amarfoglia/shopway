@@ -3,7 +3,7 @@ import { Container, Grid, IconButton, makeStyles } from '@material-ui/core';
 import ArrowBackIosOutlined from '@material-ui/icons/ArrowBackIosOutlined';
 import { useHistory, useParams } from 'react-router-dom';
 import CorePage from '../../../components/CorePage';
-import TopSection from '../../../components/TopSection';
+import TopSection from '../../../components/TopBar';
 import ProfileSection from './ProfileSections';
 
 interface Props {

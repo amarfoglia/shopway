@@ -6,22 +6,16 @@ import SettingsOutlined from '@material-ui/icons/SettingsOutlined';
 import ExploreOutlined from '@material-ui/icons/ExploreOutlined';
 import FavoriteBorderOutlined from '@material-ui/icons/FavoriteBorderOutlined';
 import ConfirmationNumberOutlined from '@material-ui/icons/ConfirmationNumberOutlined';
-import TopSection from '../../../components/TopSection';
+import TopBar from '../../../components/TopBar';
 import AuthContext from '../../../hooks/useAuth';
-import TabPanel from '../../../components/TabPanel';
-
-const Home = lazy(() => import('./Home'));
-const Orders = lazy(() => import('./Orders'));
-const Following = lazy(() => import('./Follow'));
-const Settings = lazy(() => import('./Settings'));
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    flexDirection: 'column',
+    backgroundColor: '#f9f9f9',
+    flexGrow: 1,
   },
   container: {
     padding: `${theme.spacing(3)}px ${theme.spacing(3)}px`,
-    backgroundColor: '#f9f9f9',
     height: `calc(100vh - 72px)`,
     overflowY: 'auto',
   },
@@ -69,35 +63,20 @@ const MainPage = (): React.ReactElement => {
     </Paper>
   );
 
-  const TabsPanel = () => (
-    <React.Fragment>
-      <TabPanel value={currentTab} index={PATHS.CUSTOMER_HOME}>
-        <Home />
-      </TabPanel>
-      <TabPanel value={currentTab} index={PATHS.CUSTOMER_FOLLOWING}>
-        <Following />
-      </TabPanel>
-      <TabPanel value={currentTab} index={PATHS.CUSTOMER_ORDERS}>
-        <Orders />
-      </TabPanel>
-      <TabPanel value={currentTab} index={PATHS.CUSTOMER_SETTINGS}>
-        <Settings />
-      </TabPanel>
-    </React.Fragment>
-  );
+  const LazyTabsPanel = lazy(() => import('./main/TabPanels'));
 
   return (
-    <React.Fragment>
+    <div className={classes.root}>
+      {currentTab !== PATHS.CUSTOMER_SETTINGS && (
+        <Grid item xs={12}>
+          <TopBar variant="user" userName={user?.fullName} />
+        </Grid>
+      )}
       <Container maxWidth="md" className={classes.container}>
         <Grid container direction="column" spacing={2}>
-          {currentTab !== PATHS.CUSTOMER_SETTINGS && (
-            <Grid item xs={12}>
-              <TopSection variant="user" userName={user?.fullName} />
-            </Grid>
-          )}
           <Grid item xs={12}>
             <React.Suspense fallback={<Loader />}>
-              <TabsPanel />
+              <LazyTabsPanel currentTab={currentTab} />
             </React.Suspense>
           </Grid>
         </Grid>
@@ -105,7 +84,7 @@ const MainPage = (): React.ReactElement => {
       <AppBar position="fixed" className={classes.appBar}>
         <BottomTabs />
       </AppBar>
-    </React.Fragment>
+    </div>
   );
 };
 

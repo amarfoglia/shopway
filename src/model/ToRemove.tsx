@@ -1,5 +1,3 @@
-import React from 'react';
-
 const clothesPath = process.env.PUBLIC_URL + '/clothes';
 
 const product = {

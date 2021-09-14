@@ -2,11 +2,10 @@ import React, { useState } from 'react';
 import { Grid, makeStyles, IconButton } from '@material-ui/core';
 import ArrowBackIosOutlined from '@material-ui/icons/ArrowBackIosOutlined';
 import { useHistory, useParams } from 'react-router-dom';
-import TopSection from '../../../components/TopSection';
+import TopSection from '../../../components/TopBar';
 import Image from 'material-ui-image';
 import DetailsSection from './product/DetailSection';
 import QuantitySection from './product/QuantitySection';
-import clsx from 'clsx';
 
 interface Props {
   article: {
@@ -28,18 +27,7 @@ interface Props {
 const useStyles = makeStyles((theme) => ({
   container: {
     padding: `${theme.spacing(3)}px ${theme.spacing(3)}px`,
-    backgroundColor: '#f9f9f9',
-  },
-  detailSection: {
-    marginTop: `calc(32vh - ${theme.spacing(3)}px)`,
-    height: `calc(68vh - (130px + ${theme.spacing(3)}px))`,
-    overflowY: 'auto',
-  },
-  imageCover: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '100%',
+    backgroundColor: theme.palette.background.default,
   },
 }));
 
@@ -77,27 +65,26 @@ const ProductPage: React.FC<Props> = ({ article, store }): React.ReactElement =>
 
   return (
     <React.Fragment>
-      <div className={classes.imageCover}>
-        <Image
-          src={article.image ?? 'not found'}
-          alt={`product image of ${article.name}`}
-          cover
-          style={{ paddingTop: '32vh' }}
-        />
-      </div>
+      <TopSection
+        variant="simple"
+        leftChild={
+          <IconButton onClick={history.goBack}>
+            <ArrowBackIosOutlined titleAccess="go back" fontSize="small" />
+          </IconButton>
+        }
+      />
       <Grid container>
-        <Grid item className={classes.container} xs={12}>
-          <TopSection
-            variant="simple"
-            position="fixed"
-            leftChild={
-              <IconButton onClick={history.goBack}>
-                <ArrowBackIosOutlined titleAccess="go back" fontSize="small" />
-              </IconButton>
-            }
-          />
+        <Grid item xs={12}>
+          <div>
+            <Image
+              src={article.image ?? 'not found'}
+              alt={`product image of ${article.name}`}
+              cover
+              aspectRatio={4 / 3}
+            />
+          </div>
         </Grid>
-        <Grid item xs={12} className={clsx(classes.container, classes.detailSection)}>
+        <Grid item xs={12} className={classes.container}>
           {DetailsNode}
         </Grid>
       </Grid>

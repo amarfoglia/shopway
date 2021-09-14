@@ -2,7 +2,6 @@ import React from 'react';
 import { Grid, makeStyles, Divider, Chip, Box } from '@material-ui/core';
 import Image from 'material-ui-image';
 
-import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import IconButton from '@material-ui/core/IconButton';
@@ -11,6 +10,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import StoreAvatar from './MyAvatar';
 import QueryBuilder from '@material-ui/icons/QueryBuilder';
 import Skeleton from '@material-ui/lab/Skeleton';
+import MyPaper from './MyPaper';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -89,7 +89,7 @@ const OrderCard: React.FC<OrderProps> = ({ storeName, orderDate, timeLeft, price
   const classes = useStyles();
 
   return (
-    <Card className={classes.root}>
+    <MyPaper p={0} customStyle={classes.root}>
       <CardHeader
         avatar={<StoreAvatar text={storeName} size={'medium'} alt={`logo of store ${storeName}`} />}
         action={
@@ -137,7 +137,7 @@ const OrderCard: React.FC<OrderProps> = ({ storeName, orderDate, timeLeft, price
           </Grid>
         </Grid>
       </Box>
-    </Card>
+    </MyPaper>
   );
 };
 

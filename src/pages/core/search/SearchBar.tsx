@@ -4,10 +4,12 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import OutlinedInput from '@material-ui/core/OutlinedInput';
 import ClearOutlined from '@material-ui/icons/ClearOutlined';
 import SearchOutlined from '@material-ui/icons/SearchOutlined';
-import { makeStyles } from '@material-ui/core';
+import { Collapse, makeStyles } from '@material-ui/core';
+import MyPaper from '../../../components/MyPaper';
 
 interface SearchProps {
   doOnSearch: (value: string) => void;
+  isVisible?: boolean;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -15,12 +17,13 @@ const useStyles = makeStyles((theme) => ({
     margin: `${theme.spacing(2)}px 0px`,
   },
   searchBar: {
-    backgroundColor: 'white',
-    borderRadius: theme.spacing(2),
+    '& > fieldset': {
+      border: 'none',
+    },
   },
 }));
 
-const SearchBar: React.FC<SearchProps> = ({ doOnSearch }) => {
+const SearchBar: React.FC<SearchProps> = ({ doOnSearch, isVisible = true }) => {
   const [value, setValue] = useState('');
   const classes = useStyles();
 
@@ -34,32 +37,36 @@ const SearchBar: React.FC<SearchProps> = ({ doOnSearch }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className={classes.root}>
-      <OutlinedInput
-        id="input-search-article"
-        fullWidth
-        value={value}
-        placeholder="Search the clothes you need"
-        className={classes.searchBar}
-        onChange={handleChange}
-        startAdornment={
-          <InputAdornment position="start">
-            <IconButton aria-label="search lens" edge="start" onClick={() => doOnSearch(value)}>
-              <SearchOutlined />
-            </IconButton>
-          </InputAdornment>
-        }
-        endAdornment={
-          <InputAdornment position="end">
-            {value && (
-              <IconButton aria-label="remove text" edge="end" onClick={() => setValue('')}>
-                <ClearOutlined fontSize="small" />
-              </IconButton>
-            )}
-          </InputAdornment>
-        }
-      />
-    </form>
+    <Collapse in={isVisible}>
+      <form onSubmit={handleSubmit}>
+        <MyPaper p={0}>
+          <OutlinedInput
+            id="input-search-article"
+            fullWidth
+            value={value}
+            placeholder="Search the clothes you need"
+            onChange={handleChange}
+            className={classes.searchBar}
+            startAdornment={
+              <InputAdornment position="start">
+                <IconButton aria-label="search lens" edge="start" onClick={() => doOnSearch(value)}>
+                  <SearchOutlined />
+                </IconButton>
+              </InputAdornment>
+            }
+            endAdornment={
+              <InputAdornment position="end">
+                {value && (
+                  <IconButton aria-label="remove text" edge="end" onClick={() => setValue('')}>
+                    <ClearOutlined fontSize="small" />
+                  </IconButton>
+                )}
+              </InputAdornment>
+            }
+          />
+        </MyPaper>
+      </form>
+    </Collapse>
   );
 };
 

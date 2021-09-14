@@ -1,55 +1,56 @@
 import React, { useState } from 'react';
-import { Box, Grid, IconButton, makeStyles } from '@material-ui/core';
-import clsx from 'clsx';
+import { Grid, IconButton, makeStyles } from '@material-ui/core';
 import ArrowBackIosOutlined from '@material-ui/icons/ArrowBackIosOutlined';
 import SearchOutlined from '@material-ui/icons/SearchOutlined';
 import { useHistory } from 'react-router-dom';
-import TopSection from '../../../components/TopSection';
+import TopBar from '../../../components/TopBar';
 import ProductsSection from '../common/ProductsGrid';
 import { product } from '../../../model/ToRemove';
 import SearchBar from './SearchBar';
-import AgeFilterBar from './AgeFilterBar';
+import AgeFilterBar from './AgeTabs';
+import FilterBar from './FiltersBar';
 
 const useStyles = makeStyles((theme) => ({
   container: {
     padding: `${theme.spacing(3)}px ${theme.spacing(3)}px`,
   },
-  header: {
-    backgroundColor: 'white',
-    paddingBottom: 0,
-  },
   content: {
     backgroundColor: '#f9f9f9',
     height: '100%',
+    padding: `${theme.spacing(2)}px ${theme.spacing(3)}px`,
   },
 }));
 
 interface SearchParams {
   text?: string;
-  category?: string;
   sex?: string;
+  filters: {
+    category: string;
+    orderBy: string;
+  };
 }
 
-const initFilters = {
-  category: '',
+const initParams = {
+  filters: {
+    category: '',
+    orderBy: '',
+  },
   sex: 'Man',
 };
 
 const SearchPage = (): React.ReactElement => {
   const history = useHistory();
   const classes = useStyles();
-  const [filters, setFilters] = useState<SearchParams>(initFilters);
+  const [searchParams, setSearchParams] = useState<SearchParams>(initParams);
   const [openSearchBar, setOpenSearchBar] = useState(true);
 
   const handleSearch = (text: string) => {
     setOpenSearchBar(false);
-    console.log(text, filters);
+    console.log(text, searchParams);
   };
 
   const renderSearchIcon = () =>
-    openSearchBar ? (
-      <Box />
-    ) : (
+    !openSearchBar && (
       <IconButton onClick={() => setOpenSearchBar(true)} style={{ padding: 0 }}>
         <SearchOutlined titleAccess="search article" />
       </IconButton>
@@ -57,8 +58,8 @@ const SearchPage = (): React.ReactElement => {
 
   return (
     <Grid container>
-      <Grid item className={clsx(classes.container, classes.header)} xs={12}>
-        <TopSection
+      <Grid item xs={12}>
+        <TopBar
           variant="simple"
           centerTitle="Search"
           leftChild={
@@ -70,12 +71,20 @@ const SearchPage = (): React.ReactElement => {
         />
       </Grid>
       <Grid item xs={12}>
-        <AgeFilterBar onChange={(sex) => setFilters({ ...filters, sex })} />
+        <AgeFilterBar onChange={(sex) => setSearchParams({ ...searchParams, sex })} />
       </Grid>
-      <Grid item xs={12} className={clsx(classes.container, classes.content)}>
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            {openSearchBar && <SearchBar doOnSearch={handleSearch} />}
+      <Grid item xs={12} className={classes.content}>
+        <Grid container spacing={3}>
+          <Grid item container xs={12} spacing={1}>
+            <Grid item xs={12} style={{ paddingBlock: openSearchBar ? 'inherit' : 0 }}>
+              <SearchBar doOnSearch={handleSearch} isVisible={openSearchBar} />
+            </Grid>
+            <Grid item xs={12}>
+              <FilterBar
+                filters={searchParams.filters}
+                onChange={(v) => setSearchParams({ ...searchParams, filters: v })}
+              />
+            </Grid>
           </Grid>
           <Grid item xs={12}>
             <ProductsSection clothes={[product, product, product, product]} />

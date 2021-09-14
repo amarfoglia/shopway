@@ -1,9 +1,10 @@
 import React from 'react';
-import { Paper, Typography } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import ConfirmationNumber from '@material-ui/icons/ConfirmationNumber';
 import Event from '@material-ui/icons/Event';
 import ProfilePage from '../common/ProfilePage';
+import MyPaper from '../../../components/MyPaper';
 
 const user = {
   fullName: 'Mario Rossi',
@@ -18,7 +19,7 @@ interface Props {
 }
 
 const DetailPaper: React.FC<Props> = ({ title, value, icon }) => (
-  <Paper style={{ padding: 10 }}>
+  <MyPaper style={{ padding: 10 }}>
     <Typography variant="body2" component="h6">
       {title}
     </Typography>
@@ -30,7 +31,7 @@ const DetailPaper: React.FC<Props> = ({ title, value, icon }) => (
         </Typography>
       </Grid>
     </Grid>
-  </Paper>
+  </MyPaper>
 );
 
 const UserDetails = () => (

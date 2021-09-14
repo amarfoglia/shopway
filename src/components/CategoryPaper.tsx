@@ -1,7 +1,8 @@
 import React from 'react';
-import { makeStyles, Paper, Typography, Box, Theme, IconButton } from '@material-ui/core';
+import { makeStyles, Typography, Box, Theme, IconButton } from '@material-ui/core';
 import Image from 'material-ui-image';
 import { Skeleton } from '@material-ui/lab';
+import MyPaper from './MyPaper';
 
 type Variants = 'fullwidth' | 'fixed';
 
@@ -31,9 +32,6 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
     },
   },
   categoryPaper: {
-    padding: theme.spacing(2),
-    boxShadow: '0 5px 5px rgb(0 37 132 / 6%)',
-    borderRadius: theme.spacing(2),
     width: ({ width }) => width ?? 'auto',
     textAlign: 'center',
     '& .MuiBox-root': {
@@ -58,7 +56,7 @@ const CategoryPaper: React.FC<CateogryProps> = ({
   return (
     <div className={classes.categoryContainer}>
       <IconButton className={classes.button}>
-        <Paper className={classes.categoryPaper}>
+        <MyPaper customStyle={classes.categoryPaper}>
           <Box>
             <Image
               src={iconPath}
@@ -71,7 +69,7 @@ const CategoryPaper: React.FC<CateogryProps> = ({
           <Typography variant="body1" className={classes.categoryName}>
             {name}
           </Typography>
-        </Paper>
+        </MyPaper>
       </IconButton>
     </div>
   );

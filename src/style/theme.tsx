@@ -26,6 +26,9 @@ const theme = createTheme({
       dark: '#8e0000',
       light: '#ff5f52',
     },
+    background: {
+      default: '#f9f9f9',
+    },
   },
   typography: {
     fontFamily: [

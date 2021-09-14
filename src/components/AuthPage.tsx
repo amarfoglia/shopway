@@ -50,7 +50,7 @@ const AuthPage: React.FC<Props & ReactNode> = (props) => {
       <Grid item container xs={12} className={classes.container}>
         {header && header}
         <Grid item>
-          <Paper elevation={3} className={classes.paperPopup}>
+          <Paper elevation={2} className={classes.paperPopup}>
             {props.children}
           </Paper>
         </Grid>

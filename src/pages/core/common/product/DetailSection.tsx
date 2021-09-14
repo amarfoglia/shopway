@@ -32,55 +32,58 @@ const DetailsSection: React.FC<Props> = ({
   handleSizeChange,
 }) => (
   <Grid container spacing={3}>
-    <Grid item container xs={12} spacing={2}>
-      <Grid
-        item
-        container
-        justifyContent="space-between"
-        direction="row"
-        alignItems="center"
-        xs={12}
-      >
-        <Grid item>
-          <Typography variant="h5">{name}</Typography>
+    <Grid item xs={12}>
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <Grid container justifyContent="space-between" alignItems="center">
+            <Grid item xs={8}>
+              <Typography variant="h5">{name}</Typography>
+            </Grid>
+            <Grid item xs={4}>
+              <Typography variant="body1" align="right">
+                {brand}
+              </Typography>
+            </Grid>
+          </Grid>
         </Grid>
-        <Grid item>
-          <Typography variant="body1" align="right">
-            {brand}
+        <Grid item xs={12}>
+          <Typography variant="body2" align="justify">
+            {description}
           </Typography>
         </Grid>
-      </Grid>
-      <Grid item xs={12}>
-        <Typography variant="body2" align="justify">
-          {description}
-        </Typography>
-      </Grid>
-      <Grid item xs={12}>
-        <Grid container spacing={1} direction="row" alignItems="center">
-          <Grid item>
-            <StoreAvatar
-              size="small"
-              alt={`store logo of ${storeName}`}
-              text={storeName}
-              imagePath={storeLogo}
-            />
-          </Grid>
-          <Grid item>
-            <Typography variant="body2">{storeName}</Typography>
+        <Grid item xs={12}>
+          <Grid container spacing={1} alignItems="center">
+            <Grid item>
+              <StoreAvatar
+                size="small"
+                alt={`store logo of ${storeName}`}
+                text={storeName}
+                imagePath={storeLogo}
+              />
+            </Grid>
+            <Grid item>
+              <Typography variant="body2">{storeName}</Typography>
+            </Grid>
           </Grid>
         </Grid>
       </Grid>
     </Grid>
-    <Grid item container xs={12} spacing={1}>
-      <Grid item xs={12}>
-        <RadioSizes selectedSize={selectedSize} handleSizeChange={handleSizeChange} sizes={sizes} />
-      </Grid>
-      <Grid item xs={12}>
-        <RadioColors
-          selectedColor={selectedColor}
-          handleColorChange={handleColorChange}
-          colors={colors}
-        />
+    <Grid item xs={12}>
+      <Grid container spacing={1}>
+        <Grid item xs={12}>
+          <RadioSizes
+            selectedSize={selectedSize}
+            handleSizeChange={handleSizeChange}
+            sizes={sizes}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <RadioColors
+            selectedColor={selectedColor}
+            handleColorChange={handleColorChange}
+            colors={colors}
+          />
+        </Grid>
       </Grid>
     </Grid>
   </Grid>

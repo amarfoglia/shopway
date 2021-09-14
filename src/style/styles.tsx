@@ -34,8 +34,10 @@ const baseStyles = makeStyles((theme) => ({
     color: theme.palette.primary.main,
   },
   paperPopup: {
-    borderTopLeftRadius: borderRadius,
-    borderTopRightRadius: borderRadius,
+    borderTopLeftRadius: theme.spacing(2),
+    borderTopRightRadius: theme.spacing(2),
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0,
     padding: `${theme.spacing(5)}px ${theme.spacing(4)}px`,
   },
   backFabGrid: {
