@@ -10,7 +10,7 @@ const factory = new HandlerFactory<CustomerDoc>();
 class CustomerController {
   addFollowers = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const followerList: string[] = req.body;
-    const customer = await CustomerModel.findById(req.params.id);
+    const customer = await CustomerModel.findById(req.user?.id);
     if (!customer || customer === undefined) {
       next(new AppError('Invalid customer ID', 400));
     }

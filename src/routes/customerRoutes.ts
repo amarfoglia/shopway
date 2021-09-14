@@ -17,8 +17,8 @@ router.use(authController.checkUserToken);
 router.use(authController.restrictTo(Role.CUSTOMER), userController.getMe);
 // router.get('/', customerController.getCustomer);
 
-router.get('/', customerController.getFollowers);
-router.patch('/add', customerController.addFollowers);
+router.get('/followers', customerController.getFollowers);
+router.patch('/followers', customerController.addFollowers);
 // router.patch('/update', customerController.updateCustomer);
 // router.delete('/delete', customerController.deleteCustomer);
 

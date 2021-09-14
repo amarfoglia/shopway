@@ -16,6 +16,7 @@ import Role from '../models/role';
 import Seller from '../models/users/seller';
 import Store from '../models/store';
 import StoreModel from '../models/storeModel';
+import VisitStoreModel from '../models/visitStoreModel';
 
 const getJwtSecret = () => (process.env.JWT_SECRET || 'invalid-token');
 
@@ -53,11 +54,10 @@ const verifyToken = (token: string) => jwt.verify(token, getJwtSecret());
 class AuthController {
   signup = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     let newUser: User | undefined;
-    const { role } = req.body.user;
-    const photo = req.file?.filename;
+    const { role } = req.body;
     switch (role) {
       case Role.CUSTOMER:
-        newUser = await CustomerModel.create({ photo, ...req.body.user });
+        newUser = await CustomerModel.create(req.body);
         break;
       case Role.SELLER:
         newUser = await this.createSellerWithStore(req, next);
@@ -73,12 +73,14 @@ class AuthController {
     sendFreshToken(newUser, 201, res);
   });
 
+  // visitStore
   createSellerWithStore = async (req: Request, next: NextFunction) => {
-    const seller: Seller = req.body.user;
-    const { store } = req.body;
+    const { store, ...seller } = req.body;
     const newStore = await StoreModel.create(store);
     const storeId = newStore.id ?? 'invalid-id';
     if (storeId === 'invalid-id') { next(new AppError('invalid store id', 500)); }
+    const visitObj = { storeId, visits: [] };
+    await VisitStoreModel.create(visitObj);
     seller.stores = [];
     seller.stores.push(storeId);
     const newUser = await SellerModel.create(seller);

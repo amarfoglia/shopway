@@ -16,8 +16,7 @@ const articleDetailsSchema = new mongoose.Schema({
     required: [true, 'Please, provide the color of the retail article']
   },
   image: {
-    type: String,
-    default: './public/images/' // DEFAULT PATH FOR IMAGE IF MISSING
+    type: String
   },
   price: {
     type: Number,
