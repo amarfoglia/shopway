@@ -16,23 +16,21 @@ const fileFilter = (_: Request, file: Express.Multer.File, cb: FileFilterCallbac
 
 const upload = multer({ storage, fileFilter });
 
-class UserImageController {
-  uploadUserPhoto = upload.single('photo');
+class ImageController {
+  uploadPhoto = upload.single('photo');
 
-  resizeUserPhoto = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  resizePhoto = catchAsync(async (req: Request, res: Response,
+    next: NextFunction) => {
     if (req.file) {
       const { file } = req;
-      file.filename = `user-${req.user?.id}-${Date.now()}.jpeg`;
-
-      await sharp(file.buffer)
+      const loadedFile = await sharp(file.buffer)
         .resize(500, 500)
         .toFormat('jpeg')
-        .jpeg({ quality: 90 })
-        .toFile(`public/img/users/${file.filename}`);
+        .jpeg({ quality: 90 });
+      req.file = loadedFile;
     }
-
     next();
   });
 }
 
-export default UserImageController;
+export default ImageController;

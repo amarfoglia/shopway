@@ -1,7 +1,7 @@
 import express, { Router } from 'express';
 import AuthController from '../controllers/authController';
 import UserController from '../controllers/userController';
-import UserImageController from '../controllers/helpers/imageController';
+import ImageController from '../controllers/helpers/imageController';
 import sellerRouter from './sellerRoutes';
 import storeRouter from './storeRoutes';
 import orderRouter from './orderRoutes';
@@ -11,18 +11,14 @@ import CustomerController from '../controllers/customerController';
 const router: Router = express.Router();
 const userController = new UserController();
 const authController = new AuthController();
-const customerController = new CustomerController();
-const userImageController = new UserImageController();
+const imageController = new ImageController();
 
 router.use('/:id/stores', storeRouter);
 router.use('/:id/orders', orderRouter);
 router.use('/:id/followers', customerRouter);
 // router.use('/:id/sellers', sellerRouter);
 
-router.post('/signup',
-  userImageController.uploadUserPhoto,
-  userImageController.resizeUserPhoto,
-  authController.signup);
+router.post('/signup', authController.signup);
 router.post('/login', authController.login);
 
 router.post('/forgotPassword', authController.forgotPassword);
@@ -34,8 +30,8 @@ router.patch('/updateMyPassword', authController.updatePassword);
 router.get('/me', userController.getMe, userController.getUser);
 router.patch(
   '/updateMe',
-  userImageController.uploadUserPhoto,
-  userImageController.resizeUserPhoto,
+  imageController.uploadPhoto,
+  imageController.resizePhoto,
   userController.updateMe
 );
 

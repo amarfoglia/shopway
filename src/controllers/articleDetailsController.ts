@@ -4,6 +4,8 @@ import HandlerFactory from './helpers/handlerFactory';
 import ArticleDetailsModel, { ArticleDetailsDoc } from '../models/articles/articleDetailsModel';
 import { ArticleDetails, ArticleStock } from '../models/articles/article';
 import AppError from '../utils/appError';
+import ArticleModel from '../models/articles/articleModel';
+import SellerModel from '../models/users/sellerModel';
 
 const factory = new HandlerFactory<ArticleDetailsDoc>();
 
@@ -43,13 +45,45 @@ class ArticleDetailsController {
     return unique.length === stockArticles.length;
   }
 
-  getRetailArticle = factory.getOne(ArticleDetailsModel);
+  updateMe = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const { id: articleDetailsId } = req.params;
 
-  getAllRetailArticles = factory.getAll(ArticleDetailsModel, {});
+    const seller:any = await SellerModel.findById(req.user?.id);
+    const articleDetails = await ArticleDetailsModel.findById(articleDetailsId);
+    const article = await ArticleModel.findById(articleDetails?.articleId);
+    const storeId = article?.storeId;
 
-  updateRetailArticle = factory.updateOne(ArticleDetailsModel);
+    if (!seller?.stores.includes(storeId)) {
+      next(new AppError('You do not have the permission.', 400));
+      return;
+    }
 
-  deleteRetailArticle = factory.deleteOne(ArticleDetailsModel);
+    const {
+      price, discount
+    } = req.body;
+    const image = `photo-${storeId}-${articleDetailsId}.jpeg`;
+    await req.file?.toFile(`public/img/articledetails/${image}`);
+    // effettua controllo che lo store sia effettivamente del seller loggato.
+    const updatedArticleDetails = await ArticleDetailsModel.findByIdAndUpdate(articleDetailsId, {
+      price, discount, image
+    }, {
+      new: true,
+      runValidators: true
+    });
+
+    res.status(200).json({
+      status: 'success',
+      data: { updatedArticleDetails }
+    });
+  });
+
+  getArticleDetails = factory.getOne(ArticleDetailsModel);
+
+  getAllArticlesDetails = factory.getAll(ArticleDetailsModel, {});
+
+  updateArticleDetails = factory.updateOne(ArticleDetailsModel);
+
+  deleteArticleDetails = factory.deleteOne(ArticleDetailsModel);
 }
 
 export default ArticleDetailsController;
