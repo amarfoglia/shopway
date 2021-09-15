@@ -22,9 +22,7 @@ function isEmpty(arr: StoreVisitDoc[]): Boolean {
 class StoreController {
   addStore = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const store : Store = req.body;
-    console.log(req.params.id);
     const seller = await SellerModel.findById(new ObjectId(req.params.id));
-    console.log(seller);
 
     if (!seller) {
       next(new AppError('No seller found with that ID', 404));
@@ -86,7 +84,6 @@ class StoreController {
   getWiewsStats = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const { id: storeId } = req.params;
     const { startDate, endDate } = req.query as any;
-    // console.log(startDate, endDate);
     let first;
     let last;
 
@@ -97,7 +94,6 @@ class StoreController {
       first = new Date(startDate);
       last = new Date(endDate);
     }
-    console.log(first, last);
     const visit = await VisitStoreModel.aggregate([
       {
         $match: {
@@ -114,7 +110,6 @@ class StoreController {
         }
       }
     ]);
-    console.log(visit);
     res.status(200).json({
       success: 'success',
       data: { visit }

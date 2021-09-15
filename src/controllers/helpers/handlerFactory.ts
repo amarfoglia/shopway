@@ -54,7 +54,6 @@ class HandlerFactory<T> {
     async (req: Request, res: Response, next: NextFunction) => {
       const query = model.findById(req.params.id);
       const doc = await query.populate(popOptions);
-      console.log(doc);
       if (!doc) {
         next(new AppError('No document found with that ID', 404));
         return;
