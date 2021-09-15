@@ -50,7 +50,7 @@ class StoreController {
       return;
     }
     // Mongoose Date work with year-month-day
-    const today = '2021-09-18';
+    const today = new Date().toLocaleDateString;
 
     const userObjectId = mongoose.Types.ObjectId(userId);
     const storeObjectId = mongoose.Types.ObjectId(storeId);

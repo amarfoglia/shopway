@@ -1,17 +1,27 @@
-import mongoose, { PopulatedDoc, UpdateWriteOpResult } from 'mongoose';
+import mongoose, { PopulatedDoc } from 'mongoose';
+import { addDays, addHours } from 'date-fns';
+import { utcToZonedTime } from 'date-fns-tz';
 import AppError from '../utils/appError';
 import Order from './order';
-import { ONE_SEC_IN_MS } from '../utils/time';
 import { ArticleDetails } from './articles/article';
 import Customer from './users/customer';
 import Seller from './users/seller';
 import ArticleDetailsModel from './articles/articleDetailsModel';
+import generateCode from '../utils/generateCode';
 
 interface OrderDoc extends Document, Order {
   articleDetails?: PopulatedDoc<ArticleDetails & Document>
   customer?: PopulatedDoc<Customer & Document>
   seller?: PopulatedDoc<Seller & Document>
 }
+const getCurrentDate = function () {
+  return addHours(utcToZonedTime(Date.now(), 'Europe/Rome'), 2);
+};
+
+const getNextDayFromToday = function () {
+  return addDays(addHours(utcToZonedTime(Date.now(), 'Europe/Rome'), 2), 1);
+};
+
 interface IOrderModel extends mongoose.Model<OrderDoc> {}
 const orderSchema = new mongoose.Schema({
   customer: {
@@ -44,11 +54,16 @@ const orderSchema = new mongoose.Schema({
   bookDate: {
     type: Date,
     required: [true, 'An order must have a book date'],
-    default: () => new Date(Date.now() - ONE_SEC_IN_MS)
+    default: () => getCurrentDate()
+  },
+  code: {
+    type: String,
+    default: () => generateCode(),
+    unique: true
   },
   orderExpireAt: {
     type: Date,
-    required: [true, 'An order must have an expire date']
+    default: () => getNextDayFromToday()
   },
   sold: {
     type: Boolean,
@@ -60,6 +75,7 @@ const orderSchema = new mongoose.Schema({
 });
 
 orderSchema.pre(/^find/, function _(next) {
+  generateCode();
   this.populate({ path: 'articleDetails', select: 'articleId color price image discount' })
     .populate({ path: 'store', select: '_id name' })
     .populate({ path: 'customer', select: 'fullName _id' });
@@ -77,7 +93,6 @@ orderSchema.pre<OrderDoc>('save', async function _(next) {
       next(new AppError('Product not avaiable', 400));
       return;
     }
-    console.log(result);
   }
   next();
 });

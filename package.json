@@ -22,6 +22,7 @@
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "date-fns": "^2.23.0",
+    "date-fns-tz": "^1.1.6",
     "dotenv": "^10.0.0",
     "express": "^4.16.4",
     "express-mongo-sanitize": "^2.1.0",
@@ -39,6 +40,7 @@
     "slugify": "^1.3.4",
     "universal-cookie": "^4.0.4",
     "validator": "^13.6.0",
+    "voucher-code-generator": "^1.1.1",
     "xss": "^1.0.9",
     "xss-clean": "^0.1.1"
   },
@@ -55,6 +57,7 @@
     "@types/sharp": "^0.28.5",
     "@types/util.promisify": "^1.0.4",
     "@types/validator": "^13.6.3",
+    "@types/voucher-code-generator": "^1.1.1",
     "@typescript-eslint/eslint-plugin": "^4.29.1",
     "@typescript-eslint/parser": "^4.29.1",
     "eslint": "^7.32.0",
