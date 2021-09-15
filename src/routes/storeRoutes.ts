@@ -28,7 +28,7 @@ router.patch('/:id/updateMe',
   imageController.uploadPhoto,
   imageController.resizePhoto,
   storeController.updateMe);
-router.post('/', storeController.addStore);
+router.post('/', imageController.uploadPhoto, imageController.resizePhoto, storeController.addStore);
 router.delete('/:id', storeController.deleteStore);
 
 export default router;

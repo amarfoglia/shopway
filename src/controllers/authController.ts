@@ -14,6 +14,7 @@ import SellerModel from '../models/users/sellerModel';
 import Role from '../models/role';
 import StoreModel from '../models/storeModel';
 import VisitStoreModel from '../models/visitStoreModel';
+import Customer from '../models/users/customer';
 
 const getJwtSecret = () => (process.env.JWT_SECRET || 'invalid-token');
 
@@ -52,9 +53,13 @@ class AuthController {
   signup = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     let newUser: User | undefined;
     const { role } = req.body;
+    let customer;
     switch (role) {
       case Role.CUSTOMER:
-        newUser = await CustomerModel.create(req.body);
+        customer = req.body as Customer;
+        customer.photo = `photo-${customer.email}.jpeg`;
+        await req.file?.toFile(`public/img/users/${customer.photo}`);
+        newUser = await CustomerModel.create(customer);
         break;
       case Role.SELLER:
         newUser = await this.createSellerWithStore(req, next);
@@ -73,6 +78,8 @@ class AuthController {
   // visitStore
   createSellerWithStore = async (req: Request, next: NextFunction) => {
     const { store, ...seller } = req.body;
+    store.logo = `logo-${seller.fullName}-${store.name}.jpeg`;
+    await req.file?.toFile(`public/img/stores/${store.logo}`);
     const newStore = await StoreModel.create(store);
     const storeId = newStore.id ?? 'invalid-id';
     if (storeId === 'invalid-id') { next(new AppError('invalid store id', 500)); }

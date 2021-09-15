@@ -28,6 +28,8 @@ class StoreController {
       next(new AppError('No seller found with that ID', 404));
       return;
     }
+    store.logo = `logo-${seller.fullName}-${store.name}.jpeg`;
+    await req.file?.toFile(`public/img/stores/${store.logo}`);
     const newStore = await StoreModel.create(store);
     const visitObj = { storeId: newStore.id, visits: [] };
     await VisitStoreModel.create(visitObj);

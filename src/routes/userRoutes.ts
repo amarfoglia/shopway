@@ -18,7 +18,7 @@ router.use('/:id/orders', orderRouter);
 router.use('/:id/followers', customerRouter);
 // router.use('/:id/sellers', sellerRouter);
 
-router.post('/signup', authController.signup);
+router.post('/signup', imageController.uploadPhoto, imageController.resizePhoto, authController.signup);
 router.post('/login', authController.login);
 
 router.post('/forgotPassword', authController.forgotPassword);
