@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from 'express';
-import Order from '../models/order';
 import catchAsync from '../utils/catchAsync';
 import OrderModel, { OrderDoc } from '../models/orderModel';
 import HandlerFactory from './helpers/handlerFactory';
@@ -9,10 +8,10 @@ const factory = new HandlerFactory<OrderDoc>();
 
 class OrderController {
   addOrder = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const order: Order = req.body;
-    order.customerId = req.user?.id;
+    const order: OrderDoc = req.body;
+    order.customer = req.user?.id;
 
-    if (!order.customerId) {
+    if (!req.user) {
       next(new AppError('the id of customer is not defined', 400));
     }
 
@@ -24,7 +23,7 @@ class OrderController {
 
     res.status(201).json({
       status: 'success',
-      data: { newOrder }
+      data: { order: newOrder }
     });
   });
 

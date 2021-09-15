@@ -25,7 +25,7 @@ class ArticleController {
     }
     res.status(201).json({
       status: 'success',
-      data: { newArticle }
+      data: { article: newArticle }
     });
   });
 

@@ -14,13 +14,9 @@ interface OrderDoc extends Document, Order {
   customer?: PopulatedDoc<Customer & Document>
   seller?: PopulatedDoc<Seller & Document>
 }
-const getCurrentDate = function () {
-  return addHours(utcToZonedTime(Date.now(), 'Europe/Rome'), 2);
-};
+const getCurrentDate = () => addHours(utcToZonedTime(Date.now(), 'Europe/Rome'), 2);
 
-const getNextDayFromToday = function () {
-  return addDays(addHours(utcToZonedTime(Date.now(), 'Europe/Rome'), 2), 1);
-};
+const getNextDayFromToday = () => addDays(addHours(utcToZonedTime(Date.now(), 'Europe/Rome'), 2), 1);
 
 interface IOrderModel extends mongoose.Model<OrderDoc> {}
 const orderSchema = new mongoose.Schema({

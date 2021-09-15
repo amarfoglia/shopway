@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from 'express';
-import { ObjectId } from 'mongodb';
 import AppError from '../utils/appError';
 import catchAsync from '../utils/catchAsync';
 import HandlerFactory from './helpers/handlerFactory';
@@ -33,7 +32,7 @@ class CustomerController {
     const followerList = customer?.followerList;
     res.status(200).json({
       status: 'success',
-      data: { followerList }
+      data: { followers: followerList }
     });
   });
 

@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { ObjectId } from 'mongodb';
 import mongoose from 'mongoose';
-import { addDays, getWeek, startOfWeek } from 'date-fns';
+import { addDays, startOfWeek } from 'date-fns';
 import { it } from 'date-fns/locale';
 import UserModel from '../models/users/userModel';
 import OrderModel from '../models/orderModel';
@@ -35,7 +35,7 @@ class StoreController {
     seller?.save();
     res.status(200).json({
       status: 'success',
-      data: { newStore, seller }
+      data: { store: newStore, seller }
     });
   });
 
@@ -81,7 +81,7 @@ class StoreController {
   // questa funzione qua sotto, potrei prendere come input due parametri startDate, endDate
   // stores/id/?&startDate
 
-  getWiewsStats = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  getWiewsStats = catchAsync(async (req: Request, res: Response) => {
     const { id: storeId } = req.params;
     const { startDate, endDate } = req.query as any;
     let first;
@@ -144,7 +144,7 @@ class StoreController {
     ]);
     res.status(200).json({
       status: 'success',
-      data: stats
+      data: { stats }
     });
   });
 
@@ -173,7 +173,7 @@ class StoreController {
     ]);
     res.status(200).json({
       status: 'success',
-      data: stats
+      data: { stats }
     });
   });
 
@@ -186,15 +186,12 @@ class StoreController {
       next(new AppError('You do not have the permission.', 400));
       return;
     }
+    const store: Store = req.body;
+    store.logo = `logo-${req.user?.id}-${storeId}.jpeg`;
+    await req.file?.toFile(`public/img/stores/${store.logo}`);
 
-    const {
-      name, city, address, phone
-    } = req.body;
-    const logo = `logo-${req.user?.id}-${storeId}.jpeg`;
-    await req.file?.toFile(`public/img/stores/${logo}`);
-    // effettua controllo che lo store sia effettivamente del seller loggato.
     const updatedStore = await StoreModel.findByIdAndUpdate(storeId, {
-      name, city, address, logo
+      ...store
     }, {
       new: true,
       runValidators: true
@@ -202,7 +199,7 @@ class StoreController {
 
     res.status(200).json({
       status: 'success',
-      data: { updatedStore }
+      data: { store: updatedStore }
     });
   });
 

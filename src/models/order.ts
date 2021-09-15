@@ -1,5 +1,3 @@
-import { ObjectId } from 'mongodb';
-
 interface Order {
   id?: string;
   customerId: string;

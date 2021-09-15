@@ -1,4 +1,3 @@
-import { ObjectId } from 'mongodb';
 import mongoose from 'mongoose';
 import { ONE_SEC_IN_MS } from '../../utils/time';
 import { ArticleDetails } from './article';

@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import mongoose, { PopulatedDoc } from 'mongoose';
+import mongoose from 'mongoose';
 import UserModel, { options } from './userModel';
 import Customer from './customer';
 
@@ -10,10 +10,6 @@ const customerSchema = new mongoose.Schema({
     type: [ObjectId],
     ref: 'Store',
     default: []
-  },
-  photo: {
-    type: String,
-    default: 'default.jpg'
   }
 }, options);
 export { CustomerDoc };

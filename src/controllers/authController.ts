@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import Cookies from 'universal-cookie';
-import { ObjectId } from 'mongodb';
 import Promisify from '../utils/promisify';
 import catchAsync from '../utils/catchAsync';
 import UserModel from '../models/users/userModel';
@@ -13,8 +12,6 @@ import { ONE_DAY_IN_MS } from '../utils/time';
 import CustomerModel from '../models/users/customerModel';
 import SellerModel from '../models/users/sellerModel';
 import Role from '../models/role';
-import Seller from '../models/users/seller';
-import Store from '../models/store';
 import StoreModel from '../models/storeModel';
 import VisitStoreModel from '../models/visitStoreModel';
 

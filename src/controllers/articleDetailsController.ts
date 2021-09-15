@@ -10,10 +10,9 @@ import SellerModel from '../models/users/sellerModel';
 const factory = new HandlerFactory<ArticleDetailsDoc>();
 
 class ArticleDetailsController {
-  addRetailArticle = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  addArticleDetails = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const articleDetails : ArticleDetails = req.body;
     articleDetails.articleId = req.params.id;
-
     if (!articleDetails.articleId) {
       next(new AppError('the id of article is not defined', 400));
       return;
@@ -23,7 +22,8 @@ class ArticleDetailsController {
       next(new AppError('Size must be unique, found duplicates in stockArticles', 400));
       return;
     }
-
+    articleDetails.image = `photo-${articleDetails.articleId}-${articleDetails.id}.jpeg`;
+    await req.file?.toFile(`public/img/articledetails/${articleDetails.image}`);
     const newArticleDetails = await ArticleDetailsModel.create(articleDetails);
     if (!newArticleDetails) {
       next(new AppError('Cannot create article', 500));
@@ -31,11 +31,11 @@ class ArticleDetailsController {
     }
     res.status(201).json({
       status: 'success',
-      data: { newArticleDetails }
+      data: { articleDetails: newArticleDetails }
     });
   });
 
-  checkArticleSize = function (stockArticles: ArticleStock[]): boolean {
+  checkArticleSize = (stockArticles: ArticleStock[]): boolean => {
     /* inserisce in un set tutti i size degli articleStock, se la lunghezza dell'array unique
        è diversa dalla lunghezza dello stock article allora
        c'è una ripetizione di size es: [{size: M, qnt: 10}, {size: M, qnt: 2}, {size: S, qnt:3}]
@@ -58,14 +58,12 @@ class ArticleDetailsController {
       return;
     }
 
-    const {
-      price, discount
-    } = req.body;
-    const image = `photo-${storeId}-${articleDetailsId}.jpeg`;
-    await req.file?.toFile(`public/img/articledetails/${image}`);
+    const newArticleDetails: ArticleDetails = req.body;
+    newArticleDetails.image = `photo-${storeId}-${articleDetailsId}.jpeg`;
+    await req.file?.toFile(`public/img/articledetails/${newArticleDetails.image}`);
     // effettua controllo che lo store sia effettivamente del seller loggato.
     const updatedArticleDetails = await ArticleDetailsModel.findByIdAndUpdate(articleDetailsId, {
-      price, discount, image
+      ...newArticleDetails
     }, {
       new: true,
       runValidators: true

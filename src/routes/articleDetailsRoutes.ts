@@ -14,7 +14,7 @@ router.get('/', articleDetailsController.getAllArticlesDetails);
 router.get('/:id', articleDetailsController.getArticleDetails);
 
 router.use(authController.restrictTo(Role.SELLER));
-router.post('/', articleDetailsController.addRetailArticle);
+router.post('/', imageController.uploadPhoto, imageController.resizePhoto, articleDetailsController.addArticleDetails);
 router.patch('/:id', articleDetailsController.updateArticleDetails);
 router.patch('/:id/updateMe',
   imageController.uploadPhoto,

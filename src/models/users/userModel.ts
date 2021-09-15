@@ -30,6 +30,9 @@ const userSchema = new mongoose.Schema<UserDoc>({
     value: Role,
     required: [true, 'Please provide a valid role']
   },
+  photo: {
+    type: String
+  },
   email: {
     type: String,
     required: [true, 'Please provide your email'],

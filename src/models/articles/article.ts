@@ -1,4 +1,3 @@
-import { ObjectId } from 'mongodb';
 import Category from '../category';
 
 interface ArticleStock {

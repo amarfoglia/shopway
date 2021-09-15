@@ -4,26 +4,26 @@ interface Category {
 }
 
 const categoryArticle = {
-  WINDBREAKER: 'Giubotto',
-  JACKET: 'Giacca',
-  SHORTS: 'Bermuda',
-  SHIRT: 'Camicia',
-  SWEAT_SHIRT: 'Felpa',
-  T_SHIRT: 'Maglia',
-  PANTS: 'Pantaloni',
-  TRUNK: 'Pantaloncini',
-  SHOES: 'Scarpe',
-  SLIPPERS: 'Ciabatte',
-  BOOTS: 'Stivali',
-  HIGH_HEELS: 'Scarpe con tacco',
-  BAG: 'Borsa',
-  BACKPACK: 'Zaino'
+  WINDBREAKER: 'Windbreaker',
+  JACKET: 'Jacket',
+  SHORTS: 'Shorts',
+  SHIRT: 'Shirt',
+  SWEAT_SHIRT: 'Sweat Shirt',
+  T_SHIRT: 'T-Shirt',
+  PANTS: 'Pants',
+  TRUNK: 'Trunk',
+  SHOES: 'Shoes',
+  SLIPPERS: 'Slippers',
+  BOOTS: 'Boots',
+  HIGH_HEELS: 'High Heels',
+  BAG: 'Bag',
+  BACKPACK: 'Backpack'
 };
 
 const categoryType = {
-  MAN: 'Uomo',
-  WOMAN: 'Donna',
-  CHILD: 'Bambino'
+  MAN: 'Man',
+  WOMAN: 'Woman',
+  CHILD: 'Child'
 };
 
 function isCategoryArticle(elem: string): boolean {

@@ -18,7 +18,7 @@ router.get('/', orderController.getAllOrders);
 // get one order of customer
 router.get('/:id', orderController.getOrder);
 // add order to customer
-router.post('/', orderController.addOrder);
+router.post('/', userController.getMe, orderController.addOrder);
 router.delete('/:id', orderController.deleteOrder);
 
 export default router;
