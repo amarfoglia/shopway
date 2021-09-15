@@ -86,12 +86,12 @@ const theme = createTheme({
     MuiTextField: {
       root: {
         border: 'none',
-        borderRadius: 30,
+        borderRadius: 16,
       },
     },
     MuiOutlinedInput: {
       root: {
-        borderRadius: 30,
+        borderRadius: 16,
       },
     },
     MuiInputAdornment: {

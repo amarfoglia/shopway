@@ -35,9 +35,9 @@ const StorePage = (): React.ReactElement => {
   return (
     <ProfilePage
       sections={sections}
-      title={store.storeName}
-      subtitle1={store.address}
-      subtitle2={store.phone}
+      name={store.storeName}
+      subinfo1={store.address}
+      subinfo2={store.phone}
       rightChild={
         <IconButton>
           <FavoriteOutlined color={'primary'} titleAccess="set favority store" />

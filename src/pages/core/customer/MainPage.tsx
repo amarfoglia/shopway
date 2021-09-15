@@ -68,9 +68,12 @@ const MainPage = (): React.ReactElement => {
   return (
     <div className={classes.root}>
       <Container maxWidth="md" className={classes.container}>
-        <TopBar variant="user" userName={user?.fullName} position="relative" p={0} />
         <Grid container spacing={2}>
-          {currentTab !== PATHS.CUSTOMER_SETTINGS && <Grid item xs={12}></Grid>}
+          {currentTab !== PATHS.CUSTOMER_SETTINGS && (
+            <Grid item xs={12}>
+              <TopBar variant="user" userName={user?.fullName} position="relative" p={0} />
+            </Grid>
+          )}
           <Grid item xs={12}>
             <React.Suspense fallback={<Loader />}>
               <LazyTabsPanel currentTab={currentTab} />

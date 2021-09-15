@@ -1,11 +1,12 @@
 import React from 'react';
-import Notifications from '@material-ui/icons/Notifications';
+import NotificationsOutlined from '@material-ui/icons/NotificationsOutlined';
 import UserAvatar from './MyAvatar';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
+import Badge from '@material-ui/core/Badge';
 
 type Variants = 'simple' | 'user';
 type Position = 'fixed' | 'sticky' | 'absolute' | 'relative' | 'static' | undefined;
@@ -29,13 +30,16 @@ const useStyles = makeStyles<Theme, StyleProps>((theme: Theme) =>
   createStyles({
     root: {
       flexGrow: 1,
-      padding: ({ p }) => p ?? `${theme.spacing(2)}px ${theme.spacing(3)}px`,
+      paddingLeft: ({ p }) => p ?? theme.spacing(3),
+      paddingRight: ({ p }) => p ?? theme.spacing(3),
+      paddingTop: ({ p }) => p ?? theme.spacing(2),
       paddingBottom: 0,
     },
     title: {
       flexGrow: 1,
       textAlign: 'center',
     },
+    notifyIcon: {},
   }),
 );
 
@@ -61,7 +65,14 @@ const TopBar: React.FC<Props> = ({
     ) : (
       leftChild
     );
-  const RightNode = variant === 'user' ? <Notifications /> : rightChild;
+  const RightNode =
+    variant === 'user' ? (
+      <Badge badgeContent={1} color="primary" overlap="circular">
+        <NotificationsOutlined fontSize="large" />
+      </Badge>
+    ) : (
+      rightChild
+    );
   return (
     <div>
       <AppBar position={position} elevation={0} color="transparent" className={classes.root}>

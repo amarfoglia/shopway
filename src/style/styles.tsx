@@ -2,11 +2,11 @@
 import { makeStyles } from '@material-ui/core';
 
 const shadow = '0 10px 30px rgba(0,37,132,.06)';
-const borderRadius = 30;
 
 const baseStyles = makeStyles((theme) => ({
   root: {
     height: '100vh',
+    backgroundColor: theme.palette.background.default,
   },
   container: {
     display: 'flex',
@@ -56,13 +56,6 @@ const baseStyles = makeStyles((theme) => ({
   },
 }));
 
-const illustrationStyle = makeStyles({
-  container: {
-    alignItems: 'center',
-    justifyContent: 'space-around',
-  },
-});
-
 const roleStyles = makeStyles((theme) => ({
   imageRoleContainer: {
     borderRadius: 15,
@@ -87,6 +80,6 @@ const roleStyles = makeStyles((theme) => ({
   },
 }));
 
-export { illustrationStyle, roleStyles, shadow };
+export { roleStyles, shadow };
 
 export default baseStyles;

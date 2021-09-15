@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Grid, makeStyles, IconButton } from '@material-ui/core';
+import { Grid, makeStyles, IconButton, Theme } from '@material-ui/core';
 import ArrowBackIosOutlined from '@material-ui/icons/ArrowBackIosOutlined';
 import { useHistory, useParams } from 'react-router-dom';
 import TopBar from '../../../components/TopBar';
@@ -24,10 +24,12 @@ interface Props {
   };
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles<Theme>((theme) => ({
+  root: {
+    height: 'calc(100% - 281px)',
+  },
   container: {
     padding: `${theme.spacing(2)}px ${theme.spacing(3)}px`,
-    backgroundColor: theme.palette.background.default,
   },
 }));
 
@@ -39,7 +41,6 @@ const ProductPage: React.FC<Props> = ({ article, store }): React.ReactElement =>
   const [size, setSize] = useState('');
   const [quantity, setQuantity] = useState(1);
   const [price, setPrice] = useState(article.price);
-
   console.log(`must fetch article with id ${id}`);
 
   const DetailsNode = (
@@ -73,17 +74,15 @@ const ProductPage: React.FC<Props> = ({ article, store }): React.ReactElement =>
           </IconButton>
         }
       />
-      <Grid container>
-        <Grid item xs={12}>
-          <div>
-            <Image
-              src={article.image ?? 'not found'}
-              alt={`product image of ${article.name}`}
-              cover
-              aspectRatio={4 / 3}
-            />
-          </div>
-        </Grid>
+      <div>
+        <Image
+          src={article.image ?? 'not found'}
+          alt={`product image of ${article.name}`}
+          cover
+          aspectRatio={4 / 3}
+        />
+      </div>
+      <Grid id="ei" container className={classes.root}>
         <Grid item xs={12} className={classes.container}>
           {DetailsNode}
         </Grid>

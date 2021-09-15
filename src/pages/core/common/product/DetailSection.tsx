@@ -31,7 +31,8 @@ const DetailsSection: React.FC<Props> = ({
   handleColorChange,
   handleSizeChange,
 }) => (
-  <Grid container spacing={3}>
+  //style={{ overflow: 'auto', height: 'calc(100% - 104px)' }}
+  <Grid container spacing={3} style={{ overflow: 'auto', height: 'calc(100% - 100px)' }}>
     <Grid item xs={12}>
       <Grid container spacing={2}>
         <Grid item xs={12}>

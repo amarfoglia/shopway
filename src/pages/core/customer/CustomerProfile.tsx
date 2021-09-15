@@ -54,9 +54,9 @@ const CustomerProfile = (): React.ReactElement => {
 
   return (
     <ProfilePage
-      title={user.fullName}
-      subtitle1={user.email}
-      subtitle2={user.phone}
+      name={user.fullName}
+      subinfo1={user.email}
+      subinfo2={user.phone}
       sections={sections}
     />
   );

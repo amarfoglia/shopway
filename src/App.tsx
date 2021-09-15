@@ -18,6 +18,7 @@ const ForgotPasswordPage = lazy(() => import('./pages/auth/ForgotPasswordPage'))
 const StorePage = lazy(() => import('./pages/core/common/StorePage'));
 const CustomerProfile = lazy(() => import('./pages/core/customer/CustomerProfile'));
 const SearchPage = lazy(() => import('./pages/core/search/SearchPage'));
+const CustomerEditProfile = lazy(() => import('./pages/core/customer/EditProfile'));
 
 const renderContent = () => {
   const classes = baseStyles();
@@ -34,7 +35,8 @@ const renderContent = () => {
               path={PATHS.FORGOT_PASSWORD}
               render={() => <ForgotPasswordPage />}
             />
-            <AuthRoute path={PATHS.CUSTOMER_MAIN} render={() => <CustomerPage />} />
+            <AuthRoute exact path={PATHS.CUSTOMER_MAIN} render={() => <CustomerPage />} />
+            <AuthRoute path={PATHS.CUSTOMER_EDIT} render={() => <CustomerEditProfile />} />
             <AuthRoute path={PATHS.CUSTOMER_PROFILE} render={() => <CustomerProfile />} />
             <AuthRoute path={PATHS.SEARCH_ARTICLE} render={() => <SearchPage />} />
             <AuthRoute

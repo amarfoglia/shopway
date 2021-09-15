@@ -8,11 +8,16 @@ import MyPaper from '../../../../components/MyPaper';
 const quantityStyles = makeStyles((theme) => ({
   root: {
     background: theme.palette.background.default,
-    position: 'sticky',
+    position: 'fixed',
     bottom: 0,
-    left: 0,
     padding: 0,
     width: '100%',
+  },
+  noBorderBottom: {
+    borderBottomRightRadius: 0,
+    borderBottomLeftRadius: 0,
+    borderTopLeftRadius: theme.spacing(1.5),
+    borderTopRightRadius: theme.spacing(1.5),
   },
   container: {
     padding: `${theme.spacing(3)}px ${theme.spacing(3)}px`,
@@ -59,7 +64,7 @@ const QuantitySection: React.FC<Props> = ({
 
   return (
     <div className={classes.root}>
-      <MyPaper p={0}>
+      <MyPaper p={0} className={classes.noBorderBottom}>
         <Grid container justifyContent="space-around" className={classes.container}>
           <Grid item xs={12}>
             <Grid container justifyContent="space-between">
