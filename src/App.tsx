@@ -19,6 +19,7 @@ const CustomerProfile = lazy(() => import('./pages/core/customer/CustomerProfile
 const ChangePasswordPage = lazy(() => import('./pages/core/common/ChangePassword'));
 const SearchPage = lazy(() => import('./pages/core/search/SearchPage'));
 const CustomerEditProfile = lazy(() => import('./pages/core/customer/EditProfile'));
+const ErrorPage = lazy(() => import('./pages/ErrorPage'));
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -58,6 +59,10 @@ const renderContent = () => {
             />
             <AuthRoute path={PATHS.STORE_PAGE} render={() => <StorePage />} />
             <Route path={PATHS.NOT_AUTHORIZED} render={() => <NotAuthorized />} />
+            <Route
+              path={PATHS.ERROR}
+              render={({ location }) => <ErrorPage error={location.state as string} />}
+            />
             <Route path={PATHS.NOT_FOUND} render={() => <NotFoundPage />} />
           </Switch>
         </React.Suspense>

@@ -3,7 +3,11 @@ import { Button } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 import IllustrationPage, { Position } from '../components/IllustrationPage';
 
-const ErrorPage = (error: string): React.ReactElement => {
+interface Props {
+  error: string;
+}
+
+const ErrorPage: React.FC<Props> = ({ error }): React.ReactElement => {
   const history = useHistory();
   return (
     <IllustrationPage

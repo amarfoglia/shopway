@@ -6,6 +6,8 @@ const connectionError = {
   status: 500,
 };
 
+type ConnectionError = typeof connectionError;
+
 const BACKEND_URL = 'http://localhost:5000';
 
 export { BACKEND_URL };
@@ -46,7 +48,7 @@ const toFormData = (obj: any): FormData => {
 
 type Payload<T> = JSONResponse<T>;
 
-export type { Payload };
+export type { Payload, ConnectionError };
 
 const formDataClient = AxiosClient('multipart/form-data');
 const jsonClient = AxiosClient('application/json');

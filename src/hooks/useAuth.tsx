@@ -1,9 +1,14 @@
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
 import { useMutation } from 'react-query';
-import { formDataClient, jsonClient, Payload, toFormData } from '../utils/axiosClient';
+import {
+  ConnectionError,
+  formDataClient,
+  jsonClient,
+  Payload,
+  toFormData,
+} from '../utils/axiosClient';
 import User from '../model/users/user';
 import Store from '../model/users/store';
-import { AppError } from '../model/http';
 
 interface Props {
   children: ReactNode;
@@ -27,8 +32,8 @@ interface ChangePasswordProps {
 
 interface UserContext {
   user?: User;
-  error?: AppError | null;
   isLoading?: boolean;
+  error?: ConnectionError | null;
   updateMe: (user: Partial<User>) => Promise<Payload<User>>;
   register: (props: SignupProps) => Promise<Payload<User>>;
   login: (props: LoginProps) => Promise<Payload<User>>;
@@ -56,7 +61,7 @@ export const AuthProvider = (props: Props): React.ReactElement => {
     error,
     isLoading,
     mutate: _checkUserLoggedIn,
-  } = useMutation<Payload<User>, AppError>(checkUserLoggedIn);
+  } = useMutation<Payload<User>, ConnectionError>(checkUserLoggedIn);
 
   useEffect(() => {
     _checkUserLoggedIn();

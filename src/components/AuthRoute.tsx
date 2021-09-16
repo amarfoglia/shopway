@@ -3,12 +3,15 @@ import { Route } from 'react-router';
 import { Redirect, RouteProps } from 'react-router-dom';
 import AuthContext from '../hooks/useAuth';
 import User from '../model/users/user';
+import { ConnectionError } from '../utils/axiosClient';
 import PATHS from '../utils/routes';
 import Loader from './Loader';
 
 const NotAuthorized = () => <Redirect to={{ pathname: PATHS.NOT_AUTHORIZED }} />;
 const Home = () => <Redirect to={{ pathname: PATHS.HOME }} />;
-const ErrorPage = () => <Redirect to={{ pathname: PATHS.ERROR }} />;
+const ErrorPage = (error: ConnectionError) => (
+  <Redirect to={{ pathname: PATHS.ERROR, state: error.message }} />
+);
 
 type role = 'Customer' | 'Seller';
 
@@ -34,7 +37,7 @@ const AuthRoute: React.FC<AuthRouteProps> = ({
 
   const renderComponent = () =>
     error
-      ? ErrorPage
+      ? () => ErrorPage(error)
       : _isNotLoggedIn(user, mustBeLoggedIn) || _isRoleNotValid(user, mustBe)
       ? NotAuthorized
       : mustBeNotLoggedIn && user
