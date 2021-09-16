@@ -98,43 +98,6 @@ const SearchPage = (): React.ReactElement => {
         </Grid>
       </Grid>
     </Container>
-    // <Grid container>
-    //   <Grid item xs={12}>
-    //     <TopBar
-    //       variant="simple"
-    //       centerTitle="Search"
-    //       p={0}
-    //       position="relative"
-    //       leftChild={
-    //         <IconButton onClick={history.goBack} style={{ padding: 0 }}>
-    //           <ArrowBackIosOutlined titleAccess="go back" fontSize="small" />
-    //         </IconButton>
-    //       }
-    //       rightChild={renderSearchIcon()}
-    //     />
-    //   </Grid>
-    //   <Grid item xs={12}>
-    //     <AgeFilterBar onChange={(sex) => setSearchParams({ ...searchParams, sex })} />
-    //   </Grid>
-    //   <Grid item xs={12} className={classes.content}>
-    //     <Grid container spacing={3}>
-    //       <Grid item container xs={12} spacing={1}>
-    //         <Grid item xs={12} style={{ paddingBlock: openSearchBar ? 'inherit' : 0 }}>
-    //           <SearchBar doOnSearch={handleSearch} isVisible={openSearchBar} />
-    //         </Grid>
-    //         <Grid item xs={12}>
-    //           <FilterBar
-    //             filters={searchParams.filters}
-    //             onChange={(v) => setSearchParams({ ...searchParams, filters: v })}
-    //           />
-    //         </Grid>
-    //       </Grid>
-    //       <Grid item xs={12}>
-    //         <ProductsSection clothes={[product, product, product, product]} />
-    //       </Grid>
-    //     </Grid>
-    //   </Grid>
-    // </Grid>
   );
 };
 

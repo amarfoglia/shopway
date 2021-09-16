@@ -9,6 +9,7 @@ import { Field, useFormikContext } from 'formik';
 import { SignupFormModel } from '../../../model/auth';
 import { TextFieldProps } from 'material-ui';
 import DebouncedInput from '../../../components/formFields/DebouncedInput';
+import User from '../../../model/users/user';
 
 type SignupFields = typeof SignupFormModel.formField;
 
@@ -20,7 +21,8 @@ const UserFields: React.FC<Props & TextFieldProps> = ({
   formField: { email, fullName, password, passwordConfirm },
   onChange,
 }) => {
-  const { values } = useFormikContext<SignupFields>();
+  const { values } = useFormikContext<{ user: User }>();
+  const { user } = values;
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
@@ -34,7 +36,7 @@ const UserFields: React.FC<Props & TextFieldProps> = ({
           variant="outlined"
           onChange={onChange}
           component={DebouncedInput}
-          value={values.email}
+          value={user.email}
           fullWidth
         />
       </Grid>
@@ -49,7 +51,7 @@ const UserFields: React.FC<Props & TextFieldProps> = ({
           variant="outlined"
           onChange={onChange}
           component={DebouncedInput}
-          value={values.fullName}
+          value={user.fullName}
           fullWidth
         />
       </Grid>
@@ -65,7 +67,7 @@ const UserFields: React.FC<Props & TextFieldProps> = ({
           type="password"
           onChange={onChange}
           component={DebouncedInput}
-          value={values.password}
+          value={user.password}
           fullWidth
         />
       </Grid>
@@ -81,7 +83,7 @@ const UserFields: React.FC<Props & TextFieldProps> = ({
           type="password"
           onChange={onChange}
           component={DebouncedInput}
-          value={values.passwordConfirm}
+          value={user.passwordConfirm}
           fullWidth
         />
       </Grid>

@@ -4,10 +4,6 @@ import { makeStyles } from '@material-ui/core';
 const shadow = '0 10px 30px rgba(0,37,132,.06)';
 
 const baseStyles = makeStyles((theme) => ({
-  root: {
-    height: '100vh',
-    backgroundColor: theme.palette.background.default,
-  },
   container: {
     display: 'flex',
     minHeight: '100%',

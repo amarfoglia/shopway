@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Typography } from '@material-ui/core';
 import { FormikHelpers } from 'formik';
 import { Link } from 'react-router-dom';
+import { useMutation } from 'react-query';
 
 import { LoginFormModel } from '../../model/auth';
 import LoginFields from './forms/LoginFields';
@@ -13,6 +14,8 @@ import PATHS from '../../utils/routes';
 import MyForm from '../../components/MyForm';
 import AuthPage from '../../components/AuthPage';
 import { AppError } from '../../model/http';
+import User from '../../model/users/user';
+import { Payload } from '../../utils/axiosClient';
 
 const { formId, formField } = LoginFormModel;
 
@@ -23,21 +26,23 @@ const initialValues = {
 
 type Values = typeof initialValues;
 
+interface LoginProps {
+  email: string;
+  password: string;
+}
+
 const LoginPage: React.FC = () => {
-  const { login, isLoading } = useContext(AuthContext);
-  const [error, setError] = useState<AppError>();
   const baseClasses = baseStyles();
+  const { login } = useContext(AuthContext);
+  const {
+    error,
+    isLoading,
+    mutate: loginUser,
+  } = useMutation<Payload<User>, AppError, LoginProps>(login);
 
   const handleSubmit = (values: Values, helpers: FormikHelpers<Values>) => {
     const { email, password } = values;
-    login(
-      { email, password },
-      (d) => {
-        setError(undefined);
-        console.log(d);
-      },
-      (e) => setError(e),
-    );
+    loginUser({ email, password });
     helpers.setSubmitting(isLoading);
   };
 

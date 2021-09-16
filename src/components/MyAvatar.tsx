@@ -3,6 +3,7 @@ import { Avatar, makeStyles, Typography } from '@material-ui/core';
 import clsx from 'clsx';
 import Image from 'material-ui-image';
 import { Skeleton } from '@material-ui/lab';
+import { BACKEND_URL } from '../utils/axiosClient';
 
 type Sizes = 'small' | 'medium' | 'large' | 'xl';
 
@@ -59,7 +60,7 @@ const MyAvatar: React.FC<AvatarProps> = ({ text, imagePath, size, alt }) => {
   const renderImageAvatar = (path: string) => (
     <div className={clsx(sizeClass, classes.imgAvatar)}>
       <Image
-        src={path}
+        src={`${BACKEND_URL}/img/users/${path}`}
         alt={alt}
         loading={
           <Skeleton variant="circle" animation="wave" width={'inherit'} height={'inherit'} />

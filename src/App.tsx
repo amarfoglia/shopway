@@ -1,9 +1,8 @@
 import React, { lazy, ReactElement } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import { Container } from '@material-ui/core';
+import { Container, makeStyles } from '@material-ui/core';
 import AuthRoute from './components/AuthRoute';
 import PATHS from './utils/routes';
-import baseStyles from './style/styles';
 import Loader from './components/Loader';
 import ProductPage from './pages/core/common/ProductPage';
 import { articleDetails } from './model/ToRemove';
@@ -20,8 +19,15 @@ const CustomerProfile = lazy(() => import('./pages/core/customer/CustomerProfile
 const SearchPage = lazy(() => import('./pages/core/search/SearchPage'));
 const CustomerEditProfile = lazy(() => import('./pages/core/customer/EditProfile'));
 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    height: '100vh',
+    backgroundColor: theme.palette.background.default,
+  },
+}));
+
 const renderContent = () => {
-  const classes = baseStyles();
+  const classes = useStyles();
   return (
     <Router>
       <Container className={classes.root} disableGutters maxWidth="md">

@@ -11,7 +11,7 @@ interface Props {
   errors?: string;
   handleSubmit: (values: FormikValues, helpers: FormikHelpers<FormikValues>) => void;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  validationSchema: any;
+  validationSchema?: any;
   initialValues: FormikValues;
   submitText?: string;
   isSubmitting: boolean;

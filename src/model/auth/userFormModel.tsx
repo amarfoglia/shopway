@@ -1,17 +1,17 @@
 const commonFields = {
   email: {
-    name: 'email',
+    name: 'user.email',
     label: 'Email',
     requiredErrorMsg: 'Email is required',
     invalidErrorMsg: 'Email is invalid',
   },
   fullName: {
-    name: 'fullName',
+    name: 'user.fullName',
     label: 'FullName',
     requiredErrorMsg: 'FullName is required',
   },
   password: {
-    name: 'password',
+    name: 'user.password',
     label: 'Password',
     requiredErrorMsg: 'Password is required',
     invalidErrorMsg: 'Password is invalid',
@@ -35,12 +35,12 @@ const SignupFormModel = {
     fullName,
     password,
     passwordConfirm: {
-      name: 'passwordConfirm',
+      name: 'user.passwordConfirm',
       label: 'Confirm password',
       invalidErrorMsg: 'Passwords must match',
     },
     role: {
-      name: 'role',
+      name: 'user.role',
       label: 'Role',
       requiredErrorMsg: 'Role is required',
     },

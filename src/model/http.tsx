@@ -1,10 +1,15 @@
 import { AxiosResponse } from 'axios';
 
+type payload = 'user' | 'article';
+
 export default interface JSONResponse<T> {
   status: string;
   statusText: string;
   message?: string;
-  data?: T;
+  nameT: string;
+  data?: {
+    [x in payload]: T;
+  };
   errors?: Array<{ message: string }>;
 }
 

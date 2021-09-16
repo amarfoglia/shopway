@@ -2,6 +2,7 @@ import { useFormikContext } from 'formik';
 import React from 'react';
 import ImageUploader from '../../../components/ImageUploader';
 import { CustomerFormModel } from '../../../model/auth';
+import User from '../../../model/users/user';
 
 interface Props {
   formField: typeof CustomerFormModel.formField;
@@ -9,14 +10,13 @@ interface Props {
 }
 
 const CustomerFields: React.FC<Props> = ({ formField: { photo } }) => {
-  const { setFieldValue } = useFormikContext();
-  return (
-    <ImageUploader
-      id="CustomerImageUploader"
-      inputName={photo.name}
-      onImageUpload={(image) => setFieldValue(photo.name, image)}
-    />
-  );
+  const { values, setFieldValue } = useFormikContext<{ user: User }>();
+  const inputParams = {
+    id: 'customer-photo-input',
+    inputName: photo.name,
+    onImageUpload: (image: File) => setFieldValue(photo.name, image),
+  };
+  return <ImageUploader input={inputParams} image={values.user.photo as File} />;
 };
 
 export default CustomerFields;

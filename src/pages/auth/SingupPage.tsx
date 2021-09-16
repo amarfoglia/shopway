@@ -1,19 +1,22 @@
 import React, { lazy, useContext, useState } from 'react';
 import { Fab, Grid, LinearProgress, Typography } from '@material-ui/core';
-import { FormikHelpers } from 'formik';
+import { FormikHelpers, FormikValues } from 'formik';
 import { Link } from 'react-router-dom';
 import ArrowBackIosOutlined from '@material-ui/icons/ArrowBackIosOutlined';
-
+import { useMutation } from 'react-query';
 import { CustomerFormModel, SellerFormModel, SignupFormModel } from '../../model/auth';
 import { signupValidation } from '../../model/auth/validationSchema';
 import initialValues from '../../model/auth/initialFormValues';
-import { Roles } from '../../model/User';
 import PATHS from '../../utils/routes';
 import baseStyles from '../../style/styles';
 import AuthContext from '../../hooks/useAuth';
 import AuthPage from '../../components/AuthPage';
 import MyForm from '../../components/MyForm';
 import { AppError } from '../../model/http';
+import Role from '../../model/users/role';
+import { Payload } from '../../utils/axiosClient';
+import User from '../../model/users/user';
+import Store from '../../model/users/store';
 
 const SellerFields = lazy(() => import('./forms/SellerFields'));
 const CustomerFields = lazy(() => import('./forms/CustomerFields'));
@@ -29,7 +32,7 @@ enum STEPS {
 
 const getStepOffset = (step: number) => (step === STEPS.STEP_3S ? 2 : 1);
 const getStepBasedOnRole = (role: string) =>
-  role === Roles.CUSTOMER.value ? STEPS.STEP_3C : STEPS.STEP_3S;
+  role === Role.CUSTOMER ? STEPS.STEP_3C : STEPS.STEP_3S;
 
 const { formId, formField: userFormField } = SignupFormModel;
 const { formField: sellerFormField } = SellerFormModel;
@@ -64,34 +67,26 @@ const formComponents = new Map([
   ],
 ]);
 
-type Values = typeof initialValues;
+interface SignupProps {
+  user: User;
+  store?: Store;
+}
 
 const SignupPage: React.FC = () => {
-  const { register, isLoading } = useContext(AuthContext);
-  const [error, setError] = useState<AppError>();
+  const { register } = useContext(AuthContext);
+  const {
+    error,
+    isLoading,
+    mutate: userSignup,
+  } = useMutation<Payload<User>, AppError, SignupProps>(register);
   const [activeStep, setActiveStep] = useState(STEPS.STEP_1);
   const currentValidationSchema = signupValidation[activeStep];
   const isLastStep = activeStep === STEPS.STEP_3C || activeStep === STEPS.STEP_3S;
   const baseClasses = baseStyles();
 
-  const submitForm = (values: Values) => {
-    const { fullName, password, passwordConfirm, email, role, ...store } = values;
-    const user = {
-      fullName,
-      password,
-      passwordConfirm,
-      email,
-      role,
-      store,
-    };
-    register(
-      user,
-      (d) => {
-        setError(undefined);
-        console.log(d);
-      },
-      (e) => setError(e),
-    );
+  const submitForm = (values: FormikValues) => {
+    const { user, store } = values;
+    userSignup({ user, store });
   };
 
   const FormFooter = (
@@ -103,10 +98,7 @@ const SignupPage: React.FC = () => {
     </Typography>
   );
 
-  const handleBack = () => {
-    setActiveStep(activeStep - getStepOffset(activeStep));
-    console.log('active step: ' + activeStep);
-  };
+  const handleBack = () => setActiveStep(activeStep - getStepOffset(activeStep));
 
   const BackButton = (
     <Grid item className={baseClasses.backFabGrid}>
@@ -120,19 +112,19 @@ const SignupPage: React.FC = () => {
     if (activeStep > STEPS.STEP_1) return BackButton;
   };
 
-  const nextStep = (helpers: FormikHelpers<Values>, step: number) => {
+  const nextStep = (helpers: FormikHelpers<FormikValues>, step: number) => {
     setActiveStep(step);
     helpers.setTouched({});
     helpers.setSubmitting(false);
   };
 
-  const handleSubmit = (values: Values, helpers: FormikHelpers<Values>) => {
+  const handleSubmit = (values: FormikValues, helpers: FormikHelpers<FormikValues>) => {
     switch (activeStep) {
       case STEPS.STEP_1:
         nextStep(helpers, STEPS.STEP_2);
         break;
       case STEPS.STEP_2:
-        nextStep(helpers, getStepBasedOnRole(values['role']));
+        nextStep(helpers, getStepBasedOnRole(values.user.role));
         break;
       case STEPS.STEP_3C:
       case STEPS.STEP_3S:

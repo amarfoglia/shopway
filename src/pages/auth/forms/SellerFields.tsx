@@ -10,6 +10,7 @@ import { SellerFormModel } from '../../../model/auth';
 import { TextFieldProps } from 'material-ui';
 import DebouncedInput from '../../../components/formFields/DebouncedInput';
 import ImageUploader from '../../../components/ImageUploader';
+import Store from '../../../model/users/store';
 
 type SellerFields = typeof SellerFormModel.formField;
 
@@ -21,19 +22,16 @@ const SellerForm: React.FC<Props & TextFieldProps> = ({
   formField: { storeName, address, city, phone, logo },
   onChange,
 }) => {
-  const { values, setFieldValue } = useFormikContext<SellerFields>();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const storeLogo = values.logo as any;
+  const { values, setFieldValue } = useFormikContext<{ store: Store }>();
+  const { store } = values;
+  const inputParams = {
+    id: 'SellerImageUploader',
+    inputName: logo.name,
+    onImageUpload: (image: File) => setFieldValue(logo.name, image),
+  };
   const Uploader = useMemo(
-    () => (
-      <ImageUploader
-        id="SellerImageUploader"
-        image={storeLogo}
-        inputName={logo.name}
-        onImageUpload={(image) => setFieldValue(logo.name, image)}
-      />
-    ),
-    [storeLogo],
+    () => <ImageUploader input={inputParams} image={store.logo as File} />,
+    [store.logo],
   );
   return (
     <Grid container spacing={2}>
@@ -51,7 +49,7 @@ const SellerForm: React.FC<Props & TextFieldProps> = ({
           Icon={StorefrontOutlined}
           onChange={onChange}
           component={DebouncedInput}
-          value={values.storeName}
+          value={store.name}
           fullWidth
         />
       </Grid>
@@ -66,7 +64,7 @@ const SellerForm: React.FC<Props & TextFieldProps> = ({
           Icon={LocationCityOutlined}
           onChange={onChange}
           component={DebouncedInput}
-          value={values.city}
+          value={store.city}
           fullWidth
         />
       </Grid>
@@ -81,7 +79,7 @@ const SellerForm: React.FC<Props & TextFieldProps> = ({
           Icon={LocationOnOutlined}
           onChange={onChange}
           component={DebouncedInput}
-          value={values.address}
+          value={store.address}
           fullWidth
         />
       </Grid>
@@ -96,7 +94,7 @@ const SellerForm: React.FC<Props & TextFieldProps> = ({
           Icon={PhoneOutlined}
           onChange={onChange}
           component={DebouncedInput}
-          value={values.phone}
+          value={store.phone}
           fullWidth
         />
       </Grid>

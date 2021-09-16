@@ -2,7 +2,7 @@ export default {
   formId: 'customerForm',
   formField: {
     photo: {
-      name: 'photo',
+      name: 'user.photo',
       label: 'Customer photo',
     },
   },

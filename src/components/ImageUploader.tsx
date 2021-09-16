@@ -5,14 +5,36 @@ import baseStyles from '../style/styles';
 
 interface Props {
   image?: File;
+  input: InputProps;
+}
+
+interface InputProps {
   inputName: string;
-  onImageUpload?: (image: File) => void;
+  onImageUpload: (image: File) => void;
   id: string;
 }
 
 const getImageURL = (file?: File) => file && URL.createObjectURL(file);
 
-const ImageUploader: React.FC<Props> = ({ inputName, onImageUpload, id, image }) => {
+const ImageInput: React.FC<InputProps> = ({ inputName, onImageUpload, id }) => {
+  const handleChange = (event: React.FormEvent<HTMLInputElement>) => {
+    const image = event.currentTarget?.files?.item(0);
+    image && onImageUpload?.(image);
+  };
+
+  return (
+    <input
+      name={inputName}
+      accept="image/*"
+      style={{ display: 'none' }}
+      id={id}
+      type="file"
+      onChange={handleChange}
+    />
+  );
+};
+
+const ImageUploader: React.FC<Props> = ({ input: { inputName, onImageUpload, id }, image }) => {
   const [file, setFile] = useState<File>();
   const classes = baseStyles();
 
@@ -36,24 +58,17 @@ const ImageUploader: React.FC<Props> = ({ inputName, onImageUpload, id, image })
     </Box>
   );
 
-  const handleChange = (event: React.FormEvent<HTMLInputElement>) => {
-    const image = event.currentTarget?.files?.item(0);
-    image && onImageUpload?.(image);
-    image && setFile(image);
-    console.log('modified');
-  };
-
   return (
     <FormControl>
-      <input
-        name={inputName}
-        accept="image/*"
-        style={{ display: 'none' }}
-        id={id}
-        type="file"
-        onChange={handleChange}
-      />
       <Grid container spacing={2} className={classes.container}>
+        <ImageInput
+          onImageUpload={(img) => {
+            setFile(img);
+            onImageUpload(img);
+          }}
+          id={id}
+          inputName={inputName}
+        />
         <Grid item xs={12}>
           <PhotoPaper />
         </Grid>
@@ -61,5 +76,7 @@ const ImageUploader: React.FC<Props> = ({ inputName, onImageUpload, id, image })
     </FormControl>
   );
 };
+
+export { ImageInput };
 
 export default ImageUploader;

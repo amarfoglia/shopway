@@ -1,9 +1,8 @@
-import Store from './Store';
-import User from './User';
+import User from './user';
 
 interface Seller extends User {
   id?: string;
-  store: Store[];
+  stores: string[];
 }
 
 export default Seller;

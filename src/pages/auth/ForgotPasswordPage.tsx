@@ -1,8 +1,9 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { Typography } from '@material-ui/core';
 import { Field, FormikHelpers } from 'formik';
 import { Link, useHistory } from 'react-router-dom';
 import MailOutlineOutlined from '@material-ui/icons/MailOutlineOutlined';
+import { useMutation } from 'react-query';
 
 import { LoginFormModel } from '../../model/auth';
 import { forgotPasswordValidation } from '../../model/auth/validationSchema';
@@ -14,6 +15,8 @@ import { AppError } from '../../model/http';
 import AuthPage from '../../components/AuthPage';
 import IllustrationPage from '../../components/IllustrationPage';
 import DebouncedInput from '../../components/formFields/DebouncedInput';
+import { Payload } from '../../utils/axiosClient';
+import User from '../../model/users/user';
 
 const { formField } = LoginFormModel;
 
@@ -27,7 +30,7 @@ const TIME_OUT = 2500;
 type Values = typeof initialValues;
 
 interface Props {
-  email: { name: string; label: string };
+  email: typeof formField.email;
   onChange: (e: React.ChangeEvent<string>) => void;
 }
 
@@ -46,29 +49,26 @@ const EmailField: React.FC<Props> = ({ email, onChange }) => (
 );
 
 const ForgotPasswordPage: React.FC = () => {
-  const { forgotPassword, isLoading } = useContext(AuthContext);
-  const [error, setError] = useState<AppError>();
-  const [successMessage, setSuccessMessage] = useState<string>();
   const baseClasses = baseStyles();
   const history = useHistory();
   const { email } = formField;
+  const { forgotPassword } = useContext(AuthContext);
+  const {
+    data,
+    error,
+    isLoading,
+    mutate: userForgotPassword,
+  } = useMutation<Payload<User>, AppError, string>(forgotPassword);
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      successMessage && history.push(PATHS.HOME);
+      data?.message && history.push(PATHS.HOME);
     }, TIME_OUT);
     return () => clearTimeout(timer);
-  }, [successMessage]);
+  }, [data?.message]);
 
   const handleSubmit = (values: Values, helpers: FormikHelpers<Values>) => {
-    const { email } = values;
-    forgotPassword(
-      { email },
-      ({ message }) => {
-        setSuccessMessage(message);
-      },
-      setError,
-    );
+    userForgotPassword(values.email);
     helpers.setSubmitting(isLoading);
   };
 
@@ -96,7 +96,7 @@ const ForgotPasswordPage: React.FC = () => {
     </MyForm>
   );
 
-  return successMessage ? (
+  return data?.message ? (
     <IllustrationPage
       title="Email has been sent!"
       subtitle="Please check your inbox and click in the received link to reset a password"

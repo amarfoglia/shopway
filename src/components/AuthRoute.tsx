@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { Route } from 'react-router';
 import { Redirect, RouteProps } from 'react-router-dom';
 import AuthContext from '../hooks/useAuth';
-import User from '../model/User';
+import User from '../model/users/user';
 import PATHS from '../utils/routes';
 
 const NotAuthorized = () => <Redirect to={{ pathname: PATHS.NOT_AUTHORIZED }} />;
@@ -36,7 +36,10 @@ export const AuthRoute: React.FC<AuthRouteProps> = ({
       ? Home
       : undefined;
 
-  return <Route {...props} component={component} />;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { render, ...routerProps } = props;
+
+  return component ? <Route component={component} {...routerProps} /> : <Route {...props} />;
 };
 
 export default AuthRoute;

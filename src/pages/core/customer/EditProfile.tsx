@@ -3,49 +3,74 @@ import Grid from '@material-ui/core/Grid';
 import ProfilePage from '../common/ProfilePage';
 import AuthContext from '../../../hooks/useAuth';
 import MyForm from '../../../components/MyForm';
-import { FormikHelpers } from 'formik';
+import { FormikHelpers, Field, useFormikContext } from 'formik';
+import { useMutation } from 'react-query';
+import IconButton from '@material-ui/core/IconButton';
+import PhotoCameraOutlined from '@material-ui/icons/PhotoCameraOutlined';
 
 import MailOutlineOutlined from '@material-ui/icons/MailOutlineOutlined';
 import PermIdentityOutlined from '@material-ui/icons/PermIdentityOutlined';
-import { Field } from 'formik';
-import { SignupFormModel } from '../../../model/auth';
 import DebouncedInput from '../../../components/formFields/DebouncedInput';
 import { editProfileValidation } from '../../../model/auth/validationSchema';
+import { AppError } from '../../../model/http';
+import User from '../../../model/users/user';
+import { ImageInput } from '../../../components/ImageUploader';
+import { Payload } from '../../../utils/axiosClient';
 
 interface FieldsProps {
-  formField: typeof SignupFormModel.formField;
   onChange: (e: React.ChangeEvent<string>) => void;
 }
 
-const Fields: React.FC<FieldsProps> = ({ formField: { email, fullName }, onChange }) => {
+const Fields: React.FC<FieldsProps> = ({ onChange }) => {
+  const { values, setFieldValue } = useFormikContext<Values>();
+
+  const PhotoField = () => (
+    <ImageInput
+      id={'customer-photo-input'}
+      inputName={'customer-photo'}
+      onImageUpload={(f) => setFieldValue('photo', f)}
+    />
+  );
+
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
         <Field
-          key={email.name}
-          name={email.name}
-          placeholder={email.label}
-          aria-label={email.label}
+          key="email"
+          name="email"
+          placeholder="Email"
+          aria-label="Email"
           Icon={MailOutlineOutlined}
           variant="outlined"
           onChange={onChange}
           component={DebouncedInput}
+          value={values.email}
           fullWidth
         />
       </Grid>
       <Grid item xs={12}>
         <Field
-          key={fullName.name}
-          name={fullName.name}
-          placeholder={fullName.label}
-          aria-label={fullName.label}
+          key="fullName"
+          name="fullName"
+          placeholder="FullName"
+          aria-label="FullName"
           Icon={PermIdentityOutlined}
           variant="outlined"
           onChange={onChange}
           component={DebouncedInput}
+          value={values.fullName}
           fullWidth
         />
       </Grid>
+      <Field
+        key="photo"
+        name="photo"
+        placeholder="Photo"
+        aria-label="Photo"
+        onChange={onChange}
+        component={PhotoField}
+        value={values.photo}
+      />
     </Grid>
   );
 };
@@ -53,48 +78,70 @@ const Fields: React.FC<FieldsProps> = ({ formField: { email, fullName }, onChang
 type Values = {
   fullName?: string;
   email?: string;
+  photo?: File;
 };
 
-interface Props {
-  userInfo: Values;
-}
+const UpdateForm: React.FC = () => {
+  const { updateMe, user } = useContext(AuthContext);
+  const {
+    error,
+    isLoading,
+    mutate: patchUser,
+  } = useMutation<Payload<User>, AppError, Partial<User>>(updateMe);
 
-const { formField } = SignupFormModel;
-
-const UpdateForm: React.FC<Props> = ({ userInfo: { fullName = '', email = '' } }) => {
   const handleSubmit = (values: Values, helpers: FormikHelpers<Values>) => {
-    const { email, fullName } = values;
-    console.log(email, fullName);
+    const { email, fullName, photo } = values;
+    if (email && fullName) {
+      patchUser({ email, fullName, photo });
+    }
     helpers.setSubmitting(false);
+  };
+
+  const initValues = {
+    fullName: user?.fullName,
+    email: user?.email,
+    photo: user?.photo,
   };
 
   return (
     <MyForm
-      // errors={error?.message}
-      initialValues={{ fullName, email }}
+      errors={error?.message}
+      initialValues={initValues}
       handleSubmit={handleSubmit}
       validationSchema={editProfileValidation}
       formId={'update-user-form'}
-      isSubmitting={false}
-      form={(h) => <Fields onChange={h} formField={formField} />}
+      isSubmitting={isLoading}
+      form={(h) => <Fields onChange={h} />}
       submitText="Update"
     />
   );
 };
 
-const CustomerProfile = (): React.ReactElement => {
+const CustomerEditProfile = (): React.ReactElement => {
   const { user } = useContext(AuthContext);
-  const currentValues = { fullName: user?.fullName, email: user?.email };
-  const sections = [{ node: <UpdateForm userInfo={currentValues} /> }];
+  const sections = [{ node: <UpdateForm /> }];
+  const id = 'customer-photo-input';
 
   return (
-    <ProfilePage
-      topTitle="Edit profile"
-      name={user?.fullName}
-      subinfo1={user?.role}
-      sections={sections}
-    />
+    <React.Fragment>
+      <ProfilePage
+        topTitle="Edit profile"
+        rightChild={
+          <div>
+            <label htmlFor={id}>
+              <IconButton style={{ padding: 0 }} color="primary" component="span">
+                <PhotoCameraOutlined titleAccess="change user photo" />
+              </IconButton>
+            </label>
+          </div>
+        }
+        name={user?.fullName}
+        subinfo1={user?.role}
+        imagePath={user?.photo as string}
+        sections={sections}
+      />
+    </React.Fragment>
   );
 };
 
-export default CustomerProfile;
+export default CustomerEditProfile;

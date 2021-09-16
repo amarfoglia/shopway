@@ -12,6 +12,7 @@ interface Props {
   subinfo2?: string;
   topTitle?: string;
   rightChild?: React.ReactNode;
+  imagePath?: string;
   sections: {
     node: JSX.Element;
     title?: string;
@@ -32,6 +33,7 @@ const ProfilePage: React.FC<Props> = ({
   subinfo2,
   rightChild,
   topTitle,
+  imagePath,
   sections,
 }): React.ReactElement => {
   const history = useHistory();
@@ -41,6 +43,7 @@ const ProfilePage: React.FC<Props> = ({
   const ProfileNode = () => (
     <ProfileSection
       key="profile-section"
+      imagePath={imagePath}
       title={name ?? ''}
       subtitle1={subinfo1}
       subtitle2={subinfo2}

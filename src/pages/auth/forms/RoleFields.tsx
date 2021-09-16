@@ -12,10 +12,11 @@ import {
 import { Field, FieldProps, getIn, useFormikContext } from 'formik';
 import { useState } from 'react';
 import { SignupFormModel } from '../../../model/auth';
-import { Roles } from '../../../model/User';
 import { roleStyles } from '../../../style/styles';
 import Image from 'material-ui-image';
 import clsx from 'clsx';
+import Role from '../../../model/users/role';
+import User from '../../../model/users/user';
 
 type SignupFields = typeof SignupFormModel.formField;
 
@@ -24,10 +25,10 @@ interface Props {
   onChange: (e: React.ChangeEvent<string>) => void;
 }
 
-const { CUSTOMER, SELLER } = Roles;
+const { CUSTOMER, SELLER } = Role;
 
 interface RadioProps {
-  options: { label: string; value: string }[];
+  options: string[];
 }
 
 interface PaperRoleProps {
@@ -38,8 +39,7 @@ interface PaperRoleProps {
 const RoleGroup: React.FC<FieldProps & RadioProps> = ({ form, field, options, ...rest }) => {
   const classes = roleStyles();
   const errorText = getIn(form.touched, field.name) && getIn(form.errors, field.name);
-  const [selectedRole, setSelectedRole] = useState(field.value ?? Roles.CUSTOMER);
-  const [role1, role2] = options;
+  const [selectedRole, setSelectedRole] = useState(field.value ?? CUSTOMER);
 
   const PaperRole: React.FC<PaperRoleProps> = ({ isSelected, role }) => {
     const selectedClass = isSelected ? classes.selectedRolePaper : classes.unselectedRolePaper;
@@ -66,8 +66,7 @@ const RoleGroup: React.FC<FieldProps & RadioProps> = ({ form, field, options, ..
     <FormControl error={!!errorText} component="fieldset">
       <RadioGroup {...field} {...rest} value={selectedRole}>
         <Grid container spacing={2}>
-          {renderRole(role1?.value)}
-          {renderRole(role2?.value)}
+          {options.map((o) => renderRole(o))}
         </Grid>
       </RadioGroup>
       <FormHelperText>{errorText}</FormHelperText>
@@ -76,7 +75,7 @@ const RoleGroup: React.FC<FieldProps & RadioProps> = ({ form, field, options, ..
 };
 
 const RoleFields: React.FC<Props> = ({ formField: { role } }) => {
-  const { values } = useFormikContext<SignupFields>();
+  const { values } = useFormikContext<{ user: User }>();
   return (
     <Field
       key={role.name}
@@ -84,7 +83,7 @@ const RoleFields: React.FC<Props> = ({ formField: { role } }) => {
       aria-label={role.label}
       options={[CUSTOMER, SELLER]}
       component={RoleGroup}
-      value={values.role}
+      value={values.user.role}
     />
   );
 };

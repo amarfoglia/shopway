@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
     textAlign: 'center',
     height: '100%',
     background: 'white',
-    padding: `${theme.spacing(2)}px ${theme.spacing(3)}px`,
+    padding: `${theme.spacing(3)}px ${theme.spacing(3)}px`,
   },
   image: {
     margin: 'auto',

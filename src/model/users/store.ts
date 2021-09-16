@@ -3,7 +3,7 @@ interface Store {
   name: string;
   city: string;
   address: string;
-  logo: string;
+  logo?: string | File;
   phone: string;
 }
 
