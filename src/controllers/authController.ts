@@ -54,10 +54,11 @@ class AuthController {
     let newUser: User | undefined;
     const { role } = req.body;
     let customer;
+    console.log(req.body);
     switch (role) {
       case Role.CUSTOMER:
         customer = req.body as Customer;
-        customer.photo = `photo-${customer.email}.jpeg`;
+        customer.photo = `photo-${customer.email}-${new Date()}.jpeg`;
         await req.file?.toFile(`public/img/users/${customer.photo}`);
         newUser = await CustomerModel.create(customer);
         break;
