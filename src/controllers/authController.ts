@@ -58,7 +58,7 @@ class AuthController {
     switch (role) {
       case Role.CUSTOMER:
         customer = req.body as Customer;
-        customer.photo = `photo-${customer.email}-${new Date()}.jpeg`;
+        customer.photo = `photo-${customer.email}-${new Date().getTime()}.jpeg`;
         await req.file?.toFile(`public/img/users/${customer.photo}`);
         newUser = await CustomerModel.create(customer);
         break;
@@ -140,7 +140,6 @@ class AuthController {
   });
 
   restrictTo = (...roles: string[]) => (req: Request, res: Response, next: NextFunction) => {
-    console.log(roles, req.user?.role);
     if (!roles.includes(req.user?.role)) {
       next(new AppError('You do not have permission to perform this action', 403));
     }
@@ -182,7 +181,7 @@ class AuthController {
   resetPassword = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const hashedToken = crypto
       .createHash('sha256')
-      .update(req.params.token)
+      .te(req.params.token)
       .digest('hex');
 
     const user = await UserModel.findOne({
