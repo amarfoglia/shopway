@@ -13,7 +13,7 @@ import Store from '../models/store';
 import AppError from '../utils/appError';
 import VisitStoreModel, { StoreVisitDoc } from '../models/visitStoreModel';
 
-const factory = new HandlerFactory<StoreDoc>();
+const factory = new HandlerFactory<StoreDoc>('store');
 const SIX_DAYS = 6;
 function isEmpty(arr: StoreVisitDoc[]): Boolean {
   return (arr.length === 0);

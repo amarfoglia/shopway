@@ -5,6 +5,12 @@ import AppError from '../../utils/appError';
 import APIFeatures from '../../utils/apiFeatures';
 
 class HandlerFactory<T> {
+  pathName: string
+
+  constructor(pathName: string) {
+    this.pathName = pathName;
+  }
+
   deleteOne = (model: Model<T>) => catchAsync(
     async (req: Request, res: Response, next: NextFunction) => {
       const doc = await model.findByIdAndDelete(req.params.id);
@@ -34,7 +40,7 @@ class HandlerFactory<T> {
 
       res.status(200).json({
         status: 'success',
-        data: { doc }
+        data: { [this.pathName]: doc }
       });
     }
   );
@@ -45,7 +51,7 @@ class HandlerFactory<T> {
 
       res.status(201).json({
         status: 'success',
-        data: { doc }
+        data: { [this.pathName]: doc }
       });
     }
   );
@@ -61,7 +67,7 @@ class HandlerFactory<T> {
 
       res.status(200).json({
         status: 'success',
-        data: { doc }
+        data: { [this.pathName]: doc }
       });
     }
   );
@@ -79,7 +85,7 @@ class HandlerFactory<T> {
       res.status(200).json({
         status: 'success',
         results: doc.length,
-        data: { doc }
+        data: { [this.pathName]: doc }
       });
     }
   );

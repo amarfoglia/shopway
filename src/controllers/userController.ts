@@ -4,7 +4,7 @@ import AppError from '../utils/appError';
 import catchAsync from '../utils/catchAsync';
 import HandlerFactory from './helpers/handlerFactory';
 
-const factory = new HandlerFactory<UserDoc>();
+const factory = new HandlerFactory<UserDoc>('user');
 
 class UserController {
   getMe = (req: Request, _: Response, next: NextFunction) => {

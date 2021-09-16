@@ -6,7 +6,7 @@ import AppError from '../utils/appError';
 import Article from '../models/articles/article';
 import { isCategoryArticle, isCategoryType } from '../models/category';
 
-const factory = new HandlerFactory<ArticleDoc>();
+const factory = new HandlerFactory<ArticleDoc>('article');
 
 class ArticleController {
   addArticle = catchAsync(async (req: Request, res: Response, next: NextFunction) => {

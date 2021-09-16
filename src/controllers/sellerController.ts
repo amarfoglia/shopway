@@ -1,7 +1,7 @@
 import HandlerFactory from './helpers/handlerFactory';
 import SellerModel, { SellerDoc } from '../models/users/sellerModel';
 
-const factory = new HandlerFactory<SellerDoc>();
+const factory = new HandlerFactory<SellerDoc>('seller');
 
 class SellerController {
   getSeller = factory.getOne(SellerModel);

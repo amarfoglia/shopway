@@ -4,7 +4,7 @@ import catchAsync from '../utils/catchAsync';
 import HandlerFactory from './helpers/handlerFactory';
 import CustomerModel, { CustomerDoc } from '../models/users/customerModel';
 
-const factory = new HandlerFactory<CustomerDoc>();
+const factory = new HandlerFactory<CustomerDoc>('customer');
 
 class CustomerController {
   addFollowers = catchAsync(async (req: Request, res: Response, next: NextFunction) => {

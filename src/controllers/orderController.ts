@@ -4,7 +4,7 @@ import OrderModel, { OrderDoc } from '../models/orderModel';
 import HandlerFactory from './helpers/handlerFactory';
 import AppError from '../utils/appError';
 
-const factory = new HandlerFactory<OrderDoc>();
+const factory = new HandlerFactory<OrderDoc>('order');
 
 class OrderController {
   addOrder = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
