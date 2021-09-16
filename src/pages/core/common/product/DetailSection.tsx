@@ -60,6 +60,7 @@ const DetailsSection: React.FC<Props> = ({
                 alt={`store logo of ${storeName}`}
                 text={storeName}
                 imagePath={storeLogo}
+                subject="store"
               />
             </Grid>
             <Grid item>

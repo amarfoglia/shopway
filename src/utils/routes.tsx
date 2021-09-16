@@ -8,7 +8,7 @@ enum PATHS {
   CUSTOMER_PROFILE = '/customers/:id',
   CUSTOMER_MAIN = '/customer',
   CUSTOMER_EDIT = '/customer/edit',
-  CUSTOMER_CHANGE_PASSWORD = '/customer/changePassword',
+  CHANGE_PASSWORD = '/changePassword',
   CUSTOMER_HOME = '/customer/',
   CUSTOMER_FOLLOWING = '/customer/following',
   CUSTOMER_ORDERS = '/customer/orders',
@@ -17,6 +17,7 @@ enum PATHS {
   SEARCH_ARTICLE = '/search',
   ARTICLE_DETAILS = '/articles/:id',
   NOT_AUTHORIZED = '/notAuthorized',
+  ERROR = '/error',
   NOT_FOUND = '*',
 }
 

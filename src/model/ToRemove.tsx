@@ -6,7 +6,7 @@ const product = {
   discountPrice: '15.00',
   productImage: `${clothesPath}/tshirt2.png`,
   storeName: 'Store name',
-  storeLogo: `${process.env.PUBLIC_URL}/logo192.png`,
+  storeLogo: `logo192.png`,
 };
 
 const articleDetails = {

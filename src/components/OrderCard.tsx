@@ -91,7 +91,15 @@ const OrderCard: React.FC<OrderProps> = ({ storeName, orderDate, timeLeft, price
   return (
     <MyPaper p={0} customStyle={classes.root}>
       <CardHeader
-        avatar={<StoreAvatar text={storeName} size={'medium'} alt={`logo of store ${storeName}`} />}
+        avatar={
+          <StoreAvatar
+            text={storeName}
+            size={'medium'}
+            alt={`logo of store ${storeName}`}
+            subject="store"
+            imagePath=""
+          />
+        }
         action={
           <IconButton aria-label="settings">
             <MoreVertIcon />

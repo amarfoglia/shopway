@@ -44,7 +44,7 @@ const ProfilePage: React.FC<Props> = ({
     <ProfileSection
       key="profile-section"
       imagePath={imagePath}
-      title={name ?? ''}
+      title={name}
       subtitle1={subinfo1}
       subtitle2={subinfo2}
     />

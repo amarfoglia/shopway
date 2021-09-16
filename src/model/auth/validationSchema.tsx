@@ -58,8 +58,28 @@ const editProfileValidation = Yup.object().shape({
   photo: Yup.mixed(),
 });
 
+const changePasswordValidation = Yup.object().shape({
+  fields: Yup.object().shape({
+    passwordCurrent: Yup.string().min(8).required(`${password.requiredErrorMsg}`),
+    password: Yup.string().min(8).required(`${password.requiredErrorMsg}`),
+    passwordConfirm: Yup.string().test(
+      'password-match',
+      `${passwordConfirm.invalidErrorMsg}`,
+      function _(val) {
+        return this.parent.password === val;
+      },
+    ),
+  }),
+});
+
 const forgotPasswordValidation = Yup.object().shape({
   email: Yup.string().email().required(`${email.requiredErrorMsg}`),
 });
 
-export { signupValidation, loginValidation, forgotPasswordValidation, editProfileValidation };
+export {
+  signupValidation,
+  loginValidation,
+  forgotPasswordValidation,
+  editProfileValidation,
+  changePasswordValidation,
+};

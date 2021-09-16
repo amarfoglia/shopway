@@ -5,7 +5,7 @@ import { Grid, Typography } from '@material-ui/core';
 import MyAvatar from '../../../components/MyAvatar';
 
 interface Props {
-  title: string;
+  title?: string;
   subtitle1?: string;
   subtitle2?: string;
   imagePath?: string;
@@ -13,9 +13,11 @@ interface Props {
 
 const ProfileSection: React.FC<Props> = ({ title, subtitle1, subtitle2, imagePath }) => (
   <Grid container direction="column" alignItems="center" spacing={1}>
-    <Grid item xs={12}>
-      <MyAvatar size="xl" alt={`avatar of ${title}`} text={title} imagePath={imagePath} />
-    </Grid>
+    {title && (
+      <Grid item xs={12}>
+        <MyAvatar size="xl" alt={`avatar of ${title}`} text={title} imagePath={imagePath} />
+      </Grid>
+    )}
     <Grid item xs={12}>
       <Typography variant="h5">{title}</Typography>
     </Grid>

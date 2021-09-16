@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const IllustrationPage: React.FC<Props & React.ReactNode> = ({
+const IllustrationPage: React.FC<Props> = ({
   imagePath,
   imageAlt,
   title,
@@ -45,7 +45,7 @@ const IllustrationPage: React.FC<Props & React.ReactNode> = ({
   const baseClasses = baseStyles();
   const classes = useStyles();
   const ImageItem = (
-    <Grid item xs={12}>
+    <Grid item xs={12} md={4}>
       <Box className={classes.image}>
         <Image src={process.env.PUBLIC_URL + imagePath} alt={imageAlt} cover={true} />
       </Box>
@@ -55,7 +55,7 @@ const IllustrationPage: React.FC<Props & React.ReactNode> = ({
   return (
     <Grid container className={classes.container}>
       {imagePosition === Position.TOP && ImageItem}
-      <Grid item>
+      <Grid item xs={12} md={8}>
         <Container>
           {title && (
             <Typography variant="h4" component="h1" className={baseClasses.title} gutterBottom>

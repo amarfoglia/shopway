@@ -8,7 +8,9 @@ interface Props {
 
 const LoadButton: React.FC<Props & ButtonProps> = ({ isSubmitting, text, ...rest }) => {
   return isSubmitting ? (
-    <CircularProgress size={24} />
+    <div style={{ textAlign: 'center' }}>
+      <CircularProgress size={24} />
+    </div>
   ) : (
     <Button disabled={isSubmitting} type="submit" {...rest}>
       {text}

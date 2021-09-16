@@ -10,20 +10,28 @@ import {
   Divider,
   Switch,
 } from '@material-ui/core';
+import { useHistory } from 'react-router-dom';
 import CorePage from '../../../components/CorePage';
 import CustomerAvatar from '../../../components/MyAvatar';
 import { useContext } from 'react';
 import AuthContext from '../../../hooks/useAuth';
 import { ArrowForwardIos } from '@material-ui/icons';
 import MyPaper from '../../../components/MyPaper';
+import PATHS from '../../../utils/routes';
 
 const CustomerSettings = (): React.ReactElement => {
   const { user } = useContext(AuthContext);
+  const history = useHistory();
 
   const UserAvatarSection = () => (
     <Grid container spacing={2} alignItems="center">
       <Grid item>
-        <CustomerAvatar size="xl" alt={`user avatar of ${user?.fullName}`} />
+        <CustomerAvatar
+          size="xl"
+          alt={`user avatar of ${user?.fullName}`}
+          imagePath={user?.photo as string}
+          text={user?.fullName}
+        />
       </Grid>
       <Grid item>
         <Typography variant="h5">{user?.fullName ?? 'Mario Rossi'}</Typography>
@@ -43,7 +51,7 @@ const CustomerSettings = (): React.ReactElement => {
             <List disablePadding>
               <ListItem>
                 <ListItemText primary={'Edit profile'} />
-                <ListItemSecondaryAction>
+                <ListItemSecondaryAction onClick={() => history.push(PATHS.CUSTOMER_EDIT)}>
                   <IconButton edge="end" aria-label="edit profile">
                     <ArrowForwardIos fontSize="small" />
                   </IconButton>
@@ -52,7 +60,7 @@ const CustomerSettings = (): React.ReactElement => {
               <Divider />
               <ListItem>
                 <ListItemText primary={'Change password'} />
-                <ListItemSecondaryAction>
+                <ListItemSecondaryAction onClick={() => history.push(PATHS.CHANGE_PASSWORD)}>
                   <IconButton edge="end" aria-label="change password">
                     <ArrowForwardIos fontSize="small" />
                   </IconButton>
@@ -65,7 +73,7 @@ const CustomerSettings = (): React.ReactElement => {
           <MyPaper>
             <List disablePadding>
               <ListItem>
-                <ListItemText primary={'Edit profile'} />
+                <ListItemText primary={'Notifies'} />
                 <ListItemSecondaryAction>
                   <Switch
                     checked={isNotifiesOn}

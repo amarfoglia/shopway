@@ -38,18 +38,22 @@ const ProductPaper: React.FC<ProductProps> = ({
 
   const renderPrice = (price: string, discountPrice?: string) =>
     discountPrice ? (
-      <Grid container spacing={1}>
+      <Grid container>
         <Grid item>
           <Typography variant="body2" className={classes.discount}>
             ${price}
           </Typography>
         </Grid>
         <Grid item>
-          <Typography variant="body2">${discountPrice}</Typography>
+          <Typography variant="body2">
+            <strong>${discountPrice}</strong>
+          </Typography>
         </Grid>
       </Grid>
     ) : (
-      <Typography variant="body2">${price}</Typography>
+      <Typography variant="body1">
+        <strong>${price}</strong>
+      </Typography>
     );
 
   return (
@@ -63,6 +67,7 @@ const ProductPaper: React.FC<ProductProps> = ({
                 imagePath={storeLogo}
                 text={storeName}
                 alt={`logo of store ${storeName}`}
+                subject="store"
               />
             </Grid>
             <Grid item>

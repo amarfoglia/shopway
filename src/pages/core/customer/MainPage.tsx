@@ -72,7 +72,13 @@ const MainPage = (): React.ReactElement => {
         <Grid container spacing={2}>
           {currentTab !== PATHS.CUSTOMER_SETTINGS && (
             <Grid item xs={12}>
-              <TopBar variant="user" userName={user?.fullName} position="relative" p={0} />
+              <TopBar
+                variant="user"
+                userName={user?.fullName}
+                position="relative"
+                p={0}
+                userImagePath={user?.photo as string}
+              />
             </Grid>
           )}
           <Grid item xs={12}>

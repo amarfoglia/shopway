@@ -1,7 +1,9 @@
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
+import { useMutation } from 'react-query';
 import { formDataClient, jsonClient, Payload, toFormData } from '../utils/axiosClient';
 import User from '../model/users/user';
 import Store from '../model/users/store';
+import { AppError } from '../model/http';
 
 interface Props {
   children: ReactNode;
@@ -17,12 +19,21 @@ interface SignupProps {
   store?: Store;
 }
 
+interface ChangePasswordProps {
+  passwordCurrent: string;
+  password: string;
+  passwordConfirm: string;
+}
+
 interface UserContext {
   user?: User;
+  error?: AppError | null;
+  isLoading?: boolean;
   updateMe: (user: Partial<User>) => Promise<Payload<User>>;
   register: (props: SignupProps) => Promise<Payload<User>>;
   login: (props: LoginProps) => Promise<Payload<User>>;
   forgotPassword: (email: string) => Promise<Payload<User>>;
+  changePassword: (props: ChangePasswordProps) => Promise<Payload<User>>;
 }
 
 const AuthContext = createContext<UserContext>({
@@ -30,6 +41,7 @@ const AuthContext = createContext<UserContext>({
   register: (_) => new Promise(() => _),
   login: (_) => new Promise(() => _),
   forgotPassword: (_) => new Promise(() => _),
+  changePassword: (_) => new Promise(() => _),
 });
 
 export type { UserContext };
@@ -37,8 +49,17 @@ export type { UserContext };
 export const AuthProvider = (props: Props): React.ReactElement => {
   const [user, setUser] = useState<User>();
 
+  const checkUserLoggedIn = (): Promise<Payload<User>> =>
+    jsonClient.get<void, Payload<User>>(`/users/me`).then(_onUser);
+
+  const {
+    error,
+    isLoading,
+    mutate: _checkUserLoggedIn,
+  } = useMutation<Payload<User>, AppError>(checkUserLoggedIn);
+
   useEffect(() => {
-    checkUserLoggedIn();
+    _checkUserLoggedIn();
   }, []);
 
   const _onUser = (res: Payload<User>) => {
@@ -66,16 +87,15 @@ export const AuthProvider = (props: Props): React.ReactElement => {
   const forgotPassword = (email: string): Promise<Payload<User>> =>
     jsonClient.post<string, Payload<User>>(`/users/forgotPassword`, { email }).then((res) => res);
 
-  // const logout = () => console.log('logout');
+  const changePassword = (props: ChangePasswordProps): Promise<Payload<User>> =>
+    jsonClient.patch<string, Payload<User>>(`/users/updateMyPassword`, props).then(_onUser);
 
-  const checkUserLoggedIn = () =>
-    jsonClient
-      .get<void, Payload<User>>(`/users/me`)
-      .then(_onUser)
-      .catch((e) => console.log(e.message));
+  // const logout = () => console.log('logout')
 
   return (
-    <AuthContext.Provider value={{ user, updateMe, forgotPassword, register, login }}>
+    <AuthContext.Provider
+      value={{ user, updateMe, forgotPassword, changePassword, register, login, error, isLoading }}
+    >
       {props.children}
     </AuthContext.Provider>
   );

@@ -6,12 +6,14 @@ import { Skeleton } from '@material-ui/lab';
 import { BACKEND_URL } from '../utils/axiosClient';
 
 type Sizes = 'small' | 'medium' | 'large' | 'xl';
+type Subject = 'user' | 'store';
 
 interface AvatarProps {
   imagePath?: string;
   text?: string;
   size: Sizes;
   alt: string;
+  subject?: Subject;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -46,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const MyAvatar: React.FC<AvatarProps> = ({ text, imagePath, size, alt }) => {
+const MyAvatar: React.FC<AvatarProps> = ({ text, imagePath, size, alt, subject = 'user' }) => {
   const classes = useStyles();
   const sizeClass =
     size === 'small'
@@ -60,7 +62,7 @@ const MyAvatar: React.FC<AvatarProps> = ({ text, imagePath, size, alt }) => {
   const renderImageAvatar = (path: string) => (
     <div className={clsx(sizeClass, classes.imgAvatar)}>
       <Image
-        src={`${BACKEND_URL}/img/users/${path}`}
+        src={`${BACKEND_URL}/img/${subject}s/${path}`}
         alt={alt}
         loading={
           <Skeleton variant="circle" animation="wave" width={'inherit'} height={'inherit'} />

@@ -22,7 +22,7 @@ const clothesPath = process.env.PUBLIC_URL + '/clothes';
 
 const useStyles = makeStyles((theme) => ({
   followContainer: {
-    boxShadow: '0 5px 5px rgb(0 37 132 / 6%)',
+    boxShadow: '0 0 15px 2px #efefef',
     borderRadius: theme.spacing(2),
     textAlign: 'center',
     '& #follow-see-all-link': {
@@ -68,7 +68,7 @@ const CustomerFollow = (): React.ReactElement => {
             discountPrice={'15.00'}
             productImage={`${clothesPath}/${c}.png`}
             storeName={'store name'}
-            storeLogo={`${process.env.PUBLIC_URL}/logo192.png`}
+            storeLogo={`logo192.png`}
           />
         </Grid>
       ))}
