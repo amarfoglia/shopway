@@ -181,7 +181,7 @@ class AuthController {
   resetPassword = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const hashedToken = crypto
       .createHash('sha256')
-      .te(req.params.token)
+      .update(req.params.token)
       .digest('hex');
 
     const user = await UserModel.findOne({
