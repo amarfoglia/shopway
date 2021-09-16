@@ -34,14 +34,14 @@ const sendFreshToken = (user: User, statusCode: number, res: Response) => {
 
   res.cookie('jwt', token, cookieOptions);
   const {
-    email, fullName
+    password, ...userDoc
   } = user; // exclude password
 
   res.status(statusCode).json({
     status: 'success',
     token,
     data: {
-      user: { email, fullName }
+      user: userDoc
     }
   });
 };
@@ -69,7 +69,7 @@ class AuthController {
         break;
     }
     if (!newUser) {
-      next(new AppError(`Please provide a valid role [${Role.CUSTOMER}, ${Role.SELLER}]!`, 400));
+      next(new AppError('Please provide a valid role!', 400));
       return;
     }
     sendFreshToken(newUser, 201, res);
@@ -87,8 +87,7 @@ class AuthController {
     await VisitStoreModel.create(visitObj);
     seller.stores = [];
     seller.stores.push(storeId);
-    const newUser = await SellerModel.create(seller);
-    return newUser;
+    return SellerModel.create(seller);
   }
 
   login = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
@@ -148,6 +147,7 @@ class AuthController {
   };
 
   forgotPassword = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    console.log(req.body.email);
     const user = await UserModel.findOne({ email: req.body.email });
     if (!user) {
       next(new AppError('There is no user with email address', 403));

@@ -58,7 +58,9 @@ app.use(xss());
 // Prevent parameter pollution (e.g double sort param)
 app.use(hpp({ whitelist: [] }));
 
-app.use(express.static(`${__dirname}/public`));
+console.log(`${__dirname}/../public`);
+
+app.use(express.static('public'));
 
 app.use((req: Request, res: Response, next: NextFunction) => {
   (req as any).requestTime = new Date().toISOString();
