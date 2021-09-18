@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { ObjectId } from 'mongodb';
 import mongoose from 'mongoose';
+import { v4 as uuidv4 } from 'uuid';
 import { addDays, startOfWeek } from 'date-fns';
 import { it } from 'date-fns/locale';
 import UserModel from '../models/users/userModel';
@@ -12,6 +13,7 @@ import SellerModel from '../models/users/sellerModel';
 import Store from '../models/store';
 import AppError from '../utils/appError';
 import VisitStoreModel, { StoreVisitDoc } from '../models/visitStoreModel';
+import { setPhoto } from './helpers/imageController';
 
 const factory = new HandlerFactory<StoreDoc>('store');
 const SIX_DAYS = 6;
@@ -21,6 +23,7 @@ function isEmpty(arr: StoreVisitDoc[]): Boolean {
 
 class StoreController {
   addStore = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    console.log('ci arrivo qua?');
     const store : Store = req.body;
     const seller = await SellerModel.findById(new ObjectId(req.params.id));
 
@@ -28,8 +31,11 @@ class StoreController {
       next(new AppError('No seller found with that ID', 404));
       return;
     }
+    store.logo = await setPhoto('logo', [uuidv4(), new Date().getTime().toString()], 'public/img/stores', req, next);
+    /*
     store.logo = `logo-${seller.fullName}-${store.name}.jpeg`;
     await req.file?.toFile(`public/img/stores/${store.logo}`);
+    */
     const newStore = await StoreModel.create(store);
     const visitObj = { storeId: newStore.id, visits: [] };
     await VisitStoreModel.create(visitObj);
@@ -50,8 +56,9 @@ class StoreController {
       return;
     }
     // Mongoose Date work with year-month-day
-    const today = new Date().toLocaleDateString;
 
+    const date = new Date();
+    const today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
     const userObjectId = mongoose.Types.ObjectId(userId);
     const storeObjectId = mongoose.Types.ObjectId(storeId);
     const newVisit = { users: [userId], date: today };
@@ -179,25 +186,20 @@ class StoreController {
     });
   });
 
-  updateMe = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  updateStore = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const { id: storeId } = req.params;
 
-    const seller:any = await UserModel.findById(req.user?.id);
+    const seller = await SellerModel.findById(req.user?.id);
 
-    if (!seller?.stores.includes(storeId)) {
-      next(new AppError('You do not have the permission.', 400));
-      return;
+    const newStore: Store = req.body;
+    if (req.file) {
+      newStore.logo = await setPhoto('logo', [req.user?.id, storeId], 'public/img/stores', req, next);
     }
-    const store: Store = req.body;
-    store.logo = `logo-${req.user?.id}-${storeId}.jpeg`;
-    await req.file?.toFile(`public/img/stores/${store.logo}`);
-
-    const updatedStore = await StoreModel.findByIdAndUpdate(storeId, {
-      ...store
-    }, {
-      new: true,
-      runValidators: true
-    });
+    const updatedStore = await StoreModel.updateOne(
+      { $and: [{ _id: storeId }, { _id: { $in: seller?.stores } }] },
+      { ...newStore },
+      { new: true, runValidators: true }
+    );
 
     res.status(200).json({
       status: 'success',
@@ -208,8 +210,6 @@ class StoreController {
   // getStore = factory.getOne(StoreModel);
 
   getAllStores = factory.getAll(StoreModel, {});
-
-  updateStore = factory.updateOne(StoreModel);
 
   deleteStore = factory.deleteOne(StoreModel);
 }

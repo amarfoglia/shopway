@@ -1,5 +1,5 @@
-import HandlerFactory from './helpers/handlerFactory';
 import SellerModel, { SellerDoc } from '../models/users/sellerModel';
+import HandlerFactory from './helpers/handlerFactory';
 
 const factory = new HandlerFactory<SellerDoc>('seller');
 
@@ -12,5 +12,4 @@ class SellerController {
 
   deleteSeller = factory.deleteOne(SellerModel);
 }
-
 export default SellerController;

@@ -8,18 +8,23 @@ const articleDetailsSchema = new mongoose.Schema({
   articleId: {
     type: mongoose.Types.ObjectId,
     ref: 'Article',
-    required: [true, 'Please, provide the article\'s id of the reatil article']
+    required: [true, 'Please, provide the article\'s id of the article details']
+  },
+  storeId: {
+    type: mongoose.Types.ObjectId,
+    ref: 'Store',
+    required: [true, 'Please, provide the store Id of the article detail']
   },
   color: {
     type: String,
-    required: [true, 'Please, provide the color of the retail article']
+    required: [true, 'Please, provide the color of the article details']
   },
   image: {
     type: String
   },
   price: {
     type: Number,
-    required: [true, 'Please, provide the price of the retail article']
+    required: [true, 'Please, provide the price of the article details']
   },
   discount: {
     type: String

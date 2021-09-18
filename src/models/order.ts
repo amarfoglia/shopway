@@ -6,5 +6,7 @@ interface Order {
   size: string;
   bookDate: Date;
   orderExpireAt: Date;
+  sold: boolean;
+  totalPrice: number;
 }
 export default Order;

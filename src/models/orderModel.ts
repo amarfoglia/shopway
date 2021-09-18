@@ -61,6 +61,10 @@ const orderSchema = new mongoose.Schema({
     type: Date,
     default: () => getNextDayFromToday()
   },
+  totalPrice: {
+    type: Number,
+    required: [true, 'Please, provide the price of order']
+  },
   sold: {
     type: Boolean,
     default: false
@@ -71,7 +75,6 @@ const orderSchema = new mongoose.Schema({
 });
 
 orderSchema.pre(/^find/, function _(next) {
-  generateCode();
   this.populate({ path: 'articleDetails', select: 'articleId color price image discount' })
     .populate({ path: 'store', select: '_id name' })
     .populate({ path: 'customer', select: 'fullName _id' });

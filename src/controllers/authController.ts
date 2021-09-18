@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
+import { v4 as uuidv4 } from 'uuid';
 import Cookies from 'universal-cookie';
 import Promisify from '../utils/promisify';
 import catchAsync from '../utils/catchAsync';
@@ -15,6 +16,7 @@ import Role from '../models/role';
 import StoreModel from '../models/storeModel';
 import VisitStoreModel from '../models/visitStoreModel';
 import Customer from '../models/users/customer';
+import { setPhoto } from './helpers/imageController';
 
 const getJwtSecret = () => (process.env.JWT_SECRET || 'invalid-token');
 
@@ -57,8 +59,11 @@ class AuthController {
     switch (role) {
       case Role.CUSTOMER:
         customer = req.body as Customer;
+        customer.photo = await setPhoto('photo', [uuidv4(), new Date().getTime().toString()], 'public/img/users', req, next);
+        /*
         customer.photo = `photo-${customer.email}.jpeg`;
         await req.file?.toFile(`public/img/users/${customer.photo}`);
+        */
         newUser = await CustomerModel.create(customer);
         break;
       case Role.SELLER:
@@ -78,8 +83,7 @@ class AuthController {
   // visitStore
   createSellerWithStore = async (req: Request, next: NextFunction) => {
     const { store, ...seller } = req.body;
-    store.logo = `logo-${seller.fullName}-${store.name}.jpeg`;
-    await req.file?.toFile(`public/img/stores/${store.logo}`);
+    store.logo = await setPhoto('logo', [uuidv4(), new Date().getTime().toString()], 'public/img/stores', req, next);
     const newStore = await StoreModel.create(store);
     const storeId = newStore.id ?? 'invalid-id';
     if (storeId === 'invalid-id') { next(new AppError('invalid store id', 500)); }

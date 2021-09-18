@@ -32,5 +32,21 @@ class ImageController {
     next();
   });
 }
-
+const setPhoto = async (key: string, names: string[],
+  filepath: string, req:Request, next: NextFunction): Promise<string> => {
+  let filename: string = key;
+  names.forEach((e) => {
+    filename += `-${e}`;
+  });
+  filename += '.jpeg';
+  console.log(`${filepath}/${filename}`);
+  try {
+    await req.file?.toFile(`${filepath}/${filename}`);
+  } catch (err) {
+    next(new AppError(`impossible to save the file: ${err} `, 500));
+    return ' ';
+  }
+  return filename;
+};
+export { setPhoto };
 export default ImageController;

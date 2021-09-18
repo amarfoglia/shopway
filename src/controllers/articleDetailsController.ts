@@ -1,20 +1,34 @@
 import { NextFunction, Request, Response } from 'express';
+import { v4 as uuidv4 } from 'uuid';
 import catchAsync from '../utils/catchAsync';
 import HandlerFactory from './helpers/handlerFactory';
 import ArticleDetailsModel, { ArticleDetailsDoc } from '../models/articles/articleDetailsModel';
 import { ArticleDetails, ArticleStock } from '../models/articles/article';
 import AppError from '../utils/appError';
-import ArticleModel from '../models/articles/articleModel';
 import SellerModel from '../models/users/sellerModel';
+import { setPhoto } from './helpers/imageController';
 
 const factory = new HandlerFactory<ArticleDetailsDoc>('articleDetails');
-
 class ArticleDetailsController {
   addArticleDetails = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const articleDetails : ArticleDetails = req.body;
     articleDetails.articleId = req.params.id;
-    if (!articleDetails.articleId) {
-      next(new AppError('the id of article is not defined', 400));
+    const userId = req.user?.id;
+
+    if (!userId || !articleDetails.articleId || !articleDetails.storeId) {
+      next(new AppError('the id of article or store or user is not defined', 400));
+      return;
+    }
+
+    const seller = await SellerModel.findById(userId);
+
+    if (!seller) {
+      next(new AppError('Seller not found', 404));
+      return;
+    }
+
+    if (!seller?.stores.includes(articleDetails.storeId)) {
+      next(new AppError('The seller does not own the store', 400));
       return;
     }
 
@@ -22,9 +36,11 @@ class ArticleDetailsController {
       next(new AppError('Size must be unique, found duplicates in stockArticles', 400));
       return;
     }
-    articleDetails.image = `photo-${articleDetails.articleId}-${articleDetails.id}.jpeg`;
-    await req.file?.toFile(`public/img/articledetails/${articleDetails.image}`);
+
+    if (req.file) { articleDetails.image = await setPhoto('photo', [uuidv4(), new Date().getTime().toString()], 'public/img/articledetails', req, next); }
+
     const newArticleDetails = await ArticleDetailsModel.create(articleDetails);
+
     if (!newArticleDetails) {
       next(new AppError('Cannot create article', 500));
       return;
@@ -45,41 +61,37 @@ class ArticleDetailsController {
     return unique.length === stockArticles.length;
   }
 
-  updateMe = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  updateArticleDetails = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const { id: articleDetailsId } = req.params;
 
-    const seller:any = await SellerModel.findById(req.user?.id);
-    const articleDetails = await ArticleDetailsModel.findById(articleDetailsId);
-    const article = await ArticleModel.findById(articleDetails?.articleId);
-    const storeId = article?.storeId;
+    const seller = await SellerModel.findById(req.user?.id);
+    const oldArticleDetails = await ArticleDetailsModel.findById(articleDetailsId);
 
-    if (!seller?.stores.includes(storeId)) {
-      next(new AppError('You do not have the permission.', 400));
+    const newArticleDetails: ArticleDetails = req.body;
+
+    // se c'è la photo la setta nuova, sennò non c'è non esegue il setPhoto.
+    if (req.file) { newArticleDetails.image = await setPhoto('photo', [oldArticleDetails?.storeId, articleDetailsId], 'public/img/articledetails', req, next); }
+    // effettua l'update solo se l'articleDetails è nello store del seller che vuole fare l'update.
+    const updatedArticleDetails: any = await ArticleDetailsModel.updateOne(
+      { $and: [{ _id: articleDetailsId }, { storeId: { $in: seller?.stores } }] },
+      { ...newArticleDetails },
+      { new: true, runValidators: true }
+    );
+
+    if (updatedArticleDetails.nModified === 0) {
+      next(new AppError('You are not authorised to update the article', 400));
       return;
     }
 
-    const newArticleDetails: ArticleDetails = req.body;
-    newArticleDetails.image = `photo-${storeId}-${articleDetailsId}.jpeg`;
-    await req.file?.toFile(`public/img/articledetails/${newArticleDetails.image}`);
-    // effettua controllo che lo store sia effettivamente del seller loggato.
-    const updatedArticleDetails = await ArticleDetailsModel.findByIdAndUpdate(articleDetailsId, {
-      ...newArticleDetails
-    }, {
-      new: true,
-      runValidators: true
-    });
-
     res.status(200).json({
       status: 'success',
-      data: { updatedArticleDetails }
+      data: { articleDetails: newArticleDetails }
     });
   });
 
   getArticleDetails = factory.getOne(ArticleDetailsModel);
 
   getAllArticlesDetails = factory.getAll(ArticleDetailsModel, {});
-
-  updateArticleDetails = factory.updateOne(ArticleDetailsModel);
 
   deleteArticleDetails = factory.deleteOne(ArticleDetailsModel);
 }

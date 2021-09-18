@@ -8,16 +8,17 @@ const factory = new HandlerFactory<CustomerDoc>('customer');
 
 class CustomerController {
   addFollowers = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const followerList: string[] = req.body;
+    const { followerList } = req.body;
     const customer = await CustomerModel.findById(req.user?.id);
     if (!customer || customer === undefined) {
       next(new AppError('Invalid customer ID', 400));
     }
-    followerList.forEach((storeId) => {
+    followerList.forEach((storeId: string) => {
       if (!customer?.followerList.includes(storeId)) {
         customer?.followerList.push(storeId);
       }
     });
+    customer?.save();
     res.status(201).json({
       status: 'success',
       data: { customer }
@@ -25,14 +26,29 @@ class CustomerController {
   });
 
   getFollowers = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const customer = await CustomerModel.findById(req.params.id);
-    if (!customer || customer === undefined) {
+    const customer = await CustomerModel.findById(req.user?.id);
+    if (!customer) {
       next(new AppError('Invalid customer ID', 400));
     }
-    const followerList = customer?.followerList;
+    const followers = await CustomerModel.aggregate([
+      {
+        $match: {
+          _id: customer?.id
+        }
+      },
+      {
+        $lookup: {
+          from: 'stores',
+          localField: 'followerList',
+          foreignField: '_id',
+          as: 'store'
+        }
+      },
+      { $unwind: '$store' }
+    ]);
     res.status(200).json({
       status: 'success',
-      data: { followers: followerList }
+      data: { followers }
     });
   });
 

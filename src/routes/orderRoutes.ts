@@ -10,6 +10,7 @@ const orderController = new OrderController();
 const userController = new UserController();
 
 router.use(authController.checkUserToken);
+router.patch('/:id', orderController.updateOrder);
 router.use(authController.restrictTo(Role.CUSTOMER));
 router.use(userController.getMe);
 
@@ -17,8 +18,9 @@ router.use(userController.getMe);
 router.get('/', orderController.getAllOrders);
 // get one order of customer
 router.get('/:id', orderController.getOrder);
+
 // add order to customer
-router.post('/', userController.getMe, orderController.addOrder);
+router.post('/', orderController.addOrder);
 router.delete('/:id', orderController.deleteOrder);
 
 export default router;

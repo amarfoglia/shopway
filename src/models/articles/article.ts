@@ -7,6 +7,7 @@ interface ArticleStock {
 
 interface ArticleDetails{
   id?: any;
+  storeId: any;
   articleId: string;
   color: string;
   price: string;

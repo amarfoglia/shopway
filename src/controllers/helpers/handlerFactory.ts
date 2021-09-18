@@ -74,6 +74,8 @@ class HandlerFactory<T> {
 
   getAll = (model: Model<T>, filter: FilterQuery<T>) => catchAsync(
     async (req: Request, res: Response) => {
+      console.log(filter);
+      console.log(req.query);
       const features = new APIFeatures(model.find(filter), req.query)
         .filter()
         .sort()
