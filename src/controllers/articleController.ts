@@ -52,10 +52,15 @@ class ArticleController {
     }
     const user = await SellerModel.findById(userId);
     const newArticle = req.body as Article;
-    if (!user?.stores.includes(newArticle.storeId)) {
+    const articleId = req.params.id;
+    const oldArticle = await ArticleModel.findById(articleId);
+
+    if (!user?.stores.includes(oldArticle?.storeId ?? 'invalid-id')) {
       next(new AppError('the seller does not own the article, cannot update', 400));
+      return;
     }
-    const updatedArticle = await ArticleModel.findByIdAndUpdate(newArticle.id, newArticle);
+
+    const updatedArticle = await ArticleModel.findByIdAndUpdate(articleId, newArticle);
     res.status(201).json({
       status: 'success',
       data: { article: updatedArticle }
