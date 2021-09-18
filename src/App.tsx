@@ -5,7 +5,6 @@ import AuthRoute from './components/AuthRoute';
 import PATHS from './utils/routes';
 import Loader from './components/Loader';
 import ProductPage from './pages/core/common/ProductPage';
-import { articleDetails } from './model/ToRemove';
 
 const SignupPage = lazy(() => import('./pages/auth/SingupPage'));
 const Home = lazy(() => import('./pages/HomePage'));
@@ -55,7 +54,7 @@ const renderContent = () => {
             <AuthRoute path={PATHS.SEARCH_ARTICLE} render={() => <SearchPage />} />
             <AuthRoute
               path={PATHS.ARTICLE_DETAILS}
-              render={() => <ProductPage {...articleDetails} />}
+              render={(props) => <ProductPage {...props} />}
             />
             <AuthRoute path={PATHS.STORE_PAGE} render={() => <StorePage />} />
             <Route path={PATHS.NOT_AUTHORIZED} render={() => <NotAuthorized />} />

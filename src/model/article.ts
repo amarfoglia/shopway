@@ -22,7 +22,7 @@ interface Article {
   name: string;
   brand: string;
   description: string;
-  retailArticles: ArticleDetails[];
+  retailArticles?: ArticleDetails[];
   previewPhoto: string;
   category: Category;
 }

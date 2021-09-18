@@ -4,6 +4,7 @@ import RemoveOutlined from '@material-ui/icons/RemoveOutlined';
 import AddOutlined from '@material-ui/icons/AddOutlined';
 import LoadButton from '../../../../components/formFields/LoadButton';
 import MyPaper from '../../../../components/MyPaper';
+import { WarningDisplay } from '../../../../components/ErrorDisplay';
 
 const quantityStyles = makeStyles((theme) => ({
   root: {
@@ -38,6 +39,8 @@ interface Props {
   handleQuantityChange: Dispatch<SetStateAction<number>>;
   price: number;
   handlePriceChange: Dispatch<SetStateAction<number>>;
+  isLoading: boolean;
+  handleClick: () => void;
 }
 
 const QuantitySection: React.FC<Props> = ({
@@ -45,6 +48,8 @@ const QuantitySection: React.FC<Props> = ({
   handleQuantityChange,
   price,
   handlePriceChange,
+  isLoading,
+  handleClick,
 }) => {
   const classes = quantityStyles();
 
@@ -62,47 +67,56 @@ const QuantitySection: React.FC<Props> = ({
     handlePriceChange(price + basePrice);
   };
 
+  const renderContent = () => (
+    <React.Fragment>
+      <Grid item xs={12}>
+        <Grid container justifyContent="space-between">
+          <Grid item xs={7}>
+            <Grid container spacing={2} alignItems="center">
+              <Grid item>
+                <Typography variant="body1">Qty</Typography>
+              </Grid>
+              <Grid item>
+                <IconButton className={classes.quantityButton} onClick={decQuantity} disabled>
+                  <RemoveOutlined />
+                </IconButton>
+              </Grid>
+              <Grid item>
+                <Typography variant="body1">{quantity}</Typography>
+              </Grid>
+              <Grid item>
+                <IconButton className={classes.quantityButton} onClick={incQuantity} disabled>
+                  <AddOutlined />
+                </IconButton>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item xs={5}>
+            <Typography variant="body1" align="right">
+              Total ${price}
+            </Typography>
+          </Grid>
+        </Grid>
+      </Grid>
+
+      <Grid item xs={12} className={classes.preOrderButton}>
+        <LoadButton
+          isSubmitting={isLoading}
+          onClick={handleClick}
+          fullWidth
+          variant="contained"
+          color="primary"
+          text="Pre-order"
+        />
+      </Grid>
+    </React.Fragment>
+  );
+
   return (
     <div className={classes.root}>
       <MyPaper p={0} className={classes.noBorderBottom}>
         <Grid container justifyContent="space-around" className={classes.container}>
-          <Grid item xs={12}>
-            <Grid container justifyContent="space-between">
-              <Grid container xs={7} spacing={2} alignItems="center">
-                <Grid item>
-                  <Typography variant="body1">Qty</Typography>
-                </Grid>
-                <Grid item>
-                  <IconButton className={classes.quantityButton} onClick={decQuantity}>
-                    <RemoveOutlined />
-                  </IconButton>
-                </Grid>
-                <Grid item>
-                  <Typography variant="body1">{quantity}</Typography>
-                </Grid>
-                <Grid item>
-                  <IconButton className={classes.quantityButton} onClick={incQuantity}>
-                    <AddOutlined />
-                  </IconButton>
-                </Grid>
-              </Grid>
-              <Grid item xs={5}>
-                <Typography variant="body1" align="right">
-                  Total ${price}
-                </Typography>
-              </Grid>
-            </Grid>
-          </Grid>
-
-          <Grid item xs={12} className={classes.preOrderButton}>
-            <LoadButton
-              isSubmitting={false}
-              fullWidth
-              variant="contained"
-              color="primary"
-              text="Pre-order"
-            />
-          </Grid>
+          {quantity ? renderContent() : <WarningDisplay text="Not available" />}
         </Grid>
       </MyPaper>
     </div>

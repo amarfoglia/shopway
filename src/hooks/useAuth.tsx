@@ -64,7 +64,6 @@ export const AuthProvider = (props: Props): React.ReactElement => {
 
   const _onUser = (res: Payload<User>) => {
     const user = res.data?.user;
-    // console.log(user);
     setUser(user);
     return res;
   };

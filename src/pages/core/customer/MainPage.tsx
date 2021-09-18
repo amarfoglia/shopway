@@ -38,7 +38,6 @@ const MainPage = (): React.ReactElement => {
   const classes = useStyles();
   const [currentTab, setCurrentTab] = useState(PATHS.CUSTOMER_HOME.toString());
   const { user } = useContext(AuthContext);
-  console.log(user);
 
   // eslint-disable-next-line @typescript-eslint/ban-types
   const handleChange = async (event: React.ChangeEvent<{}>, newValue: string) => {

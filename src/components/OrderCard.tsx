@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, makeStyles, Divider, Chip, Box } from '@material-ui/core';
+import { Grid, makeStyles, Divider, Chip, Box, Theme } from '@material-ui/core';
 import Image from 'material-ui-image';
 
 import CardHeader from '@material-ui/core/CardHeader';
@@ -14,30 +14,10 @@ import MyPaper from './MyPaper';
 import Order from '../model/order';
 import Moment from 'react-moment';
 import { BACKEND_URL } from '../utils/axiosClient';
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    width: '100%',
-  },
-  colorSquare: {
-    borderRadius: 30,
-    padding: theme.spacing(0.8),
-  },
-  detail: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  cardFooter: {
-    padding: `${theme.spacing(1)}px ${theme.spacing(2)}px}`,
-  },
-}));
-
-interface DetailsProps {
-  brand: string;
-  size: string;
-  quantity: number;
-  color: string;
-}
+import { useHistory } from 'react-router-dom';
+import PATHS from '../utils/routes';
+import { ArticleDetails } from '../model/article';
+import moment from 'moment';
 
 type Props = {
   label: string;
@@ -46,8 +26,15 @@ type Props = {
   alignRight?: boolean;
 };
 
+const useItemStyles = makeStyles({
+  detail: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+});
+
 const DetailItem: React.FC<Props> = ({ label, value, node }) => {
-  const classes = useStyles();
+  const classes = useItemStyles();
   return (
     <Grid item xs={6} className={classes.detail}>
       <Typography variant="body2" style={{ color: '#757575' }}>
@@ -59,8 +46,23 @@ const DetailItem: React.FC<Props> = ({ label, value, node }) => {
   );
 };
 
+const useDetailStyles = makeStyles<Theme, { color: string }>((theme) => ({
+  colorSquare: {
+    borderRadius: 30,
+    padding: theme.spacing(0.8),
+    backgroundColor: (props) => props.color,
+  },
+}));
+
+interface DetailsProps {
+  brand: string;
+  size: string;
+  quantity: number;
+  color: string;
+}
+
 const Details: React.FC<DetailsProps> = ({ brand, quantity, size, color }) => {
-  const classes = useStyles();
+  const classes = useDetailStyles({ color });
   return (
     <Grid container spacing={4}>
       <Grid item xs={6}>
@@ -80,11 +82,7 @@ const Details: React.FC<DetailsProps> = ({ brand, quantity, size, color }) => {
             <DetailItem label="Quantity" value={quantity} />
           </Grid>
           <Grid item xs={12}>
-            <DetailItem
-              alignRight
-              label="Color"
-              node={<Box className={classes.colorSquare} style={{ backgroundColor: color }} />}
-            />
+            <DetailItem alignRight label="Color" node={<Box className={classes.colorSquare} />} />
           </Grid>
         </Grid>
       </Grid>
@@ -92,8 +90,43 @@ const Details: React.FC<DetailsProps> = ({ brand, quantity, size, color }) => {
   );
 };
 
+type StyleProps = {
+  timeLeft: number;
+  sold: boolean;
+};
+
+const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
+  root: {
+    width: '100%',
+  },
+  cardFooter: {
+    padding: `${theme.spacing(1)}px ${theme.spacing(2)}px}`,
+  },
+  timeLeftChip: {
+    backgroundColor: (props) =>
+      props.sold
+        ? theme.palette.success.light
+        : props.timeLeft > 0
+        ? theme.palette.secondary.main
+        : theme.palette.error.light,
+  },
+}));
+
+const getTimeLeft = (expireAt: Date) => {
+  const startDate = moment(expireAt);
+  const timeEnd = moment(Date.now());
+  return moment.duration(timeEnd.diff(startDate));
+};
+
 const OrderCard: React.FC<Order> = ({ store, articleDetails, ...order }) => {
-  const classes = useStyles();
+  const timeLeft = getTimeLeft(order.orderExpireAt).hours();
+  const classes = useStyles({ timeLeft, sold: order.sold });
+  const history = useHistory();
+  const details = articleDetails as ArticleDetails;
+  const goToArticlePage = () =>
+    history.push(PATHS.ARTICLE_DETAILS.replace(':id', details.articleId), {
+      store,
+    });
 
   return (
     <MyPaper p={0} customStyle={classes.root}>
@@ -116,11 +149,11 @@ const OrderCard: React.FC<Order> = ({ store, articleDetails, ...order }) => {
         subheader={<Moment date={order.bookDate} format={'MMMM D, YYYY'} />}
       />
       <Divider />
-      <CardContent onClick={() => console.log('...')}>
+      <CardContent onClick={goToArticlePage}>
         <Grid container spacing={2}>
           <Grid item xs={3}>
             <Image
-              src={`${BACKEND_URL}/img/articledetails/${articleDetails?.image}`}
+              src={`${BACKEND_URL}/img/articledetails/${details?.image}`}
               loading={
                 <Skeleton animation="wave" variant="rect" width={'inherit'} height={'inherit'} />
               }
@@ -136,7 +169,7 @@ const OrderCard: React.FC<Order> = ({ store, articleDetails, ...order }) => {
               <Grid item>
                 <Details
                   brand={order.brandArticle}
-                  color={articleDetails?.color}
+                  color={details?.color}
                   quantity={order.quantity}
                   size={order.size}
                 />
@@ -151,17 +184,18 @@ const OrderCard: React.FC<Order> = ({ store, articleDetails, ...order }) => {
           <Grid item xs={6}>
             <Typography variant="body2">Total payment</Typography>
             <Typography variant="body1">
-              <b>${articleDetails?.price}</b>
+              <b>${details?.price}</b>
             </Typography>
           </Grid>
           <Grid item xs={6} style={{ textAlign: 'right' }}>
             <Chip
+              className={classes.timeLeftChip}
               label={
                 <Typography component="span" variant="body2">
-                  <Moment date={order.orderExpireAt} duration={new Date()} format="hh" /> hours left
+                  {order.sold ? 'Completed' : timeLeft > 0 ? `${timeLeft} hours left` : 'Expired'}
                 </Typography>
               }
-              icon={<QueryBuilder />}
+              icon={<QueryBuilder style={{ color: 'black' }} fontSize="small" />}
             />
           </Grid>
         </Grid>

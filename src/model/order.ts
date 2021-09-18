@@ -10,7 +10,7 @@ interface Order {
   bookDate: Date;
   orderExpireAt: Date;
   sold: boolean;
-  articleDetails: ArticleDetails;
+  articleDetails: ArticleDetails | string;
   code: string;
   nameArticle: string;
   brandArticle: string;
