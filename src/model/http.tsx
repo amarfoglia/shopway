@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios';
 
-type payload = 'user' | 'article';
+type payload = 'user' | 'article' | 'order';
 
 export default interface JSONResponse<T> {
   status: string;
@@ -15,7 +15,7 @@ export default interface JSONResponse<T> {
 
 export interface AppError {
   message: string;
-  status: string;
+  status: string | number;
 }
 
 type Response<T> = AxiosResponse<JSONResponse<T>>;

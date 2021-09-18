@@ -1,6 +1,6 @@
 import React from 'react';
 import { Typography } from '@material-ui/core';
-import { FormikHelpers } from 'formik';
+import { FormikHelpers, FormikValues } from 'formik';
 import { Link } from 'react-router-dom';
 import { useMutation } from 'react-query';
 
@@ -20,11 +20,11 @@ import { Payload } from '../../utils/axiosClient';
 const { formId, formField } = LoginFormModel;
 
 const initialValues = {
-  [formField.email.name]: '',
-  [formField.password.name]: '',
+  user: {
+    email: '',
+    password: '',
+  },
 };
-
-type Values = typeof initialValues;
 
 interface LoginProps {
   email: string;
@@ -40,9 +40,9 @@ const LoginPage: React.FC = () => {
     mutate: loginUser,
   } = useMutation<Payload<User>, AppError, LoginProps>(login);
 
-  const handleSubmit = (values: Values, helpers: FormikHelpers<Values>) => {
-    const { email, password } = values;
-    loginUser({ email, password });
+  const handleSubmit = (values: FormikValues, helpers: FormikHelpers<FormikValues>) => {
+    const { user } = values;
+    loginUser(user);
     helpers.setSubmitting(isLoading);
   };
 
@@ -57,6 +57,7 @@ const LoginPage: React.FC = () => {
 
   return (
     <AuthPage title="Welcome back">
+      <p>{error}</p>
       <MyForm
         errors={error?.message}
         handleSubmit={handleSubmit}

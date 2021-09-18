@@ -6,7 +6,7 @@ interface ArticleStock {
 }
 
 interface ArticleDetails {
-  id?: string;
+  _id?: string;
   articleId: string;
   color: string;
   price: string;
@@ -17,7 +17,7 @@ interface ArticleDetails {
 }
 
 interface Article {
-  id?: string;
+  _id?: string;
   storeId: string;
   name: string;
   brand: string;

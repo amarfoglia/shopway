@@ -48,8 +48,10 @@ const signupValidation = [
 ];
 
 const loginValidation = Yup.object().shape({
-  email: Yup.string().email().required(`${email.requiredErrorMsg}`),
-  password: Yup.string().min(8).required(`${password.requiredErrorMsg}`),
+  user: Yup.object().shape({
+    email: Yup.string().email().required(`${email.requiredErrorMsg}`),
+    password: Yup.string().min(8).required(`${password.requiredErrorMsg}`),
+  }),
 });
 
 const editProfileValidation = Yup.object().shape({

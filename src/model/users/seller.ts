@@ -1,7 +1,7 @@
 import User from './user';
 
 interface Seller extends User {
-  id?: string;
+  _id?: string;
   stores: string[];
 }
 

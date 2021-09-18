@@ -1,7 +1,7 @@
 import User from './user';
 
 interface Customer extends User {
-  id?: string;
+  _id?: string;
   followerList: string[];
 }
 

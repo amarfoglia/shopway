@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   Grid,
   IconButton,
@@ -8,14 +8,13 @@ import {
   ListItemText,
   Typography,
   Divider,
-  Switch,
 } from '@material-ui/core';
+import Switch from '@material-ui/core/Switch';
 import { useHistory } from 'react-router-dom';
 import CorePage from '../../../components/CorePage';
 import CustomerAvatar from '../../../components/MyAvatar';
-import { useContext } from 'react';
 import AuthContext from '../../../hooks/useAuth';
-import { ArrowForwardIos } from '@material-ui/icons';
+import ArrowForwardIos from '@material-ui/icons/ArrowForwardIos';
 import MyPaper from '../../../components/MyPaper';
 import PATHS from '../../../utils/routes';
 
@@ -34,7 +33,7 @@ const CustomerSettings = (): React.ReactElement => {
         />
       </Grid>
       <Grid item>
-        <Typography variant="h5">{user?.fullName ?? 'Mario Rossi'}</Typography>
+        <Typography variant="h5">{user?.fullName}</Typography>
       </Grid>
     </Grid>
   );
@@ -44,14 +43,18 @@ const CustomerSettings = (): React.ReactElement => {
     const handleNotifies = (event: React.ChangeEvent<HTMLInputElement>) => {
       setNotifiesOn(event.target.checked);
     };
+
+    const goToChangePassword = () => history.push(PATHS.CHANGE_PASSWORD);
+    const goToEditProfile = () => history.push(PATHS.CUSTOMER_EDIT);
+
     return (
       <Grid container spacing={4} direction="column">
         <Grid item xs={12}>
           <MyPaper>
             <List disablePadding>
               <ListItem>
-                <ListItemText primary={'Edit profile'} />
-                <ListItemSecondaryAction onClick={() => history.push(PATHS.CUSTOMER_EDIT)}>
+                <ListItemText primary={'Edit profile'} onClick={goToEditProfile} />
+                <ListItemSecondaryAction onClick={goToEditProfile}>
                   <IconButton edge="end" aria-label="edit profile">
                     <ArrowForwardIos fontSize="small" />
                   </IconButton>
@@ -59,8 +62,8 @@ const CustomerSettings = (): React.ReactElement => {
               </ListItem>
               <Divider />
               <ListItem>
-                <ListItemText primary={'Change password'} />
-                <ListItemSecondaryAction onClick={() => history.push(PATHS.CHANGE_PASSWORD)}>
+                <ListItemText primary={'Change password'} onClick={goToChangePassword} />
+                <ListItemSecondaryAction onClick={goToChangePassword}>
                   <IconButton edge="end" aria-label="change password">
                     <ArrowForwardIos fontSize="small" />
                   </IconButton>
