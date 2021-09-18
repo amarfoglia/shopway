@@ -20,11 +20,10 @@ interface ArticleDetails{
 interface Article {
   id?: string;
   storeId: string;
+  articleDetails: ArticleDetails[];
   name: string;
   brand: string;
   description: string;
-  retailArticles: ArticleDetails[];
-  previewPhoto: string;
   category: Category;
 }
 export { ArticleStock, ArticleDetails };

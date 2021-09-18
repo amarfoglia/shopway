@@ -62,6 +62,7 @@ class ArticleController {
     });
   });
 
+  /*
   getArticleDisplay = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const articlesDisplay = await ArticleModel.aggregate([
       {
@@ -97,7 +98,7 @@ class ArticleController {
       data: { article: articlesDisplay }
     });
   });
-
+*/
   getArticle = factory.getOne(ArticleModel);
 
   getAllArticles = factory.getAll(ArticleModel, {});

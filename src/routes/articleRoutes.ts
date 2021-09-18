@@ -11,10 +11,10 @@ const articleController = new ArticleController();
 router.use('/:id/details', articleDetailsRouter);
 
 router.use(authController.checkUserToken);
-// router.get('/', articleController.getAllArticles);
+router.get('/', articleController.getAllArticles);
 router.get('/:id', articleController.getArticle);
 
-router.get('/', articleController.getArticleDisplay);
+// router.get('/', articleController.getArticleDisplay);
 
 router.use(authController.restrictTo(Role.SELLER));
 router.post('/', articleController.addArticle);

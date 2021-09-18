@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
+import mongoose from 'mongoose';
 import catchAsync from '../utils/catchAsync';
 import HandlerFactory from './helpers/handlerFactory';
 import ArticleDetailsModel, { ArticleDetailsDoc } from '../models/articles/articleDetailsModel';

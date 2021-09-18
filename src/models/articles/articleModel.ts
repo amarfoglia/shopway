@@ -10,6 +10,11 @@ const articleSchema = new mongoose.Schema({
     ref: 'Store',
     required: [true, 'Please, provide the article\'s store id']
   },
+  articleDetails: {
+    type: [ObjectId],
+    default: [],
+    ref: 'ArticleDetails'
+  },
   name: {
     type: String,
     required: [true, 'Please, provide the name of the article']
@@ -32,6 +37,11 @@ const articleSchema = new mongoose.Schema({
       required: [true, 'Please, provide the categoryType of the article']
     }
   }
+});
+
+articleSchema.pre(/^find/, function _(next) {
+  this.populate({ path: 'articleDetails' });
+  next();
 });
 
 export { ArticleDoc };

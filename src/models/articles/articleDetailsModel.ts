@@ -1,6 +1,8 @@
-import mongoose from 'mongoose';
+import mongoose, { PopulatedDoc } from 'mongoose';
+import AppError from '../../utils/appError';
 import { ONE_SEC_IN_MS } from '../../utils/time';
-import { ArticleDetails } from './article';
+import Article, { ArticleDetails } from './article';
+import ArticleModel from './articleModel';
 
 interface ArticleDetailsDoc extends Document, ArticleDetails {}
 
@@ -44,7 +46,26 @@ const articleDetailsSchema = new mongoose.Schema({
     default: () => new Date(Date.now() - ONE_SEC_IN_MS)
   }
 });
-
+/*
+articleDetailsSchema.pre(/^find/, function _(next) {
+  this.populate({ path: 'articleId', select: 'name brand description' });
+  next();
+});
+*/
+articleDetailsSchema.pre<ArticleDetailsDoc>('save', async function _(next) {
+  const articleDetails = this;
+  const filter = { _id: articleDetails.articleId };
+  const update = { $push: { articleDetails: articleDetails.id } };
+  if ((this as any).isNew) {
+    const articleUpdated = await ArticleModel.findByIdAndUpdate(filter, update);
+    console.log(articleUpdated);
+    if (!articleUpdated) {
+      next(new AppError('Impossible to insert articleDetailsId in article', 500));
+      return;
+    }
+  }
+  next();
+});
 export { ArticleDetailsDoc };
 
 export default mongoose.model<ArticleDetailsDoc>('ArticleDetails', articleDetailsSchema);
