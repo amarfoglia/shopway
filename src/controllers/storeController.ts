@@ -4,7 +4,6 @@ import mongoose from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
 import { addDays, startOfWeek } from 'date-fns';
 import { it } from 'date-fns/locale';
-import UserModel from '../models/users/userModel';
 import OrderModel from '../models/orderModel';
 import catchAsync from '../utils/catchAsync';
 import HandlerFactory from './helpers/handlerFactory';
@@ -31,11 +30,9 @@ class StoreController {
       next(new AppError('No seller found with that ID', 404));
       return;
     }
+
     store.logo = await setPhoto('logo', [uuidv4(), new Date().getTime().toString()], 'public/img/stores', req, next);
-    /*
-    store.logo = `logo-${seller.fullName}-${store.name}.jpeg`;
-    await req.file?.toFile(`public/img/stores/${store.logo}`);
-    */
+
     const newStore = await StoreModel.create(store);
     const visitObj = { storeId: newStore.id, visits: [] };
     await VisitStoreModel.create(visitObj);

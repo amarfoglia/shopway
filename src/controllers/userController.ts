@@ -22,10 +22,7 @@ class UserController {
     const { email, fullName } = req.body;
     const userId = req.user?.id;
     const photo = await setPhoto('photo', [req.user?.id], 'public/img/users', req, next);
-    /*
-    const photo = `photo-${req.user?.id}.jpeg`;
-    await req.file?.toFile(`public/img/users/${photo}`);
-    */
+
     const updatedUser = await UserModel.findByIdAndUpdate(userId, {
       fullName, email, photo
     }, {

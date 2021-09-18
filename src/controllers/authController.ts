@@ -56,14 +56,11 @@ class AuthController {
     let newUser: User | undefined;
     const { role } = req.body;
     let customer;
+    console.log(req.body);
     switch (role) {
       case Role.CUSTOMER:
         customer = req.body as Customer;
         customer.photo = await setPhoto('photo', [uuidv4(), new Date().getTime().toString()], 'public/img/users', req, next);
-        /*
-        customer.photo = `photo-${customer.email}.jpeg`;
-        await req.file?.toFile(`public/img/users/${customer.photo}`);
-        */
         newUser = await CustomerModel.create(customer);
         break;
       case Role.SELLER:
@@ -143,7 +140,6 @@ class AuthController {
   });
 
   restrictTo = (...roles: string[]) => (req: Request, res: Response, next: NextFunction) => {
-    console.log(roles, req.user?.role);
     if (!roles.includes(req.user?.role)) {
       next(new AppError('You do not have permission to perform this action', 403));
     }
