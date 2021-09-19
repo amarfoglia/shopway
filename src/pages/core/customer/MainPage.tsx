@@ -1,13 +1,12 @@
 import React, { lazy, useContext, useState } from 'react';
 import { Container, makeStyles, Paper, Tabs, Tab, AppBar, Grid } from '@material-ui/core';
-import PATHS from '../../../utils/routes';
-import Loader from '../../../components/Loader';
 import SettingsOutlined from '@material-ui/icons/SettingsOutlined';
 import ExploreOutlined from '@material-ui/icons/ExploreOutlined';
 import FavoriteBorderOutlined from '@material-ui/icons/FavoriteBorderOutlined';
 import ConfirmationNumberOutlined from '@material-ui/icons/ConfirmationNumberOutlined';
 import TopBar from '../../../components/TopBar';
 import AuthContext from '../../../hooks/useAuth';
+import { useLocation } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -34,15 +33,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+export type CurrentTab = 'home' | 'orders' | 'following' | 'settings';
+
 const MainPage = (): React.ReactElement => {
   const classes = useStyles();
-  const [currentTab, setCurrentTab] = useState(PATHS.CUSTOMER_HOME.toString());
+  const search = useLocation().search;
+  const tab = new URLSearchParams(search).get('tab');
+  const [currentTab, setCurrentTab] = useState<CurrentTab | string>(tab ?? 'home');
   const { user } = useContext(AuthContext);
 
   // eslint-disable-next-line @typescript-eslint/ban-types
-  const handleChange = async (event: React.ChangeEvent<{}>, newValue: string) => {
+  const handleChange = (event: React.ChangeEvent<{}>, newValue: CurrentTab) =>
     setCurrentTab(newValue);
-  };
 
   const BottomTabs = () => (
     <Paper square>
@@ -55,21 +57,20 @@ const MainPage = (): React.ReactElement => {
         aria-label="customer tabs"
         className={classes.tabs}
       >
-        <Tab icon={<ExploreOutlined />} label="Explore" value={PATHS.CUSTOMER_HOME} />
-        <Tab icon={<FavoriteBorderOutlined />} label="Followed" value={PATHS.CUSTOMER_FOLLOWING} />
-        <Tab icon={<ConfirmationNumberOutlined />} label="Orders" value={PATHS.CUSTOMER_ORDERS} />
-        <Tab icon={<SettingsOutlined />} label="Settings" value={PATHS.CUSTOMER_SETTINGS} />
+        <Tab icon={<ExploreOutlined />} label="Explore" value="home" />
+        <Tab icon={<FavoriteBorderOutlined />} label="Followed" value="following" />
+        <Tab icon={<ConfirmationNumberOutlined />} label="Orders" value="orders" />
+        <Tab icon={<SettingsOutlined />} label="Settings" value="settings" />
       </Tabs>
     </Paper>
   );
 
   const LazyTabsPanel = lazy(() => import('./TabPanels'));
-
   return (
     <div className={classes.root}>
       <Container maxWidth="md" className={classes.container}>
         <Grid container spacing={2}>
-          {currentTab !== PATHS.CUSTOMER_SETTINGS && (
+          {currentTab !== 'settings' && (
             <Grid item xs={12}>
               <TopBar
                 variant="user"
@@ -81,9 +82,7 @@ const MainPage = (): React.ReactElement => {
             </Grid>
           )}
           <Grid item xs={12}>
-            <React.Suspense fallback={<Loader />}>
-              <LazyTabsPanel currentTab={currentTab} />
-            </React.Suspense>
+            <LazyTabsPanel currentTab={currentTab} />
           </Grid>
         </Grid>
       </Container>

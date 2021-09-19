@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, Grid, IconButton, makeStyles } from '@material-ui/core';
 import ArrowBackIosOutlined from '@material-ui/icons/ArrowBackIosOutlined';
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import CorePage from '../../../components/CorePage';
 import TopBar from '../../../components/TopBar';
 import ProfileSection from './ProfileSections';
@@ -38,7 +38,6 @@ const ProfilePage: React.FC<Props> = ({
 }): React.ReactElement => {
   const history = useHistory();
   const classes = useStyles();
-  const { id } = useParams<{ id: string }>();
 
   const ProfileNode = () => (
     <ProfileSection
@@ -49,8 +48,6 @@ const ProfilePage: React.FC<Props> = ({
       subtitle2={subinfo2}
     />
   );
-
-  console.log(`must fetch resource with id ${id}`);
 
   return (
     <Container maxWidth="md" className={classes.container}>

@@ -3,9 +3,9 @@ import Customer from './users/customer';
 import Store from './users/store';
 
 interface Order {
-  _id?: string;
+  _id: string;
   customer?: Customer;
-  store?: Store;
+  store: Store;
   size: string;
   bookDate: Date;
   orderExpireAt: Date;
@@ -15,5 +15,7 @@ interface Order {
   nameArticle: string;
   brandArticle: string;
   quantity: number;
+  totalPrice: number;
+  color?: string;
 }
 export default Order;

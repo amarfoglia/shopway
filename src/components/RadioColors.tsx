@@ -30,7 +30,7 @@ const spanStyles = makeStyles<Theme, ItemProps>((theme) => ({
     width: (props) => `calc(${theme.spacing(4)}px - ${props.checked ? 2 : 0}px)`,
     borderRadius: 30,
     backgroundColor: (props) => props.color,
-    border: (props) => (props.checked ? `2px solid ${theme.palette.primary.main}` : ''),
+    border: (props) => (props.checked ? `1px solid ${theme.palette.primary.main}` : ''),
   },
   span: {
     display: 'inline-grid',

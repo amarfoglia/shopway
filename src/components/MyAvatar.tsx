@@ -14,6 +14,7 @@ interface AvatarProps {
   size: Sizes;
   alt: string;
   subject?: Subject;
+  handleClick?: () => void;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -48,7 +49,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const MyAvatar: React.FC<AvatarProps> = ({ text, imagePath, size, alt, subject = 'user' }) => {
+const MyAvatar: React.FC<AvatarProps> = ({
+  text,
+  imagePath,
+  size,
+  alt,
+  subject = 'user',
+  handleClick,
+}) => {
   const classes = useStyles();
   const sizeClass =
     size === 'small'
@@ -67,6 +75,7 @@ const MyAvatar: React.FC<AvatarProps> = ({ text, imagePath, size, alt, subject =
         loading={
           <Skeleton variant="circle" animation="wave" width={'inherit'} height={'inherit'} />
         }
+        onClick={handleClick}
       />
     </div>
   );

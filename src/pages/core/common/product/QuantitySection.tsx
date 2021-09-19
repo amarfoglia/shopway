@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useState } from 'react';
+import React, { useState } from 'react';
 import { Grid, makeStyles, Typography, IconButton } from '@material-ui/core';
 import RemoveOutlined from '@material-ui/icons/RemoveOutlined';
 import AddOutlined from '@material-ui/icons/AddOutlined';
@@ -35,10 +35,10 @@ const quantityStyles = makeStyles((theme) => ({
 }));
 
 interface Props {
-  quantity: number;
-  handleQuantityChange: Dispatch<SetStateAction<number>>;
-  price: number;
-  handlePriceChange: Dispatch<SetStateAction<number>>;
+  quantity?: number;
+  handleQuantityChange: (quantity: number) => void;
+  price?: number;
+  handlePriceChange: (price: number) => void;
   isLoading: boolean;
   handleClick: () => void;
 }
@@ -52,19 +52,20 @@ const QuantitySection: React.FC<Props> = ({
   handleClick,
 }) => {
   const classes = quantityStyles();
-
-  const [basePrice] = useState(price);
+  const [basePrice] = useState(price ?? 0);
 
   const decQuantity = () => {
-    if (quantity > 1) {
+    if (quantity && quantity > 1 && price) {
       handleQuantityChange(quantity - 1);
       handlePriceChange(price - basePrice);
     }
   };
 
   const incQuantity = () => {
-    handleQuantityChange(quantity + 1);
-    handlePriceChange(price + basePrice);
+    if (quantity && quantity < 5 && price) {
+      handleQuantityChange(quantity + 1);
+      handlePriceChange(price + basePrice);
+    }
   };
 
   const renderContent = () => (

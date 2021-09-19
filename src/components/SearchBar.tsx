@@ -5,11 +5,13 @@ import OutlinedInput from '@material-ui/core/OutlinedInput';
 import ClearOutlined from '@material-ui/icons/ClearOutlined';
 import SearchOutlined from '@material-ui/icons/SearchOutlined';
 import { Collapse, makeStyles } from '@material-ui/core';
-import MyPaper from '../../../components/MyPaper';
+import MyPaper from './MyPaper';
 
 interface SearchProps {
-  doOnSearch: (value: string) => void;
+  doOnSearch?: (value: string) => void;
   isVisible?: boolean;
+  handleFocus?: () => void;
+  focused?: boolean;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -23,13 +25,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SearchBar: React.FC<SearchProps> = ({ doOnSearch, isVisible = true }) => {
+const SearchBar: React.FC<SearchProps> = ({
+  doOnSearch,
+  isVisible = true,
+  handleFocus,
+  focused = false,
+}) => {
   const [value, setValue] = useState('');
   const classes = useStyles();
 
   const handleSubmit = (event: React.ChangeEvent<HTMLFormElement>) => {
     event.preventDefault();
-    doOnSearch(value);
+    doOnSearch?.(value);
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -44,12 +51,18 @@ const SearchBar: React.FC<SearchProps> = ({ doOnSearch, isVisible = true }) => {
             id="input-search-article"
             fullWidth
             value={value}
+            onFocus={handleFocus}
+            autoFocus={focused}
             placeholder="Search the clothes you need"
             onChange={handleChange}
             className={classes.searchBar}
             startAdornment={
               <InputAdornment position="start">
-                <IconButton aria-label="search lens" edge="start" onClick={() => doOnSearch(value)}>
+                <IconButton
+                  aria-label="search lens"
+                  edge="start"
+                  onClick={() => doOnSearch?.(value)}
+                >
                   <SearchOutlined />
                 </IconButton>
               </InputAdornment>

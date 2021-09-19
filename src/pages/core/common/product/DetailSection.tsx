@@ -1,22 +1,28 @@
-import React, { Dispatch, SetStateAction } from 'react';
+import React from 'react';
 import { Grid, Typography } from '@material-ui/core';
 import RadioColors from '../../../../components/RadioColors';
 import RadioSizes from '../../../../components/RadioSizes';
 import StoreAvatar from '../../../../components/MyAvatar';
 import Article, { ArticleStock } from '../../../../model/article';
 import ErrorDisplay from '../../../../components/ErrorDisplay';
+import PATHS from '../../../../utils/routes';
+import { useHistory } from 'react-router-dom';
 
 interface Props {
   storeName: string;
   storeLogo?: string;
   article: Article;
-  selectedColor: string;
-  selectedSize: string;
-  stocks?: ArticleStock[];
+  selectedColor?: string;
+  selectedSize?: string;
   error?: string;
-  handleColorChange: Dispatch<SetStateAction<string>>;
-  handleSizeChange: Dispatch<SetStateAction<string>>;
+  handleColorChange: (color: string) => void;
+  handleSizeChange: (size: string) => void;
 }
+
+const generateSize = (s: ArticleStock) => ({
+  value: s.size,
+  disabled: s.quantity === 0,
+});
 
 const DetailsSection: React.FC<Props> = ({
   article,
@@ -25,14 +31,21 @@ const DetailsSection: React.FC<Props> = ({
   error,
   selectedColor,
   selectedSize,
-  stocks = [],
   handleColorChange,
   handleSizeChange,
 }) => {
-  const colors: string[] = article.retailArticles?.map((r) => r.color) ?? [];
-  const sizes = stocks.map((s) => s.size);
+  const colors: string[] = article.articleDetails?.map((r) => r.color) ?? [];
+  const sizes =
+    article.articleDetails
+      ?.find((d) => d.color === selectedColor)
+      ?.stockArticles.flatMap(generateSize) ?? [];
+
+  const history = useHistory();
+
+  const goToStorePage = () => history.push(PATHS.STORE_PAGE.replace(':id', article.store?._id));
+
   return (
-    <Grid container spacing={3} style={{ overflow: 'auto', height: 'calc(100% - 100px)' }}>
+    <Grid container spacing={2} style={{ overflow: 'auto', height: 'calc(100% - 100px)' }}>
       <Grid item xs={12}>
         <Grid container spacing={2}>
           <Grid item xs={12}>
@@ -61,6 +74,7 @@ const DetailsSection: React.FC<Props> = ({
                   text={storeName}
                   imagePath={storeLogo}
                   subject="store"
+                  handleClick={goToStorePage}
                 />
               </Grid>
               <Grid item>
@@ -79,17 +93,17 @@ const DetailsSection: React.FC<Props> = ({
         <Grid item xs={12}>
           <Grid container spacing={1}>
             <Grid item xs={12}>
-              <RadioSizes
-                selectedSize={selectedSize}
-                handleSizeChange={handleSizeChange}
-                sizes={sizes}
+              <RadioColors
+                selectedColor={selectedColor ?? ''}
+                handleColorChange={handleColorChange}
+                colors={colors}
               />
             </Grid>
             <Grid item xs={12}>
-              <RadioColors
-                selectedColor={selectedColor}
-                handleColorChange={handleColorChange}
-                colors={colors}
+              <RadioSizes
+                selectedSize={selectedSize ?? ''}
+                handleSizeChange={handleSizeChange}
+                sizes={sizes}
               />
             </Grid>
           </Grid>

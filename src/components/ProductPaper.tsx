@@ -4,14 +4,14 @@ import Image from 'material-ui-image';
 import StoreAvatar from './MyAvatar';
 import { Skeleton } from '@material-ui/lab';
 import MyPaper from './MyPaper';
+import Article from '../model/article';
+import { BACKEND_URL } from '../utils/axiosClient';
+import { useHistory } from 'react-router-dom';
+import PATHS from '../utils/routes';
 
 interface ProductProps {
-  productName: string;
-  price: string;
-  productImage?: string;
-  discountPrice?: string;
-  storeName: string;
-  storeLogo?: string;
+  article: Article;
+  hideHeader?: boolean;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -26,17 +26,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ProductPaper: React.FC<ProductProps> = ({
-  productName,
-  price,
-  productImage,
-  discountPrice,
-  storeName,
-  storeLogo,
-}) => {
+const ProductPaper: React.FC<ProductProps> = ({ article, hideHeader = false }) => {
   const classes = useStyles();
-
-  const renderPrice = (price: string, discountPrice?: string) =>
+  const history = useHistory();
+  const { store, articleDetails, name, _id: articleId } = article;
+  const details = articleDetails?.[0];
+  const goToStorePage = () => history.push(PATHS.STORE_PAGE.replace(':id', store?._id));
+  const goToArticleDetails = () =>
+    articleId && history.push(PATHS.ARTICLE_DETAILS.replace(':id', articleId), { article, store });
+  const renderPrice = (price = 0, discountPrice?: string) =>
     discountPrice ? (
       <Grid container>
         <Grid item>
@@ -59,38 +57,42 @@ const ProductPaper: React.FC<ProductProps> = ({
   return (
     <MyPaper>
       <Grid container spacing={1}>
-        <Grid item xs={12}>
-          <Grid container spacing={1} alignItems={'center'}>
-            <Grid item>
-              <StoreAvatar
-                size={'small'}
-                imagePath={storeLogo}
-                text={storeName}
-                alt={`logo of store ${storeName}`}
-                subject="store"
-              />
-            </Grid>
-            <Grid item>
-              <Typography variant="body2">{storeName}</Typography>
+        {!hideHeader && (
+          <Grid item xs={12}>
+            <Grid container spacing={1} alignItems={'center'}>
+              <Grid item>
+                <StoreAvatar
+                  size={'small'}
+                  imagePath={store?.logo as string}
+                  text={store?.name}
+                  alt={`logo of store ${store?.name}`}
+                  subject="store"
+                  handleClick={goToStorePage}
+                />
+              </Grid>
+              <Grid item>
+                <Typography variant="body2">{store?.name}</Typography>
+              </Grid>
             </Grid>
           </Grid>
-        </Grid>
+        )}
         <Grid item xs={12}>
           <Image
-            src={productImage ?? 'not found'}
-            alt={productName}
+            src={`${BACKEND_URL}/img/articles/${details?.image}`}
+            alt={name}
             loading={
               <Skeleton variant="rect" animation="wave" width={'inherit'} height={'inherit'} />
             }
+            onClick={goToArticleDetails}
           />
         </Grid>
         <Grid item xs={12}>
           <Typography variant="body2" className={classes.productName}>
-            {productName}
+            {article.name}
           </Typography>
         </Grid>
         <Grid item xs={12}>
-          {renderPrice(price, discountPrice)}
+          {renderPrice(details?.price, details?.discount)}
         </Grid>
       </Grid>
     </MyPaper>

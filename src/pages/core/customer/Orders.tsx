@@ -11,16 +11,18 @@ import AuthContext from '../../../hooks/useAuth';
 import Loader from '../../../components/Loader';
 import ErrorDisplay from '../../../components/ErrorDisplay';
 
+const getAllOrdes = (id?: string) =>
+  jsonClient.get<void, Payload<Order[]>>(`/users/${id}/orders`).then((res) => res);
+
 const CustomerOrders = (): React.ReactElement => {
   const { user } = useContext(AuthContext);
 
-  const getAllOrdes = () =>
-    jsonClient.get<void, Payload<Order[]>>(`/users/${user?._id}/orders`).then((res) => res);
-
   const { data, error, isLoading } = useQuery<Payload<Order[]>, AppError>(
-    'getAllOrder',
-    getAllOrdes,
+    ['getAllOrder', user?._id],
+    () => getAllOrdes(user?._id),
   );
+
+  const orders = data?.data?.order;
 
   const OrdersSection = () =>
     error ? (
@@ -29,7 +31,7 @@ const CustomerOrders = (): React.ReactElement => {
       <Loader />
     ) : (
       <List disablePadding>
-        {data?.data?.order.map((o) => (
+        {orders?.map((o) => (
           <ListItem key={o._id} disableGutters>
             <OrderCard {...o} />
           </ListItem>

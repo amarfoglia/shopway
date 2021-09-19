@@ -1,24 +1,23 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {
-  Grid,
   Paper,
-  Avatar,
   makeStyles,
-  Divider,
-  Box,
   List,
   ListItemAvatar,
   ListItemText,
   ListItem,
   ListItemSecondaryAction,
-  Link,
 } from '@material-ui/core';
 import FavoriteOutlined from '@material-ui/icons/FavoriteOutlined';
 import CorePage from '../../../components/CorePage';
-import ProductPaper from '../../../components/ProductPaper';
-
-const clothes = ['jacket', 'tshirt2', 'sweatshirt2', 'tshirt2'];
-const clothesPath = process.env.PUBLIC_URL + '/clothes';
+import AuthContext from '../../../hooks/useAuth';
+import { BACKEND_URL, jsonClient, Payload } from '../../../utils/axiosClient';
+import { useQuery } from 'react-query';
+import { AppError } from '../../../model/http';
+import Store from '../../../model/users/store';
+import MyAvatar from '../../../components/MyAvatar';
+import PATHS from '../../../utils/routes';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   followContainer: {
@@ -35,53 +34,49 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const getFollowedStores = (id?: string) =>
+  jsonClient.get<void, Payload<Store[]>>(`/users/${id}/stores`).then((res) => res);
+
 const CustomerFollow = (): React.ReactElement => {
   const classes = useStyles();
+  const { user } = useContext(AuthContext);
+  const history = useHistory();
+
+  const { data } = useQuery<Payload<Store[]>, AppError>(['getFollowedStores', user?._id], () =>
+    getFollowedStores(user?._id),
+  );
+
+  const followedStores = data?.data?.store;
+  const goToStorePage = (storeId: string) => history.push(PATHS.STORE_PAGE.replace(':id', storeId));
 
   const FollowedStoresSection = () => (
     <Paper className={classes.followContainer}>
       <List dense>
-        <ListItem key="key-prova">
-          <ListItemAvatar>
-            <Avatar alt="Store logo" src={`${process.env.PUBLIC_URL}/logo192.png`} />
-          </ListItemAvatar>
-          <ListItemText primary="Store name" secondary="address" />
-          <ListItemSecondaryAction>
-            <FavoriteOutlined color="primary" />
-          </ListItemSecondaryAction>
-        </ListItem>
+        {followedStores?.map((s) => (
+          <ListItem key={s._id}>
+            <ListItemAvatar>
+              <MyAvatar
+                alt="Store logo"
+                imagePath={`${BACKEND_URL}/img/logos/${s.logo}`}
+                size="medium"
+                handleClick={() => goToStorePage(s._id)}
+              />
+            </ListItemAvatar>
+            <ListItemText primary={s.name} secondary={s.address} />
+            <ListItemSecondaryAction>
+              <FavoriteOutlined color="primary" />
+            </ListItemSecondaryAction>
+          </ListItem>
+        ))}
       </List>
-      <Divider variant="middle" />
-      <Box id={'follow-see-all-link'}>
+      {/* <Divider variant="middle" /> */}
+      {/* <Box id={'follow-see-all-link'}>
         <Link>See all</Link>
-      </Box>
+      </Box> */}
     </Paper>
   );
 
-  const NewProductsSection = () => (
-    <Grid container spacing={2}>
-      {clothes.map((c, i) => (
-        <Grid item key={`${c}-${i}`} xs={6}>
-          <ProductPaper
-            productName={c}
-            price={'18.50'}
-            discountPrice={'15.00'}
-            productImage={`${clothesPath}/${c}.png`}
-            storeName={'store name'}
-            storeLogo={`logo192.png`}
-          />
-        </Grid>
-      ))}
-    </Grid>
-  );
-
-  const sections = [
-    { node: <FollowedStoresSection /> },
-    {
-      node: <NewProductsSection />,
-      title: 'New Products',
-    },
-  ];
+  const sections = [{ node: <FollowedStoresSection /> }];
 
   return <CorePage title="Followed" sections={sections} />;
 };

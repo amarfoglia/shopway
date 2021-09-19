@@ -1,5 +1,5 @@
 interface Store {
-  _id?: string;
+  _id: string;
   name: string;
   city: string;
   address: string;

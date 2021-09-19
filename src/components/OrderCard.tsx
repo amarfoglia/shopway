@@ -113,13 +113,13 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
 }));
 
 const getTimeLeft = (expireAt: Date) => {
-  const startDate = moment(expireAt);
-  const timeEnd = moment(Date.now());
+  const startDate = moment(Date.now());
+  const timeEnd = moment(expireAt);
   return moment.duration(timeEnd.diff(startDate));
 };
 
 const OrderCard: React.FC<Order> = ({ store, articleDetails, ...order }) => {
-  const timeLeft = getTimeLeft(order.orderExpireAt).hours();
+  const timeLeft = getTimeLeft(order.orderExpireAt).asHours();
   const classes = useStyles({ timeLeft, sold: order.sold });
   const history = useHistory();
   const details = articleDetails as ArticleDetails;
@@ -127,6 +127,8 @@ const OrderCard: React.FC<Order> = ({ store, articleDetails, ...order }) => {
     history.push(PATHS.ARTICLE_DETAILS.replace(':id', details.articleId), {
       store,
     });
+
+  const goToStorePage = () => history.push(PATHS.STORE_PAGE.replace(':id', store?._id));
 
   return (
     <MyPaper p={0} customStyle={classes.root}>
@@ -145,6 +147,7 @@ const OrderCard: React.FC<Order> = ({ store, articleDetails, ...order }) => {
             <MoreVertIcon />
           </IconButton>
         }
+        onClick={goToStorePage}
         title={store?.name}
         subheader={<Moment date={order.bookDate} format={'MMMM D, YYYY'} />}
       />
@@ -191,9 +194,15 @@ const OrderCard: React.FC<Order> = ({ store, articleDetails, ...order }) => {
             <Chip
               className={classes.timeLeftChip}
               label={
-                <Typography component="span" variant="body2">
-                  {order.sold ? 'Completed' : timeLeft > 0 ? `${timeLeft} hours left` : 'Expired'}
-                </Typography>
+                <div>
+                  <Typography component="span" variant="body2" gutterBottom>
+                    {order.sold
+                      ? 'Completed'
+                      : timeLeft > 0
+                      ? `${timeLeft.toFixed(0)} hours left`
+                      : 'Expired'}
+                  </Typography>
+                </div>
               }
               icon={<QueryBuilder style={{ color: 'black' }} fontSize="small" />}
             />

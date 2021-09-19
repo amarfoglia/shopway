@@ -11,7 +11,8 @@ const baseStyles = makeStyles((theme) => ({
     flexDirection: 'column',
   },
   horizontalScroll: {
-    overflow: 'auto',
+    overflowX: 'auto',
+    overflowY: 'hidden',
     display: 'flex',
     width: '100%',
     paddingLeft: 2,

@@ -1,6 +1,5 @@
 import React, { lazy } from 'react';
 import TabPanel from '../../../components/TabPanel';
-import PATHS from '../../../utils/routes';
 
 const Home = lazy(() => import('./Home'));
 const Orders = lazy(() => import('./Orders'));
@@ -13,16 +12,16 @@ interface TabProps {
 
 const TabPanels: React.FC<TabProps> = ({ currentTab }) => (
   <React.Fragment>
-    <TabPanel value={currentTab} index={PATHS.CUSTOMER_HOME}>
+    <TabPanel value={currentTab} index={'home'}>
       <Home />
     </TabPanel>
-    <TabPanel value={currentTab} index={PATHS.CUSTOMER_FOLLOWING}>
+    <TabPanel value={currentTab} index={'following'}>
       <Following />
     </TabPanel>
-    <TabPanel value={currentTab} index={PATHS.CUSTOMER_ORDERS}>
+    <TabPanel value={currentTab} index={'orders'}>
       <Orders />
     </TabPanel>
-    <TabPanel value={currentTab} index={PATHS.CUSTOMER_SETTINGS}>
+    <TabPanel value={currentTab} index={'settings'}>
       <Settings />
     </TabPanel>
   </React.Fragment>

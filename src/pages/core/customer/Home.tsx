@@ -3,18 +3,36 @@ import { Box } from '@material-ui/core';
 import baseStyles from '../../../style/styles';
 import CorePage from '../../../components/CorePage';
 import CategoryPaper from '../../../components/CategoryPaper';
-import { Categories } from '../../../model/Categories';
 import ProductsSection from '../common/ProductsGrid';
-import { product } from '../../../model/ToRemove';
+import { categories } from '../../../model/category';
+import SearchBar from '../../../components/SearchBar';
+import { useHistory } from 'react-router-dom';
+import PATHS from '../../../utils/routes';
+import { jsonClient, Payload } from '../../../utils/axiosClient';
+import Article from '../../../model/article';
+import { useQuery } from 'react-query';
+import { AppError } from '../../../model/http';
+import Loader from '../../../components/Loader';
 
 const categoriesPath = process.env.PUBLIC_URL + '/categories';
 
+const getAllArticles = () =>
+  jsonClient.get<void, Payload<Article[]>>(`/articles`).then((res) => res);
+
 const CustomerHome = (): React.ReactElement => {
   const baseClasses = baseStyles();
+  const history = useHistory();
+
+  const { data, isLoading } = useQuery<Payload<Article[]>, AppError>(
+    'getAllArticles',
+    getAllArticles,
+  );
+
+  const articles = data?.data?.article;
 
   const CategoriesSection = () => (
     <Box className={baseClasses.horizontalScroll}>
-      {Categories.map((c) => (
+      {categories.map((c) => (
         <CategoryPaper
           key={c}
           name={c}
@@ -26,13 +44,18 @@ const CustomerHome = (): React.ReactElement => {
     </Box>
   );
 
+  const ArticlesNode = () => (isLoading ? <Loader /> : <ProductsSection articles={articles} />);
+
   const sections = [
+    {
+      node: <SearchBar handleFocus={() => history.push(PATHS.SEARCH_ARTICLE)} />,
+    },
     {
       node: <CategoriesSection />,
       title: 'Categories',
     },
     {
-      node: <ProductsSection clothes={[product, product, product, product]} />,
+      node: <ArticlesNode />,
       title: 'Popular Products',
     },
   ];

@@ -57,7 +57,6 @@ const LoginPage: React.FC = () => {
 
   return (
     <AuthPage title="Welcome back">
-      <p>{error}</p>
       <MyForm
         errors={error?.message}
         handleSubmit={handleSubmit}

@@ -31,7 +31,7 @@ const renderContent = () => {
   const classes = useStyles();
   return (
     <Router>
-      <Container className={classes.root} disableGutters maxWidth="md">
+      <Container className={classes.root} disableGutters maxWidth="lg">
         <React.Suspense fallback={<Loader />}>
           <Switch>
             <Route exact path={PATHS.HOME} render={() => <Home />} />

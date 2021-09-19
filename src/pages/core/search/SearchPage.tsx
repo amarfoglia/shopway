@@ -5,8 +5,7 @@ import SearchOutlined from '@material-ui/icons/SearchOutlined';
 import { useHistory } from 'react-router-dom';
 import TopBar from '../../../components/TopBar';
 import ProductsSection from '../common/ProductsGrid';
-import { product } from '../../../model/ToRemove';
-import SearchBar from './SearchBar';
+import SearchBar from '../../../components/SearchBar';
 import AgeFilterBar from './AgeTabs';
 import FilterBar from './FiltersBar';
 import clsx from 'clsx';
@@ -82,7 +81,7 @@ const SearchPage = (): React.ReactElement => {
           <Grid container spacing={3}>
             <Grid item container xs={12} spacing={1}>
               <Grid item xs={12} style={{ paddingBlock: openSearchBar ? 'inherit' : 0 }}>
-                <SearchBar doOnSearch={handleSearch} isVisible={openSearchBar} />
+                <SearchBar doOnSearch={handleSearch} isVisible={openSearchBar} focused />
               </Grid>
               <Grid item xs={12}>
                 <FilterBar
@@ -92,7 +91,7 @@ const SearchPage = (): React.ReactElement => {
               </Grid>
             </Grid>
             <Grid item xs={12}>
-              <ProductsSection clothes={[product, product, product, product]} />
+              <ProductsSection articles={[]} />
             </Grid>
           </Grid>
         </Grid>

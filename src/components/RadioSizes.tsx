@@ -4,8 +4,13 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControl from '@material-ui/core/FormControl';
 import { Box, FormLabel, makeStyles, Theme } from '@material-ui/core';
 
+type Size = {
+  value: string;
+  disabled?: boolean;
+};
+
 interface Props {
-  sizes: string[];
+  sizes: Size[];
   selectedSize: string;
   handleSizeChange?: (c: string) => void;
 }
@@ -22,7 +27,7 @@ const spanStyles = makeStyles<Theme, StyleProps>((theme) => ({
     borderRadius: 30,
     backgroundColor: 'white',
     verticalAlign: 'middle',
-    border: (props) => (props.checked ? `2px solid ${theme.palette.primary.main}` : ''),
+    border: (props) => (props.checked ? `1px solid ${theme.palette.primary.main}` : ''),
   },
   span: {
     display: 'inline-block',
@@ -64,15 +69,16 @@ const RadioSizes: React.FC<Props> = ({ sizes, handleSizeChange, selectedSize }) 
         Item size
       </FormLabel>
       <RadioGroup aria-label="size" name="size" value={selectedSize} onChange={handleChange} row>
-        {sizes.map((c) => (
+        {sizes.map(({ value, disabled }) => (
           <Radio
-            icon={<SizeIcon value={c} />}
-            checkedIcon={<SizeIcon value={c} checked />}
-            key={c}
-            value={c}
-            name={`radio-${c}`}
-            inputProps={{ 'aria-label': `color ${c}` }}
+            icon={<SizeIcon value={value} />}
+            checkedIcon={<SizeIcon value={value} checked />}
+            key={value}
+            value={value}
+            name={`radio-${value}`}
+            inputProps={{ 'aria-label': `color ${value}` }}
             style={{ paddingLeft: 0 }}
+            disabled={disabled}
           />
         ))}
       </RadioGroup>

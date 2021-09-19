@@ -3,8 +3,8 @@ import { Button, Grid } from '@material-ui/core';
 import MyPaper from '../../../components/MyPaper';
 import TuneOutlined from '@material-ui/icons/TuneOutlined';
 import CategoryOutlined from '@material-ui/icons/CategoryOutlined';
-import { Categories } from '../../../model/Categories';
 import Popover from '../../../components/PopOver';
+import { categories } from '../../../model/category';
 
 const orderByItems = ['Popolari', 'Novità', 'Prezzo: Alto-Basso', 'Prezzo: Basso-Alto'];
 
@@ -58,7 +58,7 @@ const FilterBar: React.FC<Props> = ({ filters, onChange }): React.ReactElement =
             Icon={CategoryOutlined}
             label={'filter by category'}
             id={'category-filter-button'}
-            items={Categories}
+            items={categories}
             onChange={handleCategoryChange}
           />
         </MyPaper>

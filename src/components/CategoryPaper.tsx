@@ -66,7 +66,7 @@ const CategoryPaper: React.FC<CateogryProps> = ({
               }
             />
           </Box>
-          <Typography variant="body1" className={classes.categoryName}>
+          <Typography variant="body2" className={classes.categoryName}>
             {name}
           </Typography>
         </MyPaper>

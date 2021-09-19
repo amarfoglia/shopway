@@ -14,14 +14,12 @@ interface Props {
 
 const Popover: React.FC<Props> = ({ Icon, id, label, items, onChange, selectedItem }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  // const [selectedIndex, setSelectedIndex] = React.useState<number>(-1);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
   const handleMenuItemClick = (event: React.MouseEvent<HTMLElement>, index: number) => {
-    // setSelectedIndex(index);
     onChange?.(items[index], index);
     setAnchorEl(null);
   };

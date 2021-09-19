@@ -1,4 +1,5 @@
 import Category from './category';
+import Store from './users/store';
 
 interface ArticleStock {
   quantity: number;
@@ -9,7 +10,7 @@ interface ArticleDetails {
   _id?: string;
   articleId: string;
   color: string;
-  price: string;
+  price: number;
   image: string;
   discount?: string;
   stockArticles: ArticleStock[];
@@ -18,11 +19,11 @@ interface ArticleDetails {
 
 interface Article {
   _id?: string;
-  storeId: string;
+  store: Store;
   name: string;
   brand: string;
   description: string;
-  retailArticles?: ArticleDetails[];
+  articleDetails?: ArticleDetails[];
   previewPhoto: string;
   category: Category;
 }
