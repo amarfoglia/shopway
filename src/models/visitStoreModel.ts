@@ -29,22 +29,6 @@ const storeVisitSchema = new mongoose.Schema({
     }
   }]
 });
-/*
-const storeVisitSchema = new mongoose.Schema({
-  storeId: {
-    type: mongoose.Types.ObjectId,
-    ref: 'Store'
-  },
-  userId: {
-    type: mongoose.Types.ObjectId,
-    ref: 'User'
-  },
-  dates: {
-    type: [String],
-    default: () => new Date().toLocaleDateString()
-  }
-});
-*/
 export { StoreVisitDoc, Visit, StoreVisit };
 
 export default mongoose.model<StoreVisitDoc>('StoreVisit', storeVisitSchema);

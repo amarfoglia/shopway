@@ -61,7 +61,11 @@ class CustomerController {
     const query = await OrderModel.count({ $match: { customer: customerId } });
     res.status(200).json({
       status: 'success',
-      data: { stats: query }
+      data: {
+        stats: {
+          numberOfOrders: query
+        }
+      }
     });
   });
 

@@ -51,24 +51,20 @@ class StoreController {
       next(new AppError('invalid userId or storeId', 400));
       return;
     }
-    // Mongoose Date work with year-month-day
 
     const date = new Date();
     const today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
     const userObjectId = mongoose.Types.ObjectId(userId);
     const storeObjectId = mongoose.Types.ObjectId(storeId);
     const newVisit = { users: [userId], date: today };
-    let visit;
 
     const visitSearched = await VisitStoreModel.find({ storeId, 'visits.date': today });
 
     if (isEmpty(visitSearched)) {
-      // date non c'è, oppure visits è un array vuoto. (creo nuovo visit e lo aggiungo)
-      visit = await VisitStoreModel.updateOne({ storeId: storeObjectId },
+      await VisitStoreModel.updateOne({ storeId: storeObjectId },
         { $addToSet: { visits: newVisit } });
     } else {
-      // date c'è, devo aggiungere al set l'user
-      visit = await VisitStoreModel.updateOne({ storeId: storeObjectId, 'visits.date': today },
+      await VisitStoreModel.updateOne({ storeId: storeObjectId, 'visits.date': today },
         {
           $addToSet: { 'visits.$.users': userObjectId }
         });
@@ -82,9 +78,6 @@ class StoreController {
       data: { store }
     });
   });
-
-  // questa funzione qua sotto, potrei prendere come input due parametri startDate, endDate
-  // stores/id/?&startDate
 
   getWiewsStats = catchAsync(async (req: Request, res: Response) => {
     const { id: storeId } = req.params;
@@ -129,10 +122,10 @@ class StoreController {
       },
       {
         $lookup: {
-          from: 'articledetails', // collection foreign
-          localField: 'articleDetails', // order.articleDetailsId
-          foreignField: '_id', // articleDetailsCollection._id
-          as: 'ad' // lo tira fuori come array, quindi forse è per quello che non riesce ad accederci
+          from: 'articledetails',
+          localField: 'articleDetails',
+          foreignField: '_id',
+          as: 'ad'
         }
       },
       { $unwind: '$ad' },
@@ -161,10 +154,10 @@ class StoreController {
       },
       {
         $lookup: {
-          from: 'articledetails', // collection foreign
-          localField: 'articleDetails', // order.articleDetailsId
-          foreignField: '_id', // articleDetailsCollection._id
-          as: 'ad' // lo tira fuori come array, quindi forse è per quello che non riesce ad accederci
+          from: 'articledetails',
+          localField: 'articleDetails',
+          foreignField: '_id',
+          as: 'ad'
         }
       },
       { $unwind: '$ad' },
@@ -202,8 +195,6 @@ class StoreController {
       data: { store: updatedStore }
     });
   });
-
-  // getStore = factory.getOne(StoreModel);
 
   getAllStores = factory.getAll(StoreModel, {});
 

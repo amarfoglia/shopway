@@ -3,8 +3,6 @@ import AuthController from '../controllers/authController';
 import UserController from '../controllers/userController';
 import ImageController from '../controllers/helpers/imageController';
 import storeRouter from './storeRoutes';
-import orderRouter from './orderRoutes';
-import customerRouter from './customerRoutes';
 
 const router: Router = express.Router();
 const userController = new UserController();
@@ -12,8 +10,6 @@ const authController = new AuthController();
 const imageController = new ImageController();
 
 router.use('/:id/stores', storeRouter);
-router.use('/:id/followers', customerRouter);
-// router.use('/:id/sellers', sellerRouter);
 
 router.post('/signup', imageController.uploadPhoto, imageController.resizePhoto, authController.signup);
 router.post('/login', authController.login);

@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import userModel from '../models/users/userModel';
+import Seller from '../models/users/seller';
 import Role from '../models/role';
 import catchAsync from '../utils/catchAsync';
 import OrderModel, { OrderDoc } from '../models/orderModel';
@@ -58,17 +58,23 @@ class OrderController {
     }
   });
 
-  getUserOrders = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  getCustomerOrders = catchAsync(async (req: Request, res: Response) => {
     const userId = req.user?.id;
     let orders;
+    if (req.user?.role === 'Customer') { orders = await OrderModel.find({ $match: { customer: userId } }); }
+    res.status(201).json({
+      status: 'success',
+      data: { orders }
+    });
+  });
 
-    if (req.user?.role === 'Customer') {
-      orders = await OrderModel.find({ $match: { customer: userId } });
-    } else if (req.user?.role === 'Seller') {
-      const seller = await SellerModel.findById(userId);
-      orders = await OrderModel.find({ $match: { store: { $in: seller?.stores } } });
+  getOrdersFromStore = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const seller = req.user as Seller;
+    const storeId = req.params.id;
+    if (!seller.stores.includes(storeId)) {
+      next(new AppError('You are not authorised to perform this action', 400));
     }
-
+    const orders = await OrderModel.find({ $match: { store: storeId } });
     res.status(201).json({
       status: 'success',
       data: { orders }

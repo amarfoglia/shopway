@@ -1,10 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
-import { FilterQuery } from 'mongoose';
 import catchAsync from '../utils/catchAsync';
 import HandlerFactory from './helpers/handlerFactory';
 import ArticleModel, { ArticleDoc } from '../models/articles/articleModel';
 import AppError from '../utils/appError';
-import Article, { ArticleDetails } from '../models/articles/article';
+import Article from '../models/articles/article';
 import { isCategoryArticle, isCategoryType } from '../models/category';
 import SellerModel from '../models/users/sellerModel';
 
@@ -22,12 +21,10 @@ class ArticleController {
 
     article.storeId = req.params.id;
 
-    // check if the seller is authorised to create an article in the store.
     if (!seller?.stores.includes(article.storeId)) {
       next(new AppError('You cannot create an article that is not in your store.', 400));
     }
 
-    // check if categoryArticle is a type of ours
     if (!isCategoryArticle(article.category.categoryArticle)
       || !isCategoryType(article.category.categoryType)) {
       next(new AppError('Category or CategoryType is not valid', 400));
@@ -70,7 +67,7 @@ class ArticleController {
   getArticlesFromStore = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const storeId = req.params.id;
     if (!storeId) {
-      next(new AppError('invalid store-id'));
+      next(new AppError('invalid store-id', 404));
     }
     const articles = await ArticleModel.find({ $match: { storeId } });
     res.status(200).json({
@@ -79,43 +76,6 @@ class ArticleController {
     });
   });
 
-  /*
-  getArticleDisplay = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const articlesDisplay = await ArticleModel.aggregate([
-      {
-        $lookup: {
-          from: 'articledetails',
-          localField: '_id',
-          foreignField: 'articleId',
-          as: 'ad'
-        }
-      },
-      { $unwind: '$ad' },
-      {
-        $group: {
-          _id: '$_id',
-          name: { $first: '$name' },
-          brand: { $first: '$brand' },
-          description: { $first: '$description' },
-          categoryArticle: { $first: '$category.categoryArticle' },
-          categorySex: { $first: '$category.categoryType' },
-          details: {
-            $push: {
-              image: '$ad.image',
-              price: '$ad.price',
-              color: '$ad.color',
-              discount: '$ad.discount'
-            }
-          }
-        }
-      }
-    ]);
-    res.status(200).json({
-      status: 'success',
-      data: { article: articlesDisplay }
-    });
-  });
-*/
   getArticle = factory.getOne(ArticleModel);
 
   getAllArticles = factory.getAll(ArticleModel, {});

@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
-import mongoose from 'mongoose';
 import catchAsync from '../utils/catchAsync';
 import HandlerFactory from './helpers/handlerFactory';
 import ArticleDetailsModel, { ArticleDetailsDoc } from '../models/articles/articleDetailsModel';
@@ -70,9 +69,8 @@ class ArticleDetailsController {
 
     const newArticleDetails: ArticleDetails = req.body;
 
-    // se c'è la photo la setta nuova, sennò non c'è non esegue il setPhoto.
     if (req.file) { newArticleDetails.image = await setPhoto('photo', [oldArticleDetails?.storeId, articleDetailsId], 'public/img/articledetails', req, next); }
-    // effettua l'update solo se l'articleDetails è nello store del seller che vuole fare l'update.
+
     const updatedArticleDetails: any = await ArticleDetailsModel.updateOne(
       { $and: [{ _id: articleDetailsId }, { storeId: { $in: seller?.stores } }] },
       { ...newArticleDetails },

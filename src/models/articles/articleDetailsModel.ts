@@ -1,7 +1,7 @@
-import mongoose, { PopulatedDoc } from 'mongoose';
+import mongoose from 'mongoose';
 import AppError from '../../utils/appError';
 import { ONE_SEC_IN_MS } from '../../utils/time';
-import Article, { ArticleDetails } from './article';
+import { ArticleDetails } from './article';
 import ArticleModel from './articleModel';
 
 interface ArticleDetailsDoc extends Document, ArticleDetails {}
@@ -46,12 +46,7 @@ const articleDetailsSchema = new mongoose.Schema({
     default: () => new Date(Date.now() - ONE_SEC_IN_MS)
   }
 });
-/*
-articleDetailsSchema.pre(/^find/, function _(next) {
-  this.populate({ path: 'articleId', select: 'name brand description' });
-  next();
-});
-*/
+
 articleDetailsSchema.pre<ArticleDetailsDoc>('save', async function _(next) {
   const articleDetails = this;
   const filter = { _id: articleDetails.articleId };
