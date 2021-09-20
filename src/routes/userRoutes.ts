@@ -12,7 +12,6 @@ const authController = new AuthController();
 const imageController = new ImageController();
 
 router.use('/:id/stores', storeRouter);
-router.use('/:id/orders', orderRouter);
 router.use('/:id/followers', customerRouter);
 // router.use('/:id/sellers', sellerRouter);
 

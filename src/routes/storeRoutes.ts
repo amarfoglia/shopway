@@ -5,17 +5,18 @@ import Role from '../models/role';
 import UserController from '../controllers/userController';
 import articleRouter from './articleRoutes';
 import ImageController from '../controllers/helpers/imageController';
+import ArticleController from '../controllers/articleController';
 
 const router: Router = express.Router({ mergeParams: true });
 const authController = new AuthController();
 const storeController = new StoreController();
 const userController = new UserController();
 const imageController = new ImageController();
-
-router.use('/:id/articles', articleRouter);
+const articleController = new ArticleController();
 
 router.use(authController.checkUserToken);
-router.get('/:storeId', userController.getMe, storeController.getStore);
+router.get('/:id/articles/', articleController.getArticlesFromStore);
+router.get('/:id', storeController.getStore);
 router.get('/', storeController.getAllStores);
 router.get('/:id/stats', storeController.getStoreSalesPerDay);
 router.get('/:id/stats/visits', storeController.getWiewsStats);

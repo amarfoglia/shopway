@@ -11,6 +11,7 @@ const articleController = new ArticleController();
 router.use('/:id/details', articleDetailsRouter);
 
 router.use(authController.checkUserToken);
+
 router.get('/', articleController.getAllArticles);
 router.get('/:id', articleController.getArticle);
 
