@@ -1,7 +1,7 @@
 import React from 'react';
 import { Grid, IconButton } from '@material-ui/core';
 import FavoriteOutlined from '@material-ui/icons/FavoriteOutlined';
-import ProductPaper from '../../../components/ProductPaper';
+import ProductPaper from '../../../components/ArticlePaper';
 import ProfilePage from './ProfilePage';
 import { jsonClient, Payload } from '../../../utils/axiosClient';
 import Article from '../../../model/article';

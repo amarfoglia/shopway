@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ProductPaper: React.FC<ProductProps> = ({ article, hideHeader = false }) => {
+const ArticlePaper: React.FC<ProductProps> = ({ article, hideHeader = false }) => {
   const classes = useStyles();
   const history = useHistory();
   const { store, articleDetails, name, _id: articleId } = article;
@@ -78,7 +78,7 @@ const ProductPaper: React.FC<ProductProps> = ({ article, hideHeader = false }) =
         )}
         <Grid item xs={12}>
           <Image
-            src={`${BACKEND_URL}/img/articles/${details?.image}`}
+            src={`${BACKEND_URL}/img/articledetails/${details?.image}`}
             alt={name}
             loading={
               <Skeleton variant="rect" animation="wave" width={'inherit'} height={'inherit'} />
@@ -99,4 +99,4 @@ const ProductPaper: React.FC<ProductProps> = ({ article, hideHeader = false }) =
   );
 };
 
-export default ProductPaper;
+export default ArticlePaper;

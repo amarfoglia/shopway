@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Grid, makeStyles, IconButton, Theme, Container } from '@material-ui/core';
+import { Grid, makeStyles, IconButton, Theme } from '@material-ui/core';
 import ArrowBackIosOutlined from '@material-ui/icons/ArrowBackIosOutlined';
 import { RouteComponentProps, useHistory, useParams } from 'react-router-dom';
 import TopBar from '../../../components/TopBar';
@@ -19,6 +19,8 @@ import Store from '../../../model/users/store';
 import Customer from '../../../model/users/customer';
 import User from '../../../model/users/user';
 import PATHS from '../../../utils/routes';
+import 'react-responsive-carousel/lib/styles/carousel.min.css';
+import { Carousel } from 'react-responsive-carousel';
 
 type State = {
   article?: Article;
@@ -59,7 +61,7 @@ const createInitialOrder = (article: Article, user: User, store: Store): Partial
   };
 };
 
-const ProductPage: React.FC<Props> = ({ location: { state } }): React.ReactElement => {
+const ArticlePage: React.FC<Props> = ({ location: { state } }): React.ReactElement => {
   const history = useHistory();
   const classes = useStyles();
   const { user } = useContext(AuthContext);
@@ -119,16 +121,21 @@ const ProductPage: React.FC<Props> = ({ location: { state } }): React.ReactEleme
     />
   );
 
-  const renderContent = (article: Article) => (
+  const renderContent = (article?: Article) => (
     <React.Fragment>
-      <div>
-        <Image
-          src={`${BACKEND_URL}/img/articledetails/${article?.articleDetails?.[0]?.image}`}
-          alt={`product image of ${article?.name}`}
-          cover
-          aspectRatio={4 / 3}
-        />
-      </div>
+      <Carousel showThumbs={false} autoPlay>
+        {article?.articleDetails?.map((a) => (
+          <div key={a._id}>
+            <Image
+              src={`${BACKEND_URL}/img/articledetails/${article?.articleDetails?.[0]?.image}`}
+              alt={`product image of ${article?.name}`}
+              aspectRatio={4 / 3}
+              style={{ objectFit: 'contain' }}
+            />
+          </div>
+        ))}
+      </Carousel>
+      <div></div>
       <Grid container className={classes.root}>
         <Grid item xs={12} className={classes.container}>
           {DetailsNode}
@@ -150,15 +157,13 @@ const ProductPage: React.FC<Props> = ({ location: { state } }): React.ReactEleme
       />
       {isArticleLoading ? (
         <Loader />
-      ) : article ? (
-        renderContent(article)
+      ) : articleError?.message ? (
+        <ErrorDisplay text={articleError?.message} absolute />
       ) : (
-        <Container style={{ position: 'absolute', top: '30%' }}>
-          <ErrorDisplay text={articleError?.message ?? ''} />
-        </Container>
+        renderContent(article)
       )}
     </React.Fragment>
   );
 };
 
-export default ProductPage;
+export default ArticlePage;

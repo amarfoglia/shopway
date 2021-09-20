@@ -5,12 +5,13 @@ import ConfirmationNumber from '@material-ui/icons/ConfirmationNumber';
 import Event from '@material-ui/icons/Event';
 import ProfilePage from '../common/ProfilePage';
 import MyPaper from '../../../components/MyPaper';
-
-const user = {
-  fullName: 'Mario Rossi',
-  email: 'test@test.it',
-  phone: '3311427793',
-};
+import { useParams } from 'react-router-dom';
+import User from '../../../model/users/user';
+import { jsonClient, Payload } from '../../../utils/axiosClient';
+import Loader from '../../../components/Loader';
+import { useQuery } from 'react-query';
+import { AppError } from '../../../model/http';
+import ErrorDisplay from '../../../components/ErrorDisplay';
 
 interface Props {
   title: string;
@@ -49,17 +50,30 @@ const UserDetails = () => (
   </Grid>
 );
 
-const CustomerProfile = (): React.ReactElement => {
-  const sections = [{ node: <UserDetails /> }];
+const getUserInfo = (id: string) =>
+  jsonClient.get<void, Payload<User>>(`/users/${id}`).then((res) => res);
 
-  return (
+const UserProfile = (): React.ReactElement => {
+  const sections = [{ node: <UserDetails /> }];
+  const { id } = useParams<{ id: string }>();
+  const { data, isLoading, error } = useQuery<Payload<User>, AppError>(['getUserInfo', id], () =>
+    getUserInfo(id),
+  );
+
+  const user = data?.data?.user;
+
+  return isLoading ? (
+    <Loader />
+  ) : error ? (
+    <ErrorDisplay text={error.message} absolute />
+  ) : (
     <ProfilePage
-      name={user.fullName}
-      subinfo1={user.email}
-      subinfo2={user.phone}
+      name={user?.fullName}
+      subinfo1={user?.email}
+      subinfo2={user?.role}
       sections={sections}
     />
   );
 };
 
-export default CustomerProfile;
+export default UserProfile;

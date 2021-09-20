@@ -1,6 +1,6 @@
 import React from 'react';
 import { Grid } from '@material-ui/core';
-import ProductPaper from '../../../components/ProductPaper';
+import ProductPaper from '../../../components/ArticlePaper';
 import Article from '../../../model/article';
 
 interface Props {

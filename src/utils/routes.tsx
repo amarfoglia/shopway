@@ -5,7 +5,7 @@ enum PATHS {
   SIGN_IN = '/signin',
   SIGN_UP = '/signup',
   FORGOT_PASSWORD = '/forgotPassword',
-  CUSTOMER_PROFILE = '/customers/:id',
+  USER_PROFILE = '/users/:id',
   CUSTOMER_MAIN = '/customer',
   CUSTOMER_EDIT = '/customer/edit',
   CHANGE_PASSWORD = '/changePassword',

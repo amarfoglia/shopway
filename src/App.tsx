@@ -4,7 +4,7 @@ import { Container, makeStyles } from '@material-ui/core';
 import AuthRoute from './components/AuthRoute';
 import PATHS from './utils/routes';
 import Loader from './components/Loader';
-import ProductPage from './pages/core/common/ProductPage';
+import ProductPage from './pages/core/common/ArticlePage';
 
 const SignupPage = lazy(() => import('./pages/auth/SingupPage'));
 const Home = lazy(() => import('./pages/HomePage'));
@@ -14,7 +14,7 @@ const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 const NotAuthorized = lazy(() => import('./pages/NotAuthorized'));
 const ForgotPasswordPage = lazy(() => import('./pages/auth/ForgotPasswordPage'));
 const StorePage = lazy(() => import('./pages/core/common/StorePage'));
-const CustomerProfile = lazy(() => import('./pages/core/customer/CustomerProfile'));
+const UserProfile = lazy(() => import('./pages/core/customer/UserProfile'));
 const ChangePasswordPage = lazy(() => import('./pages/core/common/ChangePassword'));
 const SearchPage = lazy(() => import('./pages/core/search/SearchPage'));
 const CustomerEditProfile = lazy(() => import('./pages/core/customer/EditProfile'));
@@ -50,7 +50,7 @@ const renderContent = () => {
             />
             <AuthRoute path={PATHS.CUSTOMER_EDIT} render={() => <CustomerEditProfile />} />
             <AuthRoute path={PATHS.CHANGE_PASSWORD} render={() => <ChangePasswordPage />} />
-            <AuthRoute path={PATHS.CUSTOMER_PROFILE} render={() => <CustomerProfile />} />
+            <AuthRoute path={PATHS.USER_PROFILE} render={() => <UserProfile />} />
             <AuthRoute path={PATHS.SEARCH_ARTICLE} render={() => <SearchPage />} />
             <AuthRoute
               path={PATHS.ARTICLE_DETAILS}
