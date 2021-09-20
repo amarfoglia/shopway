@@ -19,9 +19,9 @@ class ArticleController {
 
     const seller = await SellerModel.findById(userId);
 
-    article.storeId = req.params.id;
+    article.store = req.params.id;
 
-    if (!seller?.stores.includes(article.storeId)) {
+    if (!seller?.stores.includes(article.store)) {
       next(new AppError('You cannot create an article that is not in your store.', 400));
     }
 
@@ -52,7 +52,7 @@ class ArticleController {
     const articleId = req.params.id;
     const oldArticle = await ArticleModel.findById(articleId);
 
-    if (!user?.stores.includes(oldArticle?.storeId ?? 'invalid-id')) {
+    if (!user?.stores.includes(oldArticle?.store ?? 'invalid-id')) {
       next(new AppError('the seller does not own the article, cannot update', 400));
       return;
     }
@@ -69,7 +69,7 @@ class ArticleController {
     if (!storeId) {
       next(new AppError('invalid store-id', 404));
     }
-    const articles = await ArticleModel.find({ $match: { storeId } });
+    const articles = await ArticleModel.find({ store: storeId });
     res.status(200).json({
       status: 'success',
       data: { articles }

@@ -18,14 +18,11 @@ router.get('/:id/articles/', articleController.getArticlesFromStore);
 router.get('/:id', storeController.getStore);
 router.get('/', storeController.getAllStores);
 router.get('/:id/stats/mostpopular', storeController.getStorePopularProducts);
-// restrict to Seller
+
 router.use(authController.restrictTo(Role.SELLER));
-
 router.get('/:id/orders', orderController.getOrdersFromStore);
-
 router.get('/:id/stats', storeController.getStoreSalesPerDay);
 router.get('/:id/stats/visits', storeController.getWiewsStats);
-
 router.patch('/:id',
   imageController.uploadPhoto,
   imageController.resizePhoto,

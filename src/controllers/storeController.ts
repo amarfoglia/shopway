@@ -147,25 +147,17 @@ class StoreController {
   });
 
   getStoreSalesPerDay = catchAsync(async (req: Request, res: Response) => {
+    // remember to add startDate endDate filter.
     const storeObjectId = mongoose.Types.ObjectId(req.params.id);
     const stats = await OrderModel.aggregate([
       {
         $match: { store: storeObjectId, sold: false },
       },
       {
-        $lookup: {
-          from: 'articledetails',
-          localField: 'articleDetails',
-          foreignField: '_id',
-          as: 'ad'
-        }
-      },
-      { $unwind: '$ad' },
-      {
         $group: {
           _id: { $dateToString: { format: '%Y-%m-%d', date: '$bookDate' } },
-          numberOfOrdersDay: { $sum: 1 },
-          totalPriceOrdersDay: { $sum: '$ad.price' }
+          numberOfOrders: { $sum: 1 },
+          profit: { $sum: '$totalPrice' }
         }
       },
     ]);

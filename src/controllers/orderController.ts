@@ -74,7 +74,7 @@ class OrderController {
     if (!seller.stores.includes(storeId)) {
       next(new AppError('You are not authorised to perform this action', 400));
     }
-    const orders = await OrderModel.find({ $match: { store: storeId } });
+    const orders = await OrderModel.find({ store: storeId });
     res.status(201).json({
       status: 'success',
       data: { orders }

@@ -19,7 +19,7 @@ interface ArticleDetails{
 
 interface Article {
   id?: string;
-  storeId: string;
+  store: string;
   articleDetails: ArticleDetails[];
   name: string;
   brand: string;
