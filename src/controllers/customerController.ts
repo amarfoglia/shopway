@@ -3,6 +3,7 @@ import AppError from '../utils/appError';
 import catchAsync from '../utils/catchAsync';
 import HandlerFactory from './helpers/handlerFactory';
 import CustomerModel, { CustomerDoc } from '../models/users/customerModel';
+import OrderModel from '../models/orderModel';
 
 const factory = new HandlerFactory<CustomerDoc>('customer');
 
@@ -49,6 +50,18 @@ class CustomerController {
     res.status(200).json({
       status: 'success',
       data: { followers }
+    });
+  });
+
+  getUserStats = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const customerId = req.user?.id ?? 'invalid-id';
+    if (customerId === 'invalid-id') {
+      next(new AppError('customer id is not valid', 400));
+    }
+    const query = await OrderModel.count({ $match: { customer: customerId } });
+    res.status(200).json({
+      status: 'success',
+      data: { stats: query }
     });
   });
 

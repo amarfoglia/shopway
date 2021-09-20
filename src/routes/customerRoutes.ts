@@ -15,6 +15,7 @@ router.use('/:id/orders', orderRouter);
 router.use(authController.checkUserToken);
 // restrict to customer and only if id of customer match with what he request.
 router.use(authController.restrictTo(Role.CUSTOMER), userController.getMe);
+router.get('/stats', customerController.getUserStats);
 // router.get('/', customerController.getCustomer);
 
 router.get('/followers', customerController.getFollowers);
