@@ -22,9 +22,8 @@ function isEmpty(arr: StoreVisitDoc[]): Boolean {
 
 class StoreController {
   addStore = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    console.log('ci arrivo qua?');
     const store : Store = req.body;
-    const seller = await SellerModel.findById(new ObjectId(req.params.id));
+    const seller = await SellerModel.findById(new ObjectId(req.user?.id));
 
     if (!seller) {
       next(new AppError('No seller found with that ID', 404));
@@ -46,7 +45,7 @@ class StoreController {
 
   getStore = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const userId = req.user?.id;
-    const { storeId } = req.params;
+    const storeId = req.params.id;
 
     if (!userId || !storeId) {
       next(new AppError('invalid userId or storeId', 400));
@@ -80,7 +79,7 @@ class StoreController {
     }
     res.status(200).json({
       success: 'success',
-      data: { store, visit }
+      data: { store }
     });
   });
 

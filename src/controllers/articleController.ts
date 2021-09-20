@@ -67,6 +67,18 @@ class ArticleController {
     });
   });
 
+  getArticlesFromStore = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const storeId = req.params.id;
+    if (!storeId) {
+      next(new AppError('invalid store-id'));
+    }
+    const articles = await ArticleModel.find({ $match: { storeId } });
+    res.status(200).json({
+      status: 'success',
+      data: { articles }
+    });
+  });
+
   /*
   getArticleDisplay = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const articlesDisplay = await ArticleModel.aggregate([

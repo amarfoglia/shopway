@@ -14,8 +14,12 @@ router.patch('/:id', orderController.updateOrder);
 router.use(authController.restrictTo(Role.CUSTOMER));
 router.use(userController.getMe);
 
+router.get('/', orderController.getUserOrders);
+
+/* restringilo ad amin */
+router.get('/', orderController.getUserOrders);
 // get all orders of customer
-router.get('/', orderController.getAllOrders);
+// router.get('/', orderController.getAllOrders);
 // get one order of customer
 router.get('/:id', orderController.getOrder);
 

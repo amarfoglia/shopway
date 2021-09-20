@@ -1,11 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
 import userModel from '../models/users/userModel';
 import Role from '../models/role';
-import sellerModel from '../models/users/sellerModel';
 import catchAsync from '../utils/catchAsync';
 import OrderModel, { OrderDoc } from '../models/orderModel';
 import HandlerFactory from './helpers/handlerFactory';
 import AppError from '../utils/appError';
+import SellerModel from '../models/users/sellerModel';
 
 const factory = new HandlerFactory<OrderDoc>('order');
 
@@ -42,7 +42,7 @@ class OrderController {
       next(new AppError('Invalid orderId', 400));
     }
     if (req.user?.role === Role.SELLER) {
-      const seller = await sellerModel.findById(userId);
+      const seller = await SellerModel.findById(userId);
       if (!seller?.stores.includes(order?.storeId ?? 'invalid-id')) {
         next(new AppError('You are not authorised to modify an order that does not belong to your store.', 400));
         return;
@@ -56,6 +56,23 @@ class OrderController {
         data: { order }
       });
     }
+  });
+
+  getUserOrders = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const userId = req.user?.id;
+    let orders;
+
+    if (req.user?.role === 'Customer') {
+      orders = await OrderModel.find({ $match: { customer: userId } });
+    } else if (req.user?.role === 'Seller') {
+      const seller = await SellerModel.findById(userId);
+      orders = await OrderModel.find({ $match: { store: { $in: seller?.stores } } });
+    }
+
+    res.status(201).json({
+      status: 'success',
+      data: { orders }
+    });
   });
 
   deleteOrder = factory.deleteOne(OrderModel);
