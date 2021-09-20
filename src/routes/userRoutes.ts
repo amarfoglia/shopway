@@ -2,11 +2,9 @@ import express, { Router } from 'express';
 import AuthController from '../controllers/authController';
 import UserController from '../controllers/userController';
 import ImageController from '../controllers/helpers/imageController';
-import sellerRouter from './sellerRoutes';
 import storeRouter from './storeRoutes';
 import orderRouter from './orderRoutes';
 import customerRouter from './customerRoutes';
-import CustomerController from '../controllers/customerController';
 
 const router: Router = express.Router();
 const userController = new UserController();
@@ -33,6 +31,10 @@ router.patch(
   imageController.resizePhoto,
   userController.updateMe
 );
+
+router
+  .route('/:id')
+  .get(userController.getUser);
 
 router.delete('/deleteMe', userController.deleteMe);
 
