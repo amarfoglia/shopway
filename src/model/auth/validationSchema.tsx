@@ -8,7 +8,7 @@ const {
 } = SignupFormModel;
 
 const {
-  formField: { storeName, address, city, phone },
+  formField: { name, address, city, phone },
 } = SellerFormModel;
 
 const signupValidation = [
@@ -38,7 +38,7 @@ const signupValidation = [
   }),
   Yup.object().shape({
     store: Yup.object().shape({
-      name: Yup.string().required(`${storeName.requiredErrorMsg}`),
+      name: Yup.string().required(`${name.requiredErrorMsg}`),
       logo: Yup.mixed(),
       city: Yup.string().required(`${city.requiredErrorMsg}`),
       phone: Yup.string().phone('+39').required(`${phone.requiredErrorMsg}`),

@@ -19,7 +19,7 @@ interface Props {
 }
 
 const SellerForm: React.FC<Props & TextFieldProps> = ({
-  formField: { storeName, address, city, phone, logo },
+  formField: { name, address, city, phone, logo },
   onChange,
 }) => {
   const { values, setFieldValue } = useFormikContext<{ store: Store }>();
@@ -40,12 +40,12 @@ const SellerForm: React.FC<Props & TextFieldProps> = ({
       </Grid>
       <Grid item xs={12}>
         <Field
-          key={storeName.name}
-          placeholder={storeName.label}
-          aria-label={storeName.label}
-          autoComplete={storeName.name}
+          key={name.name}
+          placeholder={name.label}
+          aria-label={name.label}
+          autoComplete={name.name}
           variant="outlined"
-          name={storeName.name}
+          name={name.name}
           Icon={StorefrontOutlined}
           onChange={onChange}
           component={DebouncedInput}

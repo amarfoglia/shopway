@@ -38,14 +38,6 @@ const AxiosClient = (type: ContentType = 'application/json'): AxiosInstance => {
   return client;
 };
 
-const toFormData = (obj: any): FormData => {
-  const formData = new FormData();
-  for (const k in obj) {
-    formData.append(k, obj[k]);
-  }
-  return formData;
-};
-
 type Payload<T> = JSONResponse<T>;
 
 export type { Payload, ConnectionError };
@@ -53,6 +45,6 @@ export type { Payload, ConnectionError };
 const formDataClient = AxiosClient('multipart/form-data');
 const jsonClient = AxiosClient('application/json');
 
-export { formDataClient, jsonClient, toFormData };
+export { formDataClient, jsonClient };
 
 export default AxiosClient;

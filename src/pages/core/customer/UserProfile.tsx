@@ -1,10 +1,8 @@
 import React from 'react';
-import { Typography } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import ConfirmationNumber from '@material-ui/icons/ConfirmationNumber';
 import Event from '@material-ui/icons/Event';
 import ProfilePage from '../common/ProfilePage';
-import MyPaper from '../../../components/MyPaper';
 import { useParams } from 'react-router-dom';
 import User from '../../../model/users/user';
 import { jsonClient, Payload } from '../../../utils/axiosClient';
@@ -12,28 +10,7 @@ import Loader from '../../../components/Loader';
 import { useQuery } from 'react-query';
 import { AppError } from '../../../model/http';
 import ErrorDisplay from '../../../components/ErrorDisplay';
-
-interface Props {
-  title: string;
-  value: string;
-  icon: React.ReactNode;
-}
-
-const DetailPaper: React.FC<Props> = ({ title, value, icon }) => (
-  <MyPaper style={{ padding: 10 }}>
-    <Typography variant="body2" component="h6">
-      {title}
-    </Typography>
-    <Grid item container spacing={1} alignItems="flex-end">
-      <Grid item>{icon}</Grid>
-      <Grid item>
-        <Typography variant="h6" component="p">
-          {value}
-        </Typography>
-      </Grid>
-    </Grid>
-  </MyPaper>
-);
+import DetailPaper from '../../../components/DetailPaper';
 
 const UserDetails = () => (
   <Grid container spacing={2}>

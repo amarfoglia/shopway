@@ -10,19 +10,23 @@ import { useContext } from 'react';
 import AuthContext from '../../../hooks/useAuth';
 import Loader from '../../../components/Loader';
 import ErrorDisplay from '../../../components/ErrorDisplay';
+import Seller from '../../../model/users/seller';
+import User from '../../../model/users/user';
 
-const getAllOrdes = (id?: string) =>
-  jsonClient.get<void, Payload<Order[]>>(`/users/${id}/orders`).then((res) => res);
+const getStore = (user?: User) => (user as Seller).stores[0];
 
-const CustomerOrders = (): React.ReactElement => {
+const getAllOrdes = (storeId: string) =>
+  jsonClient.get<void, Payload<Order[]>>(`stores/${storeId}/orders`).then((res) => res);
+
+const SellerOrders = (): React.ReactElement => {
   const { user } = useContext(AuthContext);
 
   const { data, error, isLoading } = useQuery<Payload<Order[]>, AppError>(
-    ['getAllOrder', user?._id],
-    () => getAllOrdes(user?._id),
+    ['getAllOrder', user],
+    () => getAllOrdes(getStore(user)),
   );
 
-  const orders = data?.data?.order;
+  const orders = data?.data?.orders;
 
   const OrdersSection = () =>
     error ? (
@@ -33,7 +37,7 @@ const CustomerOrders = (): React.ReactElement => {
       <List disablePadding>
         {orders?.map((o) => (
           <ListItem key={o._id} disableGutters>
-            <OrderCard order={o} />
+            <OrderCard order={o} subject="seller" />
           </ListItem>
         ))}
       </List>
@@ -44,4 +48,4 @@ const CustomerOrders = (): React.ReactElement => {
   return <CorePage title="Orders" sections={sections} />;
 };
 
-export default CustomerOrders;
+export default SellerOrders;

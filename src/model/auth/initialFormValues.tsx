@@ -14,7 +14,7 @@ const initialValues = {
   store: {
     logo: '',
     phone: '',
-    storeName: '',
+    name: '',
     address: '',
     city: '',
   },

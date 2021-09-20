@@ -17,7 +17,7 @@ import { BACKEND_URL } from '../utils/axiosClient';
 import { useHistory } from 'react-router-dom';
 import PATHS from '../utils/routes';
 import { ArticleDetails } from '../model/article';
-import moment from 'moment';
+import { getTimeLeft } from '../utils/time';
 
 type Props = {
   label: string;
@@ -112,45 +112,69 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
   },
 }));
 
-const getTimeLeft = (expireAt: Date) => {
-  const startDate = moment(Date.now());
-  const timeEnd = moment(expireAt);
-  return moment.duration(timeEnd.diff(startDate));
-};
+type Subject = 'customer' | 'seller';
 
-const OrderCard: React.FC<Order> = ({ store, articleDetails, ...order }) => {
+interface CardProps {
+  order: Order;
+  subject?: Subject;
+}
+
+const OrderCard: React.FC<CardProps> = ({
+  order: { store, articleDetails, ...order },
+  subject = 'customer',
+}) => {
   const timeLeft = getTimeLeft(order.orderExpireAt).asHours();
   const classes = useStyles({ timeLeft, sold: order.sold });
   const history = useHistory();
   const details = articleDetails as ArticleDetails;
+  const customer = order.customer;
   const goToArticlePage = () =>
     history.push(PATHS.ARTICLE_DETAILS.replace(':id', details.articleId), {
       store,
     });
 
+  const isCustomer = subject === 'customer';
   const goToStorePage = () => history.push(PATHS.STORE_PAGE.replace(':id', store?._id));
+  const goToCustomerPage = () =>
+    history.push(PATHS.USER_PROFILE.replace(':id', customer?._id ?? '-'));
+
+  type CardHeaderInfo = {
+    name?: string;
+    goToPage: () => void;
+    bookDate: Date;
+    imagePath: string;
+  };
+
+  const renderCardHeader: React.FC<CardHeaderInfo> = ({ name, goToPage, bookDate, imagePath }) => (
+    <CardHeader
+      avatar={
+        <StoreAvatar
+          text={name}
+          size={'medium'}
+          alt={`logo of ${name}`}
+          subject={subject === 'seller' ? 'store' : 'user'}
+          imagePath={imagePath}
+        />
+      }
+      action={
+        <IconButton aria-label="settings">
+          <MoreVertIcon />
+        </IconButton>
+      }
+      onClick={goToPage}
+      title={name}
+      subheader={<Moment date={bookDate} format={'MMMM D, YYYY'} />}
+    />
+  );
 
   return (
     <MyPaper p={0} customStyle={classes.root}>
-      <CardHeader
-        avatar={
-          <StoreAvatar
-            text={store?.name}
-            size={'medium'}
-            alt={`logo of store ${store?.name}`}
-            subject="store"
-            imagePath={store?.logo as string}
-          />
-        }
-        action={
-          <IconButton aria-label="settings">
-            <MoreVertIcon />
-          </IconButton>
-        }
-        onClick={goToStorePage}
-        title={store?.name}
-        subheader={<Moment date={order.bookDate} format={'MMMM D, YYYY'} />}
-      />
+      {renderCardHeader({
+        name: isCustomer ? store.name : customer?.fullName,
+        imagePath: isCustomer ? (store.logo as string) : (customer?.photo as string),
+        goToPage: isCustomer ? goToStorePage : goToCustomerPage,
+        bookDate: order.bookDate,
+      })}
       <Divider />
       <CardContent onClick={goToArticlePage}>
         <Grid container spacing={2}>

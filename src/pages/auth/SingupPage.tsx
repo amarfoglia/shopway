@@ -70,6 +70,7 @@ const formComponents = new Map([
 interface SignupProps {
   user: User;
   store?: Store;
+  photo?: File;
 }
 
 const SignupPage: React.FC = () => {
@@ -86,7 +87,8 @@ const SignupPage: React.FC = () => {
 
   const submitForm = (values: FormikValues) => {
     const { user, store } = values;
-    userSignup({ user, store });
+    const { logo, ..._store } = store;
+    userSignup({ user, store: _store, photo: logo });
   };
 
   const FormFooter = (

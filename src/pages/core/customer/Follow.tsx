@@ -1,7 +1,6 @@
 import React, { useContext } from 'react';
 import {
-  Paper,
-  makeStyles,
+  // makeStyles,
   List,
   ListItemAvatar,
   ListItemText,
@@ -18,27 +17,28 @@ import Store from '../../../model/users/store';
 import MyAvatar from '../../../components/MyAvatar';
 import PATHS from '../../../utils/routes';
 import { useHistory } from 'react-router-dom';
+import MyPaper from '../../../components/MyPaper';
 
-const useStyles = makeStyles((theme) => ({
-  followContainer: {
-    boxShadow: '0 0 15px 2px #efefef',
-    borderRadius: theme.spacing(2),
-    textAlign: 'center',
-    '& #follow-see-all-link': {
-      padding: theme.spacing(1),
-    },
-  },
-  followRow: {
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-}));
+// const useStyles = makeStyles((theme) => ({
+//   followContainer: {
+//     boxShadow: '0 0 15px 2px #efefef',
+//     borderRadius: theme.spacing(2),
+//     textAlign: 'center',
+//     '& #follow-see-all-link': {
+//       padding: theme.spacing(1),
+//     },
+//   },
+//   followRow: {
+//     justifyContent: 'space-between',
+//     alignItems: 'center',
+//   },
+// }));
 
 const getFollowedStores = (id?: string) =>
   jsonClient.get<void, Payload<Store[]>>(`/users/${id}/stores`).then((res) => res);
 
 const CustomerFollow = (): React.ReactElement => {
-  const classes = useStyles();
+  // const classes = useStyles();
   const { user } = useContext(AuthContext);
   const history = useHistory();
 
@@ -50,7 +50,7 @@ const CustomerFollow = (): React.ReactElement => {
   const goToStorePage = (storeId: string) => history.push(PATHS.STORE_PAGE.replace(':id', storeId));
 
   const FollowedStoresSection = () => (
-    <Paper className={classes.followContainer}>
+    <MyPaper>
       <List dense>
         {followedStores?.map((s) => (
           <ListItem key={s._id}>
@@ -73,7 +73,7 @@ const CustomerFollow = (): React.ReactElement => {
       {/* <Box id={'follow-see-all-link'}>
         <Link>See all</Link>
       </Box> */}
-    </Paper>
+    </MyPaper>
   );
 
   const sections = [{ node: <FollowedStoresSection /> }];

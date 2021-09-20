@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
 import { useMutation } from 'react-query';
-import { formDataClient, jsonClient, Payload, toFormData } from '../utils/axiosClient';
+import { serialize } from 'object-to-formdata';
+import { formDataClient, jsonClient, Payload } from '../utils/axiosClient';
 import User from '../model/users/user';
 import Store from '../model/users/store';
 import { AppError } from '../model/http';
@@ -17,6 +18,7 @@ interface LoginProps {
 interface SignupProps {
   user: User;
   store?: Store;
+  photo?: File;
 }
 
 interface ChangePasswordProps {
@@ -69,14 +71,12 @@ export const AuthProvider = (props: Props): React.ReactElement => {
   };
 
   const updateMe = (user: Partial<User>): Promise<Payload<User>> =>
-    formDataClient
-      .patch<FormData, Payload<User>>('/users/updateMe', toFormData(user))
-      .then(_onUser);
+    formDataClient.patch<FormData, Payload<User>>('/users/updateMe', serialize(user)).then(_onUser);
 
   const register = (props: SignupProps): Promise<Payload<User>> => {
-    const { user, store } = props;
+    const { user, store, photo } = props;
     return formDataClient
-      .post<SignupProps, Payload<User>>(`/users/signup`, toFormData({ ...user, store }))
+      .post<SignupProps, Payload<User>>(`/users/signup`, serialize({ ...user, store, photo }))
       .then(_onUser);
   };
 

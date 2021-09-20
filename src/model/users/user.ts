@@ -3,6 +3,7 @@ interface User {
   fullName: string;
   role: string;
   email: string;
+  createdAt: Date;
   photo?: string | File;
   password: string;
   passwordConfirm?: string;

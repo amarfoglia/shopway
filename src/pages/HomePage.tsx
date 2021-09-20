@@ -6,7 +6,7 @@ import { Position } from '../components/IllustrationPage';
 import AuthContext from '../hooks/useAuth';
 import Role from '../model/users/role';
 
-const { SIGN_IN, CUSTOMER_MAIN } = PATHS;
+const { SIGN_IN, CUSTOMER_MAIN, SELLER_MAIN } = PATHS;
 
 const IllustrationPage = lazy(() => import('../components/IllustrationPage'));
 
@@ -14,11 +14,7 @@ const Home = (): React.ReactElement => {
   const history = useHistory();
   const { user } = useContext(AuthContext);
 
-  const handlePath = !user
-    ? SIGN_IN
-    : user.role === Role.CUSTOMER
-    ? CUSTOMER_MAIN
-    : PATHS.CHANGE_PASSWORD;
+  const handlePath = !user ? SIGN_IN : user.role === Role.CUSTOMER ? CUSTOMER_MAIN : SELLER_MAIN;
 
   return (
     <IllustrationPage

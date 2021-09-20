@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios';
 
-type payload = 'user' | 'article' | 'order' | 'store';
+type payload = 'user' | 'article' | 'order' | 'store' | 'stats' | 'orders';
 
 export default interface JSONResponse<T> {
   status: string;
