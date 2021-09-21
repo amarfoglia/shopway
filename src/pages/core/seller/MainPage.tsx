@@ -2,10 +2,12 @@ import React, { lazy } from 'react';
 import SettingsOutlined from '@material-ui/icons/SettingsOutlined';
 import ExploreOutlined from '@material-ui/icons/ExploreOutlined';
 import ConfirmationNumberOutlined from '@material-ui/icons/ConfirmationNumberOutlined';
+import StoreMallDirectoryOutlined from '@material-ui/icons/StoreMallDirectoryOutlined';
 import TabsPage from '../common/TabPage';
 import TabPanel from '../../../components/TabPanel';
+import StocksPage from './StocksPage';
 
-const Home = lazy(() => import('./Home'));
+const Home = lazy(() => import('./home/Home'));
 const Orders = lazy(() => import('./Orders'));
 const Settings = lazy(() => import('../common/Settings'));
 
@@ -21,6 +23,9 @@ const TabPanels: React.FC<TabProps> = ({ currentTab }) => (
     <TabPanel value={currentTab} index={'orders'}>
       <Orders />
     </TabPanel>
+    <TabPanel value={currentTab} index={'stocks'}>
+      <StocksPage />
+    </TabPanel>
     <TabPanel value={currentTab} index={'settings'}>
       <Settings />
     </TabPanel>
@@ -33,6 +38,11 @@ const MainPage = (): React.ReactElement => {
       value: 'home',
       label: 'Home',
       icon: <ExploreOutlined />,
+    },
+    {
+      value: 'stocks',
+      label: 'Stocks',
+      icon: <StoreMallDirectoryOutlined />,
     },
     {
       value: 'orders',

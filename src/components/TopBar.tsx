@@ -9,6 +9,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Badge from '@material-ui/core/Badge';
 
 type Variants = 'simple' | 'user';
+type Subject = 'seller' | 'customer';
 type Position = 'fixed' | 'sticky' | 'absolute' | 'relative' | 'static' | undefined;
 
 interface Props {
@@ -19,6 +20,7 @@ interface Props {
   userName?: string;
   userImagePath?: string;
   position?: Position;
+  subject?: Subject;
   p?: number;
 }
 
@@ -50,6 +52,7 @@ const TopBar: React.FC<Props> = ({
   variant = 'simple',
   userName,
   userImagePath,
+  subject = 'customer',
   position = 'fixed',
   p,
 }) => {
@@ -60,7 +63,8 @@ const TopBar: React.FC<Props> = ({
         text={userName}
         imagePath={userImagePath}
         size={'large'}
-        alt={`avatar of user ${userName}`}
+        subject={subject === 'customer' ? 'user' : 'store'}
+        alt={`${userName}'s avatar`}
       />
     ) : (
       leftChild

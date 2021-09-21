@@ -10,20 +10,19 @@ import { useContext } from 'react';
 import AuthContext from '../../../hooks/useAuth';
 import Loader from '../../../components/Loader';
 import ErrorDisplay from '../../../components/ErrorDisplay';
-import Seller from '../../../model/users/seller';
-import User from '../../../model/users/user';
+import { getStoreId } from '../../../model/users/user';
 
-const getStore = (user?: User) => (user as Seller).stores[0];
-
-const getAllOrdes = (storeId: string) =>
+const getAllOrdes = (storeId?: string) =>
   jsonClient.get<void, Payload<Order[]>>(`stores/${storeId}/orders`).then((res) => res);
 
 const SellerOrders = (): React.ReactElement => {
   const { user } = useContext(AuthContext);
+  const storeId = getStoreId(user);
 
   const { data, error, isLoading } = useQuery<Payload<Order[]>, AppError>(
-    ['getAllOrder', user],
-    () => getAllOrdes(getStore(user)),
+    ['getAllOrder', storeId],
+    () => getAllOrdes(storeId),
+    { enabled: !!storeId },
   );
 
   const orders = data?.data?.orders;

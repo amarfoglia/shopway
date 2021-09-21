@@ -70,7 +70,7 @@ const TabsPage: React.FC<Props> = ({ tabs, TabPanels, role }): React.ReactElemen
     </Paper>
   );
 
-  const isTopBarVisible = currentTab !== 'settings' && role !== 'seller';
+  const isTopBarVisible = currentTab !== 'settings';
   return (
     <div className={classes.root}>
       <Container maxWidth="md" className={classes.container}>
@@ -82,6 +82,7 @@ const TabsPage: React.FC<Props> = ({ tabs, TabPanels, role }): React.ReactElemen
                 userName={user?.fullName}
                 position="relative"
                 p={0}
+                subject={role}
                 userImagePath={user?.photo as string}
               />
             </Grid>

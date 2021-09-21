@@ -57,7 +57,7 @@ const CustomerFollow = (): React.ReactElement => {
             <ListItemAvatar>
               <MyAvatar
                 alt="Store logo"
-                imagePath={`${BACKEND_URL}/img/logos/${s.logo}`}
+                imagePath={`${BACKEND_URL}/img/stores/${s.logo}`}
                 size="medium"
                 handleClick={() => goToStorePage(s._id)}
               />

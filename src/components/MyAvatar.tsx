@@ -1,12 +1,13 @@
 import React from 'react';
-import { Avatar, makeStyles, Typography } from '@material-ui/core';
+import { Avatar, makeStyles, Theme, Typography } from '@material-ui/core';
 import clsx from 'clsx';
 import Image from 'material-ui-image';
 import { Skeleton } from '@material-ui/lab';
 import { BACKEND_URL } from '../utils/axiosClient';
 
 type Sizes = 'small' | 'medium' | 'large' | 'xl';
-type Subject = 'user' | 'store';
+type Subject = 'user' | 'store' | 'article';
+type Shape = 'circle' | 'square';
 
 interface AvatarProps {
   imagePath?: string;
@@ -14,16 +15,17 @@ interface AvatarProps {
   size: Sizes;
   alt: string;
   subject?: Subject;
+  shape?: Shape;
   handleClick?: () => void;
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles<Theme, { shape: Shape }>((theme) => ({
   textAvatar: {
     textTransform: 'uppercase',
     backgroundColor: theme.palette.primary.main,
   },
   imgAvatar: {
-    borderRadius: 30,
+    borderRadius: ({ shape }) => (shape === 'circle' ? 30 : 0),
   },
   smallAvatar: {
     width: theme.spacing(3),
@@ -55,9 +57,10 @@ const MyAvatar: React.FC<AvatarProps> = ({
   size,
   alt,
   subject = 'user',
+  shape = 'circle',
   handleClick,
 }) => {
-  const classes = useStyles();
+  const classes = useStyles({ shape });
   const sizeClass =
     size === 'small'
       ? classes.smallAvatar
