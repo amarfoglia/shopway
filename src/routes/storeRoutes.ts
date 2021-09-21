@@ -14,7 +14,7 @@ const articleController = new ArticleController();
 const orderController = new OrderController();
 
 router.use(authController.checkUserToken);
-router.get('/:id/articles/', articleController.getArticlesFromStore);
+router.get('/:id/articles', articleController.getArticlesFromStore);
 router.get('/:id', storeController.getStore);
 router.get('/', storeController.getAllStores);
 router.get('/:id/mostpopulararticles', storeController.getStorePopularProducts);

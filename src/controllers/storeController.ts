@@ -141,6 +141,9 @@ class StoreController {
           profit: { $sum: '$totalPrice' }
         }
       },
+      {
+        $sort: { _id: 1 }
+      }
     ]);
     return sales;
   };
