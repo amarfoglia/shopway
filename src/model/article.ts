@@ -19,7 +19,7 @@ interface ArticleDetails {
 
 interface Article {
   _id?: string;
-  store: Store;
+  store: Store | string;
   name: string;
   brand: string;
   description: string;

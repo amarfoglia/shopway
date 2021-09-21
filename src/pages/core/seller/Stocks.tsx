@@ -16,18 +16,23 @@ import { jsonClient, Payload } from '../../../utils/axiosClient';
 import MyPaper from '../../../components/MyPaper';
 import MyAvatar from '../../../components/MyAvatar';
 import CorePage from '../../../components/CorePage';
+import { useHistory } from 'react-router-dom';
+import PATHS from '../../../utils/routes';
 
 const getStoreArticles = (id?: string) =>
   jsonClient.get<void, Payload<Article[]>>(`/stores/${id}/articles`).then((res) => res);
 
-const ArticleItem: React.FC<Article> = ({ brand, name, articleDetails }) => {
-  const imagePath = articleDetails?.[0].image;
-  const quantity = articleDetails
-    ?.flatMap((d) => d.stockArticles)
-    .flatMap((s) => s.quantity)
-    .reduce((p, n) => p + n);
+const ArticleItem: React.FC<Article> = (article) => {
+  const { brand, name, articleDetails } = article;
+  const history = useHistory();
+  const firstDetails = articleDetails?.[0];
+  const imagePath = firstDetails ? firstDetails.image : undefined;
+  const quantities = articleDetails?.flatMap((d) => d.stockArticles).flatMap((s) => s.quantity);
+  const quantity = quantities && quantities?.length > 0 ? quantities.reduce((p, n) => p + n) : 0;
+
+  const goToDetailsPage = () => history.push(PATHS.ARTICLE_DETAILS_PAGE, { article });
   return (
-    <ListItem>
+    <ListItem onClick={goToDetailsPage}>
       <ListItemAvatar>
         <MyAvatar
           alt="Article image"
@@ -35,7 +40,6 @@ const ArticleItem: React.FC<Article> = ({ brand, name, articleDetails }) => {
           size="large"
           subject="article"
           shape="square"
-          // handleClick={() => goToStorePage(s._id)}
         />
       </ListItemAvatar>
       <ListItemText primary={name} secondary={brand} />
@@ -63,7 +67,7 @@ const StocksPage: React.FC = () => {
   const StocksSection = () => (
     <MyPaper>
       <List dense>
-        {articles ? (
+        {articles && articles.length > 0 ? (
           articles.map((o) => <ArticleItem key={o._id} {...o} />)
         ) : (
           <ListItem>

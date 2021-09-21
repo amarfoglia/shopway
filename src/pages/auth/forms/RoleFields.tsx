@@ -11,7 +11,7 @@ import {
 } from '@material-ui/core';
 import { Field, FieldProps, getIn, useFormikContext } from 'formik';
 import { useState } from 'react';
-import { SignupFormModel } from '../../../model/auth';
+import { SignupFormModel } from '../../../model/validation';
 import { roleStyles } from '../../../style/styles';
 import Image from 'material-ui-image';
 import clsx from 'clsx';

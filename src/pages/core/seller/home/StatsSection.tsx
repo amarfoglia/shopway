@@ -8,18 +8,23 @@ import VisibilityOutlined from '@material-ui/icons/VisibilityOutlined';
 import MyPaper from '../../../../components/MyPaper';
 import moment from 'moment';
 import Skeleton from '@material-ui/lab/Skeleton';
+import Stats from '../../../../model/statistics';
 
 interface Props {
-  stats?: {
-    _id: string;
-    numberOfOrders: number;
-    profit: number;
-  }[];
+  stats?: Stats;
 }
 
-const StatsSections: React.FC<Props> = ({ stats = [] }) => {
-  const dates = stats?.flatMap((s) => moment(s._id).format('DD MMM'));
-  const profits = stats?.flatMap((s) => s.profit);
+const computeAvgProfit = (total?: number, num?: number) =>
+  total && num && total > 0 && num > 0 ? total / num : 0;
+
+const _sum = (x: number, y: number) => x + y;
+
+const StatsSections: React.FC<Props> = ({ stats }) => {
+  const dates = stats?.salesStore.flatMap((s) => moment(s._id).format('DD MMM'));
+  const profits = stats?.salesStore.flatMap((s) => s.profit);
+  const weeklyProfit = profits?.reduce((p1, p2) => p1 + p2);
+  const weeklyVisits = stats?.viewsStore.flatMap((v) => v.numberOfViews).reduce(_sum);
+  const weeklyOrders = stats?.salesStore.flatMap((s) => s.numberOfOrders).reduce(_sum);
 
   const options = {
     responsive: true,
@@ -30,9 +35,9 @@ const StatsSections: React.FC<Props> = ({ stats = [] }) => {
     },
   };
 
-  const data = () => {
+  const _prepareData = (labels: string[], data: number[]) => {
     return {
-      labels: dates,
+      labels,
       datasets: [
         {
           lineTension: 0.6,
@@ -45,7 +50,7 @@ const StatsSections: React.FC<Props> = ({ stats = [] }) => {
           pointHoverRadius: 4,
           fill: false,
           label: 'Profit per day',
-          data: profits,
+          data,
         },
       ],
     };
@@ -55,9 +60,9 @@ const StatsSections: React.FC<Props> = ({ stats = [] }) => {
     <Grid container justifyContent="space-between">
       <Grid item>
         <Typography variant="h3" component="p">
-          84{' '}
+          {weeklyOrders}{' '}
           <Typography variant="subtitle1" component="span">
-            articles
+            orders
           </Typography>
         </Typography>
       </Grid>
@@ -73,8 +78,13 @@ const StatsSections: React.FC<Props> = ({ stats = [] }) => {
     <Grid container spacing={2}>
       <Grid item xs={12}>
         <MyPaper>
-          {profits.length > 0 ? (
-            <Line data={data} height={220} options={options} />
+          {profits && dates ? (
+            <Line
+              data={_prepareData(dates, profits)}
+              height={220}
+              options={options}
+              redraw={false}
+            />
           ) : (
             <Skeleton variant="rect" width={'100%'} height={118} />
           )}
@@ -83,14 +93,14 @@ const StatsSections: React.FC<Props> = ({ stats = [] }) => {
       <Grid item xs={6}>
         <DetailPaper
           title={'Profits per day'}
-          value={`12`}
+          value={computeAvgProfit(weeklyProfit, weeklyOrders)}
           icon={<ArrowUpwardOutlined fontSize="small" />}
         />
       </Grid>
       <Grid item xs={6}>
         <DetailPaper
           title={'Weekly visits'}
-          value={`30`}
+          value={weeklyVisits ?? 0}
           icon={<VisibilityOutlined fontSize="small" />}
         />
       </Grid>

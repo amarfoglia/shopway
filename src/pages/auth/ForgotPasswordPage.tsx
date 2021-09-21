@@ -5,8 +5,8 @@ import { Link, useHistory } from 'react-router-dom';
 import MailOutlineOutlined from '@material-ui/icons/MailOutlineOutlined';
 import { useMutation } from 'react-query';
 
-import { LoginFormModel } from '../../model/auth';
-import { forgotPasswordValidation } from '../../model/auth/validationSchema';
+import { LoginFormModel } from '../../model/validation';
+import { forgotPasswordValidation } from '../../model/validation/validationSchema';
 import AuthContext from '../../hooks/useAuth';
 import baseStyles from '../../style/styles';
 import PATHS from '../../utils/routes';

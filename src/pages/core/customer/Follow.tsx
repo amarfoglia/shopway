@@ -53,13 +53,12 @@ const CustomerFollow = (): React.ReactElement => {
     <MyPaper>
       <List dense>
         {followedStores?.map((s) => (
-          <ListItem key={s._id}>
+          <ListItem key={s._id} onClick={() => goToStorePage(s._id)}>
             <ListItemAvatar>
               <MyAvatar
                 alt="Store logo"
                 imagePath={`${BACKEND_URL}/img/stores/${s.logo}`}
                 size="medium"
-                handleClick={() => goToStorePage(s._id)}
               />
             </ListItemAvatar>
             <ListItemText primary={s.name} secondary={s.address} />

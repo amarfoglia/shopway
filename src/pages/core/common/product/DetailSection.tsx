@@ -7,6 +7,7 @@ import Article, { ArticleStock } from '../../../../model/article';
 import ErrorDisplay from '../../../../components/ErrorDisplay';
 import PATHS from '../../../../utils/routes';
 import { useHistory } from 'react-router-dom';
+import Store from '../../../../model/users/store';
 
 interface Props {
   storeName: string;
@@ -42,7 +43,8 @@ const DetailsSection: React.FC<Props> = ({
 
   const history = useHistory();
 
-  const goToStorePage = () => history.push(PATHS.STORE_PAGE.replace(':id', article.store?._id));
+  const goToStorePage = () =>
+    history.push(PATHS.STORE_PAGE.replace(':id', (article.store as Store)?._id));
 
   return (
     <Grid container spacing={2} style={{ overflow: 'auto', height: 'calc(100% - 100px)' }}>

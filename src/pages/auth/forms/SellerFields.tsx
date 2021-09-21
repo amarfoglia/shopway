@@ -6,7 +6,7 @@ import LocationOnOutlined from '@material-ui/icons/LocationOnOutlined';
 import StorefrontOutlined from '@material-ui/icons/StorefrontOutlined';
 
 import { Field, useFormikContext } from 'formik';
-import { SellerFormModel } from '../../../model/auth';
+import { SellerFormModel } from '../../../model/validation';
 import { TextFieldProps } from 'material-ui';
 import DebouncedInput from '../../../components/formFields/DebouncedInput';
 import ImageUploader from '../../../components/ImageUploader';

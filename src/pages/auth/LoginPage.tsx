@@ -4,9 +4,9 @@ import { FormikHelpers, FormikValues } from 'formik';
 import { Link } from 'react-router-dom';
 import { useMutation } from 'react-query';
 
-import { LoginFormModel } from '../../model/auth';
+import { LoginFormModel } from '../../model/validation';
 import LoginFields from './forms/LoginFields';
-import { loginValidation } from '../../model/auth/validationSchema';
+import { loginValidation } from '../../model/validation/validationSchema';
 import { useContext } from 'react';
 import AuthContext from '../../hooks/useAuth';
 import baseStyles from '../../style/styles';

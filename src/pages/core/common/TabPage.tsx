@@ -29,12 +29,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-type Component = React.FC<{ currentTab: string }>;
+type Component = React.FC<{ currentTab: number }>;
 type Role = 'customer' | 'seller';
 
 interface Props {
   tabs: {
-    value: string;
+    value: number;
     label: string;
     icon: React.ReactElement;
   }[];
@@ -45,12 +45,12 @@ interface Props {
 const TabsPage: React.FC<Props> = ({ tabs, TabPanels, role = 'customer' }): React.ReactElement => {
   const classes = useStyles();
   const search = useLocation().search;
-  const tab = new URLSearchParams(search).get('tab');
-  const [currentTab, setCurrentTab] = useState<string>(tab ?? tabs[0].value);
+  const tab = new URLSearchParams(search).get('tab') ?? '0';
+  const [currentTab, setCurrentTab] = useState<number>(parseInt(tab, 10));
   const { user } = useContext(AuthContext);
 
   // eslint-disable-next-line @typescript-eslint/ban-types
-  const handleChange = (event: React.ChangeEvent<{}>, newValue: string) => setCurrentTab(newValue);
+  const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => setCurrentTab(newValue);
 
   const BottomTabs = () => (
     <Paper square>
@@ -70,7 +70,7 @@ const TabsPage: React.FC<Props> = ({ tabs, TabPanels, role = 'customer' }): Reac
     </Paper>
   );
 
-  const isTopBarVisible = currentTab !== 'settings';
+  const isTopBarVisible = currentTab !== tabs[tabs.length - 1].value;
   return (
     <div className={classes.root}>
       <Container maxWidth="md" className={classes.container}>
@@ -78,7 +78,7 @@ const TabsPage: React.FC<Props> = ({ tabs, TabPanels, role = 'customer' }): Reac
           {isTopBarVisible && (
             <Grid item xs={12}>
               <TopBar
-                variant={'user'}
+                variant={role === 'customer' ? 'user' : 'simple'}
                 userName={user?.fullName}
                 position="relative"
                 p={0}

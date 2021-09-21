@@ -126,7 +126,7 @@ const OrderCard: React.FC<CardProps> = ({
   const details = articleDetails as ArticleDetails;
   const customer = order.customer;
   const goToArticlePage = () =>
-    history.push(PATHS.ARTICLE_DETAILS.replace(':id', details.articleId), {
+    history.push(PATHS.ARTICLE_PAGE.replace(':id', details.articleId), {
       store,
     });
 
@@ -175,14 +175,16 @@ const OrderCard: React.FC<CardProps> = ({
       <Divider />
       <CardContent onClick={goToArticlePage}>
         <Grid container spacing={2}>
-          <Grid item xs={3} style={{ display: 'flex' }} justifyContent="center" alignItems="center">
-            <MyAvatar
-              imagePath={details?.image}
-              size="large"
-              subject="article"
-              shape="square"
-              alt={`image of article ${details.articleId}`}
-            />
+          <Grid item xs={3} style={{ display: 'flex' }}>
+            <Grid container justifyContent="center" alignItems="center">
+              <MyAvatar
+                imagePath={details?.image}
+                size="large"
+                subject="article"
+                shape="square"
+                alt={`image of article ${details.articleId}`}
+              />
+            </Grid>
           </Grid>
           <Grid item xs={9}>
             <Grid container direction="column">

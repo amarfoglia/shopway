@@ -9,15 +9,10 @@ import Order from '../../../../model/order';
 import { getStoreId } from '../../../../model/users/user';
 import StatsSections from './StatsSection';
 import OrdersSection from './OrdersSections';
-
-interface Stats {
-  _id: string;
-  numberOfOrders: number;
-  profit: number;
-}
+import Stats from '../../../../model/statistics';
 
 const getStoreStats = (id?: string) =>
-  jsonClient.get<void, Payload<Stats[]>>(`/stores/${id}/stats`).then((res) => res);
+  jsonClient.get<void, Payload<Stats>>(`/stores/${id}/stats`).then((res) => res);
 
 const getStoreOrders = (id?: string) =>
   jsonClient.get<void, Payload<Order[]>>(`/stores/${id}/orders`).then((res) => res);
@@ -26,7 +21,7 @@ const SellerHome = (): React.ReactElement => {
   const { user } = useContext(AuthContext);
   const storeId = getStoreId(user);
 
-  const { data: statsRes } = useQuery<Payload<Stats[]>, AppError>(
+  const { data: statsRes } = useQuery<Payload<Stats>, AppError>(
     ['getStoreStats', storeId],
     () => getStoreStats(storeId),
     { enabled: !!storeId, retry: false },

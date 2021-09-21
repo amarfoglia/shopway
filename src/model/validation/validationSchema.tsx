@@ -2,6 +2,7 @@ import * as Yup from 'yup';
 import 'yup-phone';
 import Role from '../users/role';
 import { SignupFormModel, SellerFormModel } from '.';
+import { categories, subCategories } from '../category';
 
 const {
   formField: { email, password, fullName, passwordConfirm, role },
@@ -78,10 +79,21 @@ const forgotPasswordValidation = Yup.object().shape({
   email: Yup.string().email().required(`${email.requiredErrorMsg}`),
 });
 
+const articleValidation = Yup.object().shape({
+  name: Yup.string().required('Article name is required'),
+  brand: Yup.string().required('Brand is required'),
+  description: Yup.string().required('Description is required'),
+  category: Yup.object().shape({
+    categoryArticle: Yup.string().oneOf(categories).required('Category is required'),
+    categoryType: Yup.string().oneOf(subCategories).required('Subcategory is required'),
+  }),
+});
+
 export {
   signupValidation,
   loginValidation,
   forgotPasswordValidation,
   editProfileValidation,
   changePasswordValidation,
+  articleValidation,
 };

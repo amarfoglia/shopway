@@ -8,6 +8,7 @@ import Article from '../model/article';
 import { BACKEND_URL } from '../utils/axiosClient';
 import { useHistory } from 'react-router-dom';
 import PATHS from '../utils/routes';
+import Store from '../model/users/store';
 
 interface ProductProps {
   article: Article;
@@ -31,9 +32,10 @@ const ArticlePaper: React.FC<ProductProps> = ({ article, hideHeader = false }) =
   const history = useHistory();
   const { store, articleDetails, name, _id: articleId } = article;
   const details = articleDetails?.[0];
-  const goToStorePage = () => history.push(PATHS.STORE_PAGE.replace(':id', store?._id));
+  const _store = store as Store;
+  const goToStorePage = () => history.push(PATHS.STORE_PAGE.replace(':id', _store?._id));
   const goToArticleDetails = () =>
-    articleId && history.push(PATHS.ARTICLE_DETAILS.replace(':id', articleId), { article, store });
+    articleId && history.push(PATHS.ARTICLE_PAGE.replace(':id', articleId), { article, store });
   const renderPrice = (price = 0, discountPrice?: string) =>
     discountPrice ? (
       <Grid container>
@@ -63,15 +65,15 @@ const ArticlePaper: React.FC<ProductProps> = ({ article, hideHeader = false }) =
               <Grid item>
                 <StoreAvatar
                   size={'small'}
-                  imagePath={store?.logo as string}
-                  text={store?.name}
-                  alt={`logo of store ${store?.name}`}
+                  imagePath={_store?.logo as string}
+                  text={_store?.name}
+                  alt={`logo of store ${_store?.name}`}
                   subject="store"
                   handleClick={goToStorePage}
                 />
               </Grid>
               <Grid item>
-                <Typography variant="body2">{store?.name}</Typography>
+                <Typography variant="body2">{_store?.name}</Typography>
               </Grid>
             </Grid>
           </Grid>

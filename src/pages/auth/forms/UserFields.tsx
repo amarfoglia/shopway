@@ -6,7 +6,7 @@ import MailOutlineOutlined from '@material-ui/icons/MailOutlineOutlined';
 import PermIdentityOutlined from '@material-ui/icons/PermIdentityOutlined';
 
 import { Field, useFormikContext } from 'formik';
-import { SignupFormModel } from '../../../model/auth';
+import { SignupFormModel } from '../../../model/validation';
 import { TextFieldProps } from 'material-ui';
 import DebouncedInput from '../../../components/formFields/DebouncedInput';
 import User from '../../../model/users/user';

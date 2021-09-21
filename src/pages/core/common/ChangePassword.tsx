@@ -8,7 +8,7 @@ import { useMutation } from 'react-query';
 
 import LockOutlined from '@material-ui/icons/LockOutlined';
 import DebouncedInput from '../../../components/formFields/DebouncedInput';
-import { changePasswordValidation } from '../../../model/auth/validationSchema';
+import { changePasswordValidation } from '../../../model/validation/validationSchema';
 import { AppError } from '../../../model/http';
 import User from '../../../model/users/user';
 import { Payload } from '../../../utils/axiosClient';

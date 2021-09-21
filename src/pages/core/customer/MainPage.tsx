@@ -12,21 +12,21 @@ const Following = lazy(() => import('./Follow'));
 const Settings = lazy(() => import('../common/Settings'));
 
 interface TabProps {
-  currentTab: string;
+  currentTab: number;
 }
 
 const TabPanels: React.FC<TabProps> = ({ currentTab }) => (
   <React.Fragment>
-    <TabPanel value={currentTab} index={'home'}>
+    <TabPanel value={currentTab} index={0}>
       <Home />
     </TabPanel>
-    <TabPanel value={currentTab} index={'following'}>
+    <TabPanel value={currentTab} index={1}>
       <Following />
     </TabPanel>
-    <TabPanel value={currentTab} index={'orders'}>
+    <TabPanel value={currentTab} index={2}>
       <Orders />
     </TabPanel>
-    <TabPanel value={currentTab} index={'settings'}>
+    <TabPanel value={currentTab} index={3}>
       <Settings />
     </TabPanel>
   </React.Fragment>
@@ -35,27 +35,27 @@ const TabPanels: React.FC<TabProps> = ({ currentTab }) => (
 const MainPage = (): React.ReactElement => {
   const tabs = [
     {
-      value: 'home',
+      value: 0,
       label: 'Home',
       icon: <ExploreOutlined />,
     },
     {
-      value: 'following',
+      value: 1,
       label: 'Followed',
       icon: <FavoriteBorderOutlined />,
     },
     {
-      value: 'orders',
+      value: 2,
       label: 'Orders',
       icon: <ConfirmationNumberOutlined />,
     },
     {
-      value: 'settings',
+      value: 3,
       label: 'Settings',
       icon: <SettingsOutlined />,
     },
   ];
-  return <TabsPage tabs={tabs} TabPanels={TabPanels} role="customer" />;
+  return <TabsPage tabs={tabs} TabPanels={TabPanels} />;
 };
 
 export default MainPage;

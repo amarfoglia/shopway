@@ -17,8 +17,8 @@ const categories = [
   'Backpack',
 ];
 
-const ages = ['Man', 'Woman', 'Child'];
+const subCategories = ['Man', 'Woman', 'Child'];
 
-export { categories, ages };
+export { categories, subCategories };
 
 export default Category;

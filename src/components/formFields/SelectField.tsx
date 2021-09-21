@@ -2,20 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { at } from 'lodash';
 import { FieldProps, useField } from 'formik';
-import { InputLabel, FormControl, Select, MenuItem, FormHelperText } from '@material-ui/core';
-
-interface Item {
-  value: string;
-  label: string;
-}
+import { FormControl, Select, MenuItem, FormHelperText } from '@material-ui/core';
 
 interface Props {
+  data: string[];
   label: string;
-  data: Item[];
 }
 
 const SelectField: React.FC<Props & FieldProps> = (props) => {
-  const { label, data, ...rest } = props;
+  const { data, label, ...rest } = props;
   const [field, meta] = useField(rest.field);
   const { value: selectedValue } = field;
   const [touched, error] = at(meta, 'touched', 'error');
@@ -28,11 +23,17 @@ const SelectField: React.FC<Props & FieldProps> = (props) => {
 
   return (
     <FormControl {...rest} error={isError}>
-      <InputLabel>{label}</InputLabel>
-      <Select {...field} value={selectedValue ? selectedValue : ''}>
+      <Select
+        {...field}
+        value={selectedValue ? selectedValue : 'none'}
+        style={{ color: selectedValue ? 'inherit' : 'grey' }}
+      >
+        <MenuItem value={'none'} disabled>
+          {label}
+        </MenuItem>
         {data.map((item, index) => (
-          <MenuItem key={index} value={item.value}>
-            {item.label}
+          <MenuItem key={index} value={item}>
+            {item}
           </MenuItem>
         ))}
       </Select>

@@ -1,7 +1,7 @@
 import { useFormikContext } from 'formik';
 import React from 'react';
 import ImageUploader from '../../../components/ImageUploader';
-import { CustomerFormModel } from '../../../model/auth';
+import { CustomerFormModel } from '../../../model/validation';
 import User from '../../../model/users/user';
 
 interface Props {

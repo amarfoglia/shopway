@@ -23,7 +23,7 @@ const useStyles = makeStyles<Theme, { shape: Shape }>((theme) => ({
   textAvatar: {
     textTransform: 'uppercase',
     backgroundColor: theme.palette.primary.main,
-    borderRadius: ({ shape }) => (shape === 'circle' ? 30 : theme.spacing(1)),
+    borderRadius: ({ shape }) => (shape === 'circle' ? '50%' : theme.spacing(1.5)),
   },
   smallAvatar: {
     width: theme.spacing(3),

@@ -12,7 +12,7 @@ import {
 import Switch from '@material-ui/core/Switch';
 import { useHistory } from 'react-router-dom';
 import CorePage from '../../../components/CorePage';
-import CustomerAvatar from '../../../components/MyAvatar';
+import MyAvatar from '../../../components/MyAvatar';
 import AuthContext from '../../../hooks/useAuth';
 import ArrowForwardIos from '@material-ui/icons/ArrowForwardIos';
 import MyPaper from '../../../components/MyPaper';
@@ -25,7 +25,7 @@ const CustomerSettings = (): React.ReactElement => {
   const UserAvatarSection = () => (
     <Grid container spacing={2} alignItems="center">
       <Grid item>
-        <CustomerAvatar
+        <MyAvatar
           size="xl"
           alt={`user avatar of ${user?.fullName}`}
           imagePath={user?.photo as string}
@@ -52,18 +52,18 @@ const CustomerSettings = (): React.ReactElement => {
         <Grid item xs={12}>
           <MyPaper>
             <List disablePadding>
-              <ListItem>
-                <ListItemText primary={'Edit profile'} onClick={goToEditProfile} />
-                <ListItemSecondaryAction onClick={goToEditProfile}>
+              <ListItem onClick={goToEditProfile}>
+                <ListItemText primary={'Edit profile'} />
+                <ListItemSecondaryAction>
                   <IconButton edge="end" aria-label="edit profile">
                     <ArrowForwardIos fontSize="small" />
                   </IconButton>
                 </ListItemSecondaryAction>
               </ListItem>
               <Divider />
-              <ListItem>
-                <ListItemText primary={'Change password'} onClick={goToChangePassword} />
-                <ListItemSecondaryAction onClick={goToChangePassword}>
+              <ListItem onClick={goToChangePassword}>
+                <ListItemText primary={'Change password'} />
+                <ListItemSecondaryAction>
                   <IconButton edge="end" aria-label="change password">
                     <ArrowForwardIos fontSize="small" />
                   </IconButton>

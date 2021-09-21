@@ -4,7 +4,7 @@ import MailOutlineOutlined from '@material-ui/icons/MailOutlineOutlined';
 import LockOutlined from '@material-ui/icons/LockOutlined';
 import { Field } from 'formik';
 import { Link } from 'react-router-dom';
-import { LoginFormModel } from '../../../model/auth';
+import { LoginFormModel } from '../../../model/validation';
 import PATHS from '../../../utils/routes';
 import baseStyles from '../../../style/styles';
 import DebouncedInput from '../../../components/formFields/DebouncedInput';

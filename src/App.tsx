@@ -4,7 +4,8 @@ import { Container, makeStyles } from '@material-ui/core';
 import AuthRoute from './components/AuthRoute';
 import PATHS from './utils/routes';
 import Loader from './components/Loader';
-import ProductPage from './pages/core/common/ArticlePage';
+import ArticlePage from './pages/core/common/ArticlePage';
+import ArticleFormPage from './pages/core/seller/stocks/ArticleFormPage';
 
 const SignupPage = lazy(() => import('./pages/auth/SingupPage'));
 const Home = lazy(() => import('./pages/HomePage'));
@@ -20,6 +21,7 @@ const SearchPage = lazy(() => import('./pages/core/search.article/SearchPage'));
 const CustomerEditProfile = lazy(() => import('./pages/core/customer/EditProfile'));
 const ErrorPage = lazy(() => import('./pages/ErrorPage'));
 const SellerPage = lazy(() => import('./pages/core/seller/MainPage'));
+const ArticleDetailsPage = lazy(() => import('./pages/core/seller/stocks/ArticlesDetailsPage'));
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -48,11 +50,13 @@ const renderContent = () => {
             <AuthRoute exact path={PATHS.SELLER_MAIN} render={() => <SellerPage />} />
             <AuthRoute path={PATHS.CHANGE_PASSWORD} render={() => <ChangePasswordPage />} />
             <AuthRoute path={PATHS.USER_PROFILE} render={() => <UserProfile />} />
-            <AuthRoute path={PATHS.SEARCH_ARTICLE} render={() => <SearchPage />} />
+            <AuthRoute path={PATHS.ARTICLE_FORM} render={() => <ArticleFormPage />} />
             <AuthRoute
-              path={PATHS.ARTICLE_DETAILS}
-              render={(props) => <ProductPage {...props} />}
+              path={PATHS.ARTICLE_DETAILS_PAGE}
+              render={(props) => <ArticleDetailsPage {...props} />}
             />
+            <AuthRoute path={PATHS.SEARCH_ARTICLE} render={() => <SearchPage />} />
+            <AuthRoute path={PATHS.ARTICLE_PAGE} render={(props) => <ArticlePage {...props} />} />
             <AuthRoute path={PATHS.STORE_PAGE} render={() => <StorePage />} />
             <Route path={PATHS.NOT_AUTHORIZED} render={() => <NotAuthorized />} />
             <Route

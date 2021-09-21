@@ -11,7 +11,7 @@ import PhotoCameraOutlined from '@material-ui/icons/PhotoCameraOutlined';
 import MailOutlineOutlined from '@material-ui/icons/MailOutlineOutlined';
 import PermIdentityOutlined from '@material-ui/icons/PermIdentityOutlined';
 import DebouncedInput from '../../../components/formFields/DebouncedInput';
-import { editProfileValidation } from '../../../model/auth/validationSchema';
+import { editProfileValidation } from '../../../model/validation/validationSchema';
 import { AppError } from '../../../model/http';
 import User from '../../../model/users/user';
 import { ImageInput } from '../../../components/ImageUploader';
