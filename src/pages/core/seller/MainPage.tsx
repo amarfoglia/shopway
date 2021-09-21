@@ -55,7 +55,7 @@ const MainPage = (): React.ReactElement => {
       icon: <SettingsOutlined />,
     },
   ];
-  return <TabsPage tabs={tabs} TabPanels={TabPanels} role="seller" />;
+  return <TabsPage tabs={tabs} TabPanels={TabPanels} />;
 };
 
 export default MainPage;

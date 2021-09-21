@@ -39,10 +39,10 @@ interface Props {
     icon: React.ReactElement;
   }[];
   TabPanels: Component;
-  role: Role;
+  role?: Role;
 }
 
-const TabsPage: React.FC<Props> = ({ tabs, TabPanels, role }): React.ReactElement => {
+const TabsPage: React.FC<Props> = ({ tabs, TabPanels, role = 'customer' }): React.ReactElement => {
   const classes = useStyles();
   const search = useLocation().search;
   const tab = new URLSearchParams(search).get('tab');

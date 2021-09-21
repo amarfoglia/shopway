@@ -23,9 +23,7 @@ const useStyles = makeStyles<Theme, { shape: Shape }>((theme) => ({
   textAvatar: {
     textTransform: 'uppercase',
     backgroundColor: theme.palette.primary.main,
-  },
-  imgAvatar: {
-    borderRadius: ({ shape }) => (shape === 'circle' ? 30 : 0),
+    borderRadius: ({ shape }) => (shape === 'circle' ? 30 : theme.spacing(1)),
   },
   smallAvatar: {
     width: theme.spacing(3),
@@ -70,18 +68,29 @@ const MyAvatar: React.FC<AvatarProps> = ({
       ? classes.xlAvatar
       : classes.mediumAvatar;
 
-  const renderImageAvatar = (path: string) => (
-    <div className={clsx(sizeClass, classes.imgAvatar)}>
-      <Image
-        src={`${BACKEND_URL}/img/${subject}s/${path}`}
-        alt={alt}
-        loading={
-          <Skeleton variant="circle" animation="wave" width={'inherit'} height={'inherit'} />
-        }
-        onClick={handleClick}
-      />
-    </div>
+  const ImageSkeleton = (
+    <Skeleton variant="circle" animation="wave" width={'inherit'} height={'inherit'} />
   );
+
+  const renderImageAvatar = (path: string) => {
+    const radius = shape === 'circle' ? '50%' : '10%';
+    return (
+      <div className={sizeClass}>
+        {path ? (
+          <Image
+            style={{ borderRadius: radius }}
+            imageStyle={{ borderRadius: radius }}
+            src={`${BACKEND_URL}/img/${subject}s/${path}`}
+            alt={alt}
+            loading={ImageSkeleton}
+            onClick={handleClick}
+          />
+        ) : (
+          ImageSkeleton
+        )}
+      </div>
+    );
+  };
 
   const renderTextAvatar = () => (
     <Avatar className={clsx(sizeClass, classes.textAvatar)} alt={alt}>

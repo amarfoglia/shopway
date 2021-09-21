@@ -1,19 +1,16 @@
 import React from 'react';
 import { Grid, makeStyles, Divider, Chip, Box, Theme } from '@material-ui/core';
-import Image from 'material-ui-image';
 
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import StoreAvatar from './MyAvatar';
+import MyAvatar from './MyAvatar';
 import QueryBuilder from '@material-ui/icons/QueryBuilder';
-import Skeleton from '@material-ui/lab/Skeleton';
 import MyPaper from './MyPaper';
 import Order from '../model/order';
 import Moment from 'react-moment';
-import { BACKEND_URL } from '../utils/axiosClient';
 import { useHistory } from 'react-router-dom';
 import PATHS from '../utils/routes';
 import { ArticleDetails } from '../model/article';
@@ -148,7 +145,7 @@ const OrderCard: React.FC<CardProps> = ({
   const renderCardHeader: React.FC<CardHeaderInfo> = ({ name, goToPage, bookDate, imagePath }) => (
     <CardHeader
       avatar={
-        <StoreAvatar
+        <MyAvatar
           text={name}
           size={'medium'}
           alt={`logo of ${name}`}
@@ -178,12 +175,13 @@ const OrderCard: React.FC<CardProps> = ({
       <Divider />
       <CardContent onClick={goToArticlePage}>
         <Grid container spacing={2}>
-          <Grid item xs={3}>
-            <Image
-              src={`${BACKEND_URL}/img/articledetails/${details?.image}`}
-              loading={
-                <Skeleton animation="wave" variant="rect" width={'inherit'} height={'inherit'} />
-              }
+          <Grid item xs={3} style={{ display: 'flex' }} justifyContent="center" alignItems="center">
+            <MyAvatar
+              imagePath={details?.image}
+              size="large"
+              subject="article"
+              shape="square"
+              alt={`image of article ${details.articleId}`}
             />
           </Grid>
           <Grid item xs={9}>
