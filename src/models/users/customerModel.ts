@@ -12,6 +12,7 @@ const customerSchema = new mongoose.Schema({
     default: []
   }
 }, options);
+
 export { CustomerDoc };
 
 export default UserModel.discriminator<CustomerDoc>('Customer', customerSchema);

@@ -5,22 +5,14 @@ import HandlerFactory from './helpers/handlerFactory';
 import ArticleDetailsModel, { ArticleDetailsDoc } from '../models/articles/articleDetailsModel';
 import { ArticleDetails, ArticleStock } from '../models/articles/article';
 import AppError from '../utils/appError';
-import SellerModel from '../models/users/sellerModel';
 import { setPhoto } from './helpers/imageController';
+import Seller from '../models/users/seller';
 
 const factory = new HandlerFactory<ArticleDetailsDoc>('articleDetails');
 class ArticleDetailsController {
   addArticleDetails = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const articleDetails : ArticleDetails = req.body;
-    articleDetails.articleId = req.params.id;
-    const userId = req.user?.id;
-
-    if (!userId || !articleDetails.articleId || !articleDetails.storeId) {
-      next(new AppError('the id of article or store or user is not defined', 400));
-      return;
-    }
-
-    const seller = await SellerModel.findById(userId);
+    const seller = req.user as Seller;
 
     if (!seller) {
       next(new AppError('Seller not found', 404));
@@ -63,13 +55,10 @@ class ArticleDetailsController {
 
   updateArticleDetails = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const { id: articleDetailsId } = req.params;
-
-    const seller = await SellerModel.findById(req.user?.id);
-    const oldArticleDetails = await ArticleDetailsModel.findById(articleDetailsId);
-
+    const seller = req.user as Seller;
     const newArticleDetails: ArticleDetails = req.body;
 
-    if (req.file) { newArticleDetails.image = await setPhoto('photo', [oldArticleDetails?.storeId, articleDetailsId], 'public/img/articledetails', req, next); }
+    if (req.file) { newArticleDetails.image = await setPhoto('photo', [newArticleDetails?.storeId, articleDetailsId], 'public/img/articledetails', req, next); }
 
     const updatedArticleDetails: any = await ArticleDetailsModel.updateOne(
       { $and: [{ _id: articleDetailsId }, { storeId: { $in: seller?.stores } }] },

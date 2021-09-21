@@ -1,11 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
 import Seller from '../models/users/seller';
-import Role from '../models/role';
 import catchAsync from '../utils/catchAsync';
 import OrderModel, { OrderDoc } from '../models/orderModel';
 import HandlerFactory from './helpers/handlerFactory';
 import AppError from '../utils/appError';
-import SellerModel from '../models/users/sellerModel';
+import ArticleDetailsModel from '../models/articles/articleDetailsModel';
 
 const factory = new HandlerFactory<OrderDoc>('order');
 
@@ -16,12 +15,14 @@ class OrderController {
 
     if (!order.customer) {
       next(new AppError('the id of customer is not defined', 400));
+      return;
     }
 
     const newOrder = await OrderModel.create(order);
 
     if (!newOrder) {
       next(new AppError('Cannot create the order', 500));
+      return;
     }
 
     res.status(201).json({
@@ -35,33 +36,30 @@ class OrderController {
   getAllOrders = factory.getAll(OrderModel, {});
 
   updateOrder = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const userId = req.user?.id;
     const orderId = req.params.id;
     const order = await OrderModel.findById(orderId);
     if (!order) {
       next(new AppError('Invalid orderId', 400));
+      return;
     }
-    if (req.user?.role === Role.SELLER) {
-      const seller = await SellerModel.findById(userId);
-      if (!seller?.stores.includes(order?.storeId ?? 'invalid-id')) {
-        next(new AppError('You are not authorised to modify an order that does not belong to your store.', 400));
-        return;
-      }
-      if (order) {
-        order.sold = true;
-        order?.save();
-      }
-      res.status(201).json({
-        status: 'success',
-        data: { order }
-      });
+    const seller = req.user as Seller;
+    if (!seller?.stores.includes(order?.storeId ?? 'invalid-id')) {
+      next(new AppError('You are not authorised to modify an order that does not belong to your store.', 400));
+      return;
     }
+    if (order) {
+      order.sold = true;
+      order.save();
+    }
+    res.status(201).json({
+      status: 'success',
+      data: { order }
+    });
   });
 
   getCustomerOrders = catchAsync(async (req: Request, res: Response) => {
     const userId = req.user?.id;
-    let orders;
-    if (req.user?.role === 'Customer') { orders = await OrderModel.find({ $match: { customer: userId } }); }
+    const orders = await OrderModel.find({ customer: userId });
     res.status(201).json({
       status: 'success',
       data: { orders }
@@ -73,6 +71,7 @@ class OrderController {
     const storeId = req.params.id;
     if (!seller.stores.includes(storeId)) {
       next(new AppError('You are not authorised to perform this action', 400));
+      return;
     }
     const orders = await OrderModel.find({ store: storeId });
     res.status(201).json({
@@ -81,7 +80,21 @@ class OrderController {
     });
   });
 
-  deleteOrder = factory.deleteOne(OrderModel);
+  deleteOrder = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const orderId = req.params.id;
+    const deleteOrder = await OrderModel.findByIdAndDelete(orderId);
+    const update = { $inc: { 'stockArticles.$[e].quantity': 1 } };
+    const filter = { _id: deleteOrder?.articleDetails };
+    const options = { arrayFilters: [{ 'e.size': deleteOrder?.size }] };
+    const result: any = await ArticleDetailsModel.updateOne(filter, update, options);
+    if (result.nModified === 0) {
+      next(new AppError('impossible increment stockArticles quantity', 500));
+    }
+    res.status(204).json({
+      status: 'success',
+      data: null
+    });
+  });
 }
 
 export default OrderController;

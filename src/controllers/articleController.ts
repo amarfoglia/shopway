@@ -5,24 +5,24 @@ import ArticleModel, { ArticleDoc } from '../models/articles/articleModel';
 import AppError from '../utils/appError';
 import Article from '../models/articles/article';
 import { isCategoryArticle, isCategoryType } from '../models/category';
-import SellerModel from '../models/users/sellerModel';
+import Seller from '../models/users/seller';
 
 const factory = new HandlerFactory<ArticleDoc>('article');
 
 class ArticleController {
   addArticle = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const article = req.body as Article;
+    const seller = req.user as Seller;
     const userId = req.user?.id;
+
     if (!userId) {
       next(new AppError('user id is not defined.', 400));
+      return;
     }
-
-    const seller = await SellerModel.findById(userId);
-
-    article.store = req.params.id;
 
     if (!seller?.stores.includes(article.store)) {
       next(new AppError('You cannot create an article that is not in your store.', 400));
+      return;
     }
 
     if (!isCategoryArticle(article.category.categoryArticle)
@@ -43,21 +43,27 @@ class ArticleController {
   });
 
   updateArticle = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const userId = req.user?.id;
-    if (!userId) {
-      next(new AppError('user id is not defined', 400));
-    }
-    const user = await SellerModel.findById(userId);
+    const seller = req.user as Seller;
     const newArticle = req.body as Article;
     const articleId = req.params.id;
-    const oldArticle = await ArticleModel.findById(articleId);
-
-    if (!user?.stores.includes(oldArticle?.store ?? 'invalid-id')) {
+    if (!seller?.stores.includes(newArticle?.store ?? 'invalid-id')) {
       next(new AppError('the seller does not own the article, cannot update', 400));
       return;
     }
 
-    const updatedArticle = await ArticleModel.findByIdAndUpdate(articleId, newArticle);
+    if (newArticle.category) {
+      if (!isCategoryArticle(newArticle.category.categoryArticle)
+      || !isCategoryType(newArticle.category.categoryType)) {
+        next(new AppError('Category or CategoryType is not valid', 400));
+        return;
+      }
+    }
+
+    const updatedArticle = await ArticleModel.findByIdAndUpdate(
+      articleId,
+      newArticle,
+      { new: true }
+    );
     res.status(201).json({
       status: 'success',
       data: { article: updatedArticle }
@@ -68,6 +74,7 @@ class ArticleController {
     const storeId = req.params.id;
     if (!storeId) {
       next(new AppError('invalid store-id', 404));
+      return;
     }
     const articles = await ArticleModel.find({ store: storeId });
     res.status(200).json({

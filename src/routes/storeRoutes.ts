@@ -17,12 +17,11 @@ router.use(authController.checkUserToken);
 router.get('/:id/articles/', articleController.getArticlesFromStore);
 router.get('/:id', storeController.getStore);
 router.get('/', storeController.getAllStores);
-router.get('/:id/stats/mostpopular', storeController.getStorePopularProducts);
+router.get('/:id/mostpopulararticles', storeController.getStorePopularProducts);
 
 router.use(authController.restrictTo(Role.SELLER));
 router.get('/:id/orders', orderController.getOrdersFromStore);
-router.get('/:id/stats', storeController.getStoreSalesPerDay);
-router.get('/:id/stats/visits', storeController.getWiewsStats);
+router.get('/:id/stats', storeController.getStatsStore);
 router.patch('/:id',
   imageController.uploadPhoto,
   imageController.resizePhoto,

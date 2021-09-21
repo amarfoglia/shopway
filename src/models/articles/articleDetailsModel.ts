@@ -10,7 +10,7 @@ const articleDetailsSchema = new mongoose.Schema({
   articleId: {
     type: mongoose.Types.ObjectId,
     ref: 'Article',
-    required: [true, 'Please, provide the article\'s id of the article details']
+    required: [true, 'Please, provide the articleId of the article details']
   },
   storeId: {
     type: mongoose.Types.ObjectId,
@@ -50,10 +50,9 @@ const articleDetailsSchema = new mongoose.Schema({
 articleDetailsSchema.pre<ArticleDetailsDoc>('save', async function _(next) {
   const articleDetails = this;
   const filter = { _id: articleDetails.articleId };
-  const update = { $push: { articleDetails: articleDetails.id } };
+  const update = { $addToSet: { articleDetails: articleDetails.id } };
   if ((this as any).isNew) {
     const articleUpdated = await ArticleModel.findByIdAndUpdate(filter, update);
-    console.log(articleUpdated);
     if (!articleUpdated) {
       next(new AppError('Impossible to insert articleDetailsId in article', 500));
       return;
