@@ -45,7 +45,8 @@ const ArticleSection: React.FC<Props> = ({ article }) => {
   const history = useHistory();
   const previewPhoto = article.articleDetails?.[0]?.image;
 
-  const _redirectToStocksPage = () => history.replace(`${PATHS.SELLER_MAIN}?tab=2`);
+  const _redirectToStocksPage = () =>
+    history.push({ pathname: PATHS.SELLER_MAIN, search: 'tab=2' });
 
   const {
     error,

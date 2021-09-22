@@ -191,7 +191,7 @@ const initValues = {
 const ArticleFormPage: React.FC<Props> = ({ location: { state } }): React.ReactElement => {
   const history = useHistory();
   const classes = useStyles();
-  const article = (state as State).article;
+  const article = state && (state as State).article;
 
   const sections = [
     { node: <FormSection initValues={article ?? initValues} articleId={article?._id} /> },

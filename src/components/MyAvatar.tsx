@@ -104,7 +104,7 @@ const MyAvatar: React.FC<AvatarProps> = ({
     </Avatar>
   );
 
-  return imagePath ? renderImageAvatar(imagePath) : renderTextAvatar();
+  return imagePath && imagePath !== ' ' ? renderImageAvatar(imagePath) : renderTextAvatar();
 };
 
 export default MyAvatar;

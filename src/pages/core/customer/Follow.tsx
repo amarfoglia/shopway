@@ -10,7 +10,7 @@ import {
 import FavoriteOutlined from '@material-ui/icons/FavoriteOutlined';
 import CorePage from '../../../components/CorePage';
 import AuthContext from '../../../hooks/useAuth';
-import { BACKEND_URL, jsonClient, Payload } from '../../../utils/axiosClient';
+import { jsonClient, Payload } from '../../../utils/axiosClient';
 import { useQuery } from 'react-query';
 import { AppError } from '../../../model/http';
 import Store from '../../../model/users/store';
@@ -57,7 +57,8 @@ const CustomerFollow = (): React.ReactElement => {
             <ListItemAvatar>
               <MyAvatar
                 alt="Store logo"
-                imagePath={`${BACKEND_URL}/img/stores/${s.logo}`}
+                subject="store"
+                imagePath={s.logo as string}
                 size="medium"
               />
             </ListItemAvatar>

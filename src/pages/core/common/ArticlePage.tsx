@@ -87,7 +87,7 @@ const ArticlePage: React.FC<Props> = ({ location: { state } }): React.ReactEleme
     isLoading: isOrderLoading,
     mutate: _createOrder,
   } = useMutation<Payload<Order>, AppError, void>(() => createOrder(order, user?._id), {
-    onSuccess: () => history.push(`${PATHS.CUSTOMER_MAIN}?tab=2`),
+    onSuccess: () => history.push({ pathname: PATHS.CUSTOMER_MAIN, search: 'tab=2' }),
   });
 
   const article = articleRes?.data?.article;
