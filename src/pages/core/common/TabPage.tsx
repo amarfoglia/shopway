@@ -3,6 +3,7 @@ import { Container, makeStyles, Paper, Tabs, Tab, AppBar, Grid } from '@material
 import TopBar from '../../../components/TopBar';
 import AuthContext from '../../../hooks/useAuth';
 import { useLocation } from 'react-router-dom';
+import Loader from '../../../components/Loader';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -88,7 +89,9 @@ const TabsPage: React.FC<Props> = ({ tabs, TabPanels, role = 'customer' }): Reac
             </Grid>
           )}
           <Grid item xs={12}>
-            <TabPanels currentTab={currentTab} />
+            <React.Suspense fallback={<Loader />}>
+              <TabPanels currentTab={currentTab} />
+            </React.Suspense>
           </Grid>
         </Grid>
       </Container>

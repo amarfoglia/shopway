@@ -6,33 +6,35 @@ import React from 'react';
 interface Props {
   text: string;
   absolute?: boolean;
+  mb?: number;
 }
 
-const useStyles = makeStyles<Theme, { absolute: boolean }>((theme) => ({
+const useStyles = makeStyles<Theme, Props>((theme) => ({
   alert: {
     textAlign: 'left',
     borderRadius: theme.spacing(3),
     top: (props) => (props.absolute ? '30%' : 'inherit'),
     position: (props) => (props.absolute ? 'absolute' : 'inherit'),
     margin: (props) => (props.absolute ? `0px ${theme.spacing(3)}px` : 'inherit'),
+    marginBottom: (props) => (props.mb ? theme.spacing(props.mb) : 'inherit'),
   },
 }));
 
-const ErrorDisplay: React.FC<Props> = ({ text, absolute = false }) => {
-  const classes = useStyles({ absolute });
+const ErrorDisplay: React.FC<Props> = (props) => {
+  const classes = useStyles(props);
   return (
     <Alert severity="error" className={classes.alert}>
       <AlertTitle>Error</AlertTitle>
-      {text}
+      {props.text}
     </Alert>
   );
 };
 
-const WarningDisplay: React.FC<Props> = ({ text, absolute = false }) => {
-  const classes = useStyles({ absolute });
+const WarningDisplay: React.FC<Props> = (props) => {
+  const classes = useStyles(props);
   return (
     <Alert severity="warning" className={classes.alert}>
-      {text}
+      {props.text}
     </Alert>
   );
 };

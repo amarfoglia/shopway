@@ -81,6 +81,11 @@ const theme = createTheme({
         },
       },
     },
+    MuiFab: {
+      root: {
+        boxShadow: '0 0 15px 2px #efefef',
+      },
+    },
     MuiCard: {
       root: {
         borderRadius: 16,
