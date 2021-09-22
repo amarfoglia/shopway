@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
 import { addDays, startOfWeek } from 'date-fns';
 import { it } from 'date-fns/locale';
+import ArticleModel from '../models/articles/articleModel';
 import Seller from '../models/users/seller';
 import OrderModel from '../models/orderModel';
 import catchAsync from '../utils/catchAsync';
@@ -102,11 +103,17 @@ class StoreController {
     }
     const viewsStore = await this.getViewsOfStore(storeId, first, last);
     const salesStore = await this.getSalesOfStore(storeId, first, last);
+    const numberOfArticles = await this.getNumberOfStoreArticles(storeId);
     res.status(200).json({
       success: 'success',
-      data: { stats: { viewsStore, salesStore } }
+      data: { stats: { viewsStore, salesStore, numberOfArticles } }
     });
   });
+
+  getNumberOfStoreArticles = async (storeId: string) => {
+    const numberOfArticles = await ArticleModel.find({ storeId }).count();
+    return numberOfArticles;
+  };
 
   getViewsOfStore = async (storeId: string, startDate: Date, endDate: Date) => {
     const visits = await VisitStoreModel.aggregate([
@@ -213,75 +220,3 @@ class StoreController {
 }
 
 export default StoreController;
-
-/*
-  getWiewsStats = catchAsync(async (req: Request, res: Response) => {
-    const { id: storeId } = req.params;
-    const { startDate, endDate } = req.query as any;
-    let first;
-    let last;
-
-    if (!startDate && !endDate) {
-      first = startOfWeek(new Date(), { weekStartsOn: 1, locale: it });
-      last = addDays(first, SIX_DAYS);
-    } else {
-      first = new Date(startDate);
-      last = new Date(endDate);
-    }
-    const visit = await VisitStoreModel.aggregate([
-      {
-        $match: {
-          storeId: mongoose.Types.ObjectId(storeId)
-        }
-      },
-      { $unwind: '$visits' },
-      { $match: { 'visits.date': { $gte: first, $lte: last } } },
-      { $unwind: '$visits.users' },
-      {
-        $group: {
-          _id: '$visits.date',
-          numberOfViews: { $count: {} }
-        }
-      }
-    ]);
-    res.status(200).json({
-      success: 'success',
-      data: { visit }
-    });
-  });
-*/
-
-/*
-  getStoreSalesPerDay = catchAsync(async (req: Request, res: Response) => {
-    // remember to add startDate endDate filter.
-    const { startDate, endDate } = req.query as any;
-    let first;
-    let last;
-
-    if (!startDate && !endDate) {
-      first = startOfWeek(new Date(), { weekStartsOn: 1, locale: it });
-      last = addDays(first, SIX_DAYS);
-    } else {
-      first = new Date(startDate);
-      last = new Date(endDate);
-    }
-
-    const storeObjectId = mongoose.Types.ObjectId(req.params.id);
-    const stats = await OrderModel.aggregate([
-      {
-        $match: { store: storeObjectId, sold: false, bookDate: { $gte: first, $lte: last } }
-      },
-      {
-        $group: {
-          _id: { $dateToString: { format: '%Y-%m-%d', date: '$bookDate' } },
-          numberOfOrders: { $sum: 1 },
-          profit: { $sum: '$totalPrice' }
-        }
-      },
-    ]);
-    res.status(200).json({
-      status: 'success',
-      data: { stats }
-    });
-  });
-*/
