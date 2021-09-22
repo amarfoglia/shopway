@@ -1,24 +1,12 @@
 import React from 'react';
 import CorePage from '../../../../components/CorePage';
-import { jsonClient, Payload } from '../../../../utils/axiosClient';
-import { useQuery } from 'react-query';
-import { AppError } from '../../../../model/http';
-import { useContext } from 'react';
-import AuthContext from '../../../../hooks/useAuth';
-import Order from '../../../../model/order';
-import { getStoreId } from '../../../../model/users/user';
-import MyPaper from '../../../../components/MyPaper';
 import { Container, Grid, IconButton, makeStyles } from '@material-ui/core';
 import { RouteComponentProps, useHistory } from 'react-router-dom';
 import ArrowBackIosOutlined from '@material-ui/icons/ArrowBackIosOutlined';
 import TopBar from '../../../../components/TopBar';
 import Article from '../../../../model/article';
-
-interface Stats {
-  _id: string;
-  numberOfOrders: number;
-  profit: number;
-}
+import VariantsSection from './details/VariantsSection';
+import ArticleSection from './details/ArticleSection';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -27,12 +15,6 @@ const useStyles = makeStyles((theme) => ({
     height: '100%',
   },
 }));
-
-const getStoreStats = (id?: string) =>
-  jsonClient.get<void, Payload<Stats[]>>(`/stores/${id}/stats`).then((res) => res);
-
-const getStoreOrders = (id?: string) =>
-  jsonClient.get<void, Payload<Order[]>>(`/stores/${id}/orders`).then((res) => res);
 
 type State = {
   article: Article;
@@ -46,41 +28,9 @@ const ArticleDetailsPage: React.FC<Props> = ({ location: { state } }): React.Rea
   const history = useHistory();
   const article = (state as State).article;
 
-  console.log(article);
-
-  // const { data: statsRes } = useQuery<Payload<Stats[]>, AppError>(
-  //   ['getStoreStats', storeId],
-  //   () => getStoreStats(storeId),
-  //   { enabled: !!storeId, retry: false },
-  // );
-
-  // const { data: ordersRes } = useQuery<Payload<Order[]>, AppError>(
-  //   ['getStoreOrders', storeId],
-  //   () => getStoreOrders(storeId),
-  //   { enabled: !!storeId, retry: false },
-  // );
-
-  // const stats = statsRes?.data?.stats;
-  // const orders = ordersRes?.data?.orders;
-
-  const ArticleSummary = () => (
-    <MyPaper>
-      <Grid container>
-        <Grid item xs={12}>
-          <Grid container justifyContent="space-between">
-            <Grid item>{article.name}</Grid>
-            <Grid item>{article.brand}</Grid>
-          </Grid>
-        </Grid>
-        <Grid item></Grid>
-        <Grid item></Grid>
-      </Grid>
-    </MyPaper>
-  );
-
   const sections = [
-    { node: <ArticleSummary />, title: 'Article summary' },
-    { node: <MyPaper />, title: 'Variations' },
+    { node: <ArticleSection article={article} />, title: 'Article summary' },
+    { node: <VariantsSection details={article.articleDetails} />, title: 'Variations' },
   ];
 
   return (

@@ -24,7 +24,6 @@ interface Article {
   brand: string;
   description: string;
   articleDetails?: ArticleDetails[];
-  previewPhoto: string;
   category: Category;
 }
 export type { ArticleStock, ArticleDetails };

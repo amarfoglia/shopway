@@ -150,7 +150,7 @@ const ArticlePage: React.FC<Props> = ({ location: { state } }): React.ReactEleme
       <TopBar
         variant="simple"
         leftChild={
-          <IconButton onClick={history.goBack}>
+          <IconButton onClick={history.goBack} style={{ padding: 0 }} aria-label="go back">
             <ArrowBackIosOutlined titleAccess="go back" fontSize="small" />
           </IconButton>
         }

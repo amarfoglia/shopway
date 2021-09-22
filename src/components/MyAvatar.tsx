@@ -5,8 +5,8 @@ import Image from 'material-ui-image';
 import { Skeleton } from '@material-ui/lab';
 import { BACKEND_URL } from '../utils/axiosClient';
 
-type Sizes = 'small' | 'medium' | 'large' | 'xl';
-type Subject = 'user' | 'store' | 'article';
+type Sizes = 'small' | 'medium' | 'large' | 'xl' | 'fullWidth';
+type Subject = 'user' | 'store' | 'articledetail';
 type Shape = 'circle' | 'square';
 
 interface AvatarProps {
@@ -22,7 +22,7 @@ interface AvatarProps {
 const useStyles = makeStyles<Theme, { shape: Shape }>((theme) => ({
   textAvatar: {
     textTransform: 'uppercase',
-    backgroundColor: theme.palette.primary.main,
+    backgroundColor: theme.palette.primary.light,
     borderRadius: ({ shape }) => (shape === 'circle' ? '50%' : theme.spacing(1.5)),
   },
   smallAvatar: {
@@ -47,6 +47,10 @@ const useStyles = makeStyles<Theme, { shape: Shape }>((theme) => ({
       fontSize: theme.spacing(5),
     },
   },
+  fullWidth: {
+    width: '100%',
+    height: '100%',
+  },
 }));
 
 const MyAvatar: React.FC<AvatarProps> = ({
@@ -62,11 +66,13 @@ const MyAvatar: React.FC<AvatarProps> = ({
   const sizeClass =
     size === 'small'
       ? classes.smallAvatar
+      : size === 'medium'
+      ? classes.medium
       : size === 'large'
       ? classes.largeAvatar
       : size === 'xl'
       ? classes.xlAvatar
-      : classes.mediumAvatar;
+      : classes.fullWidth;
 
   const ImageSkeleton = (
     <Skeleton variant="circle" animation="wave" width={'inherit'} height={'inherit'} />

@@ -50,7 +50,10 @@ const renderContent = () => {
             <AuthRoute exact path={PATHS.SELLER_MAIN} render={() => <SellerPage />} />
             <AuthRoute path={PATHS.CHANGE_PASSWORD} render={() => <ChangePasswordPage />} />
             <AuthRoute path={PATHS.USER_PROFILE} render={() => <UserProfile />} />
-            <AuthRoute path={PATHS.ARTICLE_FORM} render={() => <ArticleFormPage />} />
+            <AuthRoute
+              path={PATHS.ARTICLE_FORM}
+              render={(props) => <ArticleFormPage {...props} />}
+            />
             <AuthRoute
               path={PATHS.ARTICLE_DETAILS_PAGE}
               render={(props) => <ArticleDetailsPage {...props} />}

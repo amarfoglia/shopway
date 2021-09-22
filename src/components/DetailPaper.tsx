@@ -10,21 +10,27 @@ interface Props {
 }
 
 const DetailPaper: React.FC<Props> = ({ title, value, icon, subValue }) => (
-  <MyPaper style={{ padding: 10 }}>
-    <Typography variant="body2" component="h6">
-      {title}
-    </Typography>
-    <Grid item container spacing={1} alignItems="flex-end">
-      <Grid item>{icon}</Grid>
-      <Grid item>
-        <Grid container alignItems="center">
+  <MyPaper p={10}>
+    <Grid container spacing={1}>
+      <Grid item xs={12}>
+        <Typography variant="subtitle1" component="h6">
+          {title}
+        </Typography>
+      </Grid>
+      <Grid item xs={12}>
+        <Grid item container spacing={1} alignItems="center" style={{ display: 'flex' }}>
+          <Grid item>{icon}</Grid>
           <Grid item>
-            <Typography variant="h6" component="p">
-              {value}
-            </Typography>
-          </Grid>
-          <Grid item>
-            <Typography variant="subtitle1">{subValue}</Typography>
+            <Grid container alignItems="center">
+              <Grid item>
+                <Typography variant="h5" component="p">
+                  <b>{value}</b>
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Typography variant="subtitle1">{subValue}</Typography>
+              </Grid>
+            </Grid>
           </Grid>
         </Grid>
       </Grid>

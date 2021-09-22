@@ -180,7 +180,7 @@ const OrderCard: React.FC<CardProps> = ({
               <MyAvatar
                 imagePath={details?.image}
                 size="large"
-                subject="article"
+                subject="articledetail"
                 shape="square"
                 alt={`image of article ${details.articleId}`}
               />

@@ -12,6 +12,7 @@ interface ProfitStats {
 interface Stats {
   viewsStore: ViewStats[];
   salesStore: ProfitStats[];
+  numberOfArticles: number;
 }
 
 export default Stats;

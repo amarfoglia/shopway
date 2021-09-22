@@ -40,7 +40,7 @@ const ImageUploader: React.FC<Props> = ({ input: { inputName, onImageUpload, id 
 
   const ImageButton = () => (
     <label htmlFor={id}>
-      <IconButton color="primary" component="span">
+      <IconButton color="primary" component="span" aria-label="Add photo">
         <AddAPhotoOutlined />
       </IconButton>
     </label>

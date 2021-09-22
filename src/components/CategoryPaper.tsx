@@ -55,7 +55,7 @@ const CategoryPaper: React.FC<CateogryProps> = ({
   const classes = useStyles({ variant, width });
   return (
     <div className={classes.categoryContainer}>
-      <IconButton className={classes.button}>
+      <IconButton className={classes.button} aria-label={`filter by ${name} category`}>
         <MyPaper customStyle={classes.categoryPaper}>
           <Box>
             <Image

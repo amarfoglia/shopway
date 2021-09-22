@@ -4,7 +4,7 @@ import { FormikHelpers, Field, useFormikContext } from 'formik';
 import { useMutation } from 'react-query';
 import IconButton from '@material-ui/core/IconButton';
 import ArrowBackIosOutlined from '@material-ui/icons/ArrowBackIosOutlined';
-import { useHistory } from 'react-router-dom';
+import { RouteComponentProps, useHistory } from 'react-router-dom';
 import AuthContext from '../../../../hooks/useAuth';
 import MyForm from '../../../../components/MyForm';
 import TopBar from '../../../../components/TopBar';
@@ -14,7 +14,7 @@ import Typography from '@material-ui/core/Typography';
 import { Container, makeStyles } from '@material-ui/core';
 import Article from '../../../../model/article';
 import SelectField from '../../../../components/formFields/SelectField';
-import { categories, subCategories } from '../../../../model/category';
+import Category, { categories, subCategories } from '../../../../model/category';
 import { jsonClient, Payload } from '../../../../utils/axiosClient';
 import { articleValidation } from '../../../../model/validation/validationSchema';
 import { getStoreId } from '../../../../model/users/user';
@@ -105,36 +105,51 @@ const Fields: React.FC<FieldsProps> = ({ onChange }) => {
 const createArticle = (article: Partial<Article>) =>
   jsonClient.post<Article, Payload<Article>>('/articles', article).then((res) => res);
 
-const FormSection: React.FC = () => {
+const updateArticle = (article: Partial<Article>) =>
+  jsonClient
+    .patch<Article, Payload<Article>>(`/articles/${article._id}`, article)
+    .then((res) => res);
+
+interface FormProps {
+  initValues: {
+    name: string;
+    brand: string;
+    description: string;
+    category: Category;
+  };
+  articleId?: string;
+}
+
+const FormSection: React.FC<FormProps> = ({ initValues, articleId }) => {
   const { user } = useContext(AuthContext);
   const storeId = getStoreId(user);
   const history = useHistory();
+
+  const _redirectToArticlePage = (data: Payload<Article>) =>
+    data?.data?.article &&
+    history.push(PATHS.ARTICLE_DETAILS_PAGE, {
+      article: data.data.article,
+    });
+
   const {
     error,
     isLoading,
     mutate: _createArticle,
   } = useMutation<Payload<Article>, AppError, Partial<Article>>(createArticle, {
-    onSuccess: ({ data }) =>
-      data?.article &&
-      history.push(PATHS.ARTICLE_DETAILS_PAGE, {
-        article: data.article,
-      }),
+    onSuccess: _redirectToArticlePage,
   });
+
+  const { mutate: _updateArticle } = useMutation<Payload<Article>, AppError, Partial<Article>>(
+    updateArticle,
+    {
+      onSuccess: _redirectToArticlePage,
+    },
+  );
 
   const handleSubmit = (values: Values, helpers: FormikHelpers<Values>) => {
     const article = { ...values, store: storeId };
-    _createArticle(article);
+    articleId ? _updateArticle({ ...article, _id: articleId }) : _createArticle(article);
     helpers.setSubmitting(false);
-  };
-
-  const initValues = {
-    name: '',
-    brand: '',
-    description: '',
-    category: {
-      categoryArticle: '',
-      categoryType: '',
-    },
   };
 
   return (
@@ -146,7 +161,7 @@ const FormSection: React.FC = () => {
       formId={'article-form'}
       isSubmitting={isLoading}
       form={(h) => <Fields onChange={h} />}
-      submitText="Add"
+      submitText={articleId ? 'Update' : 'Add'}
     />
   );
 };
@@ -159,11 +174,28 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ArticleFormPage = (): React.ReactElement => {
+type State = {
+  article?: Article;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type Props = RouteComponentProps<any, any, State | any>;
+
+const initValues = {
+  brand: '',
+  name: '',
+  description: '',
+  category: { categoryArticle: '', categoryType: '' },
+};
+
+const ArticleFormPage: React.FC<Props> = ({ location: { state } }): React.ReactElement => {
   const history = useHistory();
   const classes = useStyles();
-  const sections = [{ node: <FormSection /> }];
+  const article = (state as State).article;
 
+  const sections = [
+    { node: <FormSection initValues={article ?? initValues} articleId={article?._id} /> },
+  ];
   return (
     <Container maxWidth="md" className={classes.container}>
       <Grid container spacing={2}>

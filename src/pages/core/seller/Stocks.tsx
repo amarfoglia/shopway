@@ -38,7 +38,7 @@ const ArticleItem: React.FC<Article> = (article) => {
           alt="Article image"
           imagePath={imagePath}
           size="large"
-          subject="article"
+          subject="articledetail"
           shape="square"
         />
       </ListItemAvatar>
