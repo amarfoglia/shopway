@@ -56,7 +56,6 @@ class AuthController {
     let newUser: User | undefined;
     const { role } = req.body;
     let customer;
-    console.log(req.body);
     switch (role) {
       case Role.CUSTOMER:
         customer = req.body as Customer;
@@ -147,7 +146,6 @@ class AuthController {
   };
 
   forgotPassword = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    console.log(req.body.email);
     const user = await UserModel.findOne({ email: req.body.email });
     if (!user) {
       next(new AppError('There is no user with email address', 403));

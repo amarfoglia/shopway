@@ -5,6 +5,7 @@ import Role from '../models/role';
 import ImageController from '../controllers/helpers/imageController';
 import ArticleController from '../controllers/articleController';
 import OrderController from '../controllers/orderController';
+import ArticleDetailsController from '../controllers/articleDetailsController';
 
 const router: Router = express.Router({ mergeParams: true });
 const authController = new AuthController();
@@ -12,9 +13,11 @@ const storeController = new StoreController();
 const imageController = new ImageController();
 const articleController = new ArticleController();
 const orderController = new OrderController();
+const articleDetailsController = new ArticleDetailsController();
 
 router.use(authController.checkUserToken);
 router.get('/:id/articles', articleController.getArticlesFromStore);
+router.get('/:id/details', articleDetailsController.getStoreArticleDetails);
 router.get('/:id', storeController.getStore);
 router.get('/', storeController.getAllStores);
 router.get('/:id/mostpopulararticles', storeController.getStorePopularProducts);

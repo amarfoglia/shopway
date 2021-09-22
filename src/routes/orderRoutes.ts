@@ -11,7 +11,7 @@ router.use(authController.checkUserToken);
 router.delete('/:id', orderController.deleteOrder);
 router.get('/:id', orderController.getOrder);
 router.patch('/:id', authController.restrictTo(Role.SELLER), orderController.updateOrder);
-
+router.get('/', orderController.getAllOrders);
 router.use(authController.restrictTo(Role.CUSTOMER));
 router.post('/', orderController.addOrder);
 export default router;

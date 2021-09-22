@@ -39,7 +39,6 @@ const setPhoto = async (key: string, names: string[],
     filename += `-${e}`;
   });
   filename += '.jpeg';
-  console.log(`${filepath}/${filename}`);
   try {
     await req.file?.toFile(`${filepath}/${filename}`);
   } catch (err) {

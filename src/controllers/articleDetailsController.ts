@@ -7,6 +7,7 @@ import { ArticleDetails, ArticleStock } from '../models/articles/article';
 import AppError from '../utils/appError';
 import { setPhoto } from './helpers/imageController';
 import Seller from '../models/users/seller';
+import APIFeatures from '../utils/apiFeatures';
 
 const factory = new HandlerFactory<ArticleDetailsDoc>('articleDetails');
 class ArticleDetailsController {
@@ -77,9 +78,24 @@ class ArticleDetailsController {
     });
   });
 
+  getStoreArticleDetails = catchAsync(async (req: Request, res: Response) => {
+    const storeId = req.params.id;
+    const features = new APIFeatures(ArticleDetailsModel.find({ storeId }), req.query)
+      .filter()
+      .sort()
+      .limitFields()
+      .paginate();
+
+    const articleDetailsStore = await features.query;
+    res.status(200).json({
+      status: 'success',
+      data: articleDetailsStore
+    });
+  });
+
   getArticleDetails = factory.getOne(ArticleDetailsModel);
 
-  getAllArticlesDetails = factory.getAll(ArticleDetailsModel, {});
+  getAllArticlesDetails = factory.getAll(ArticleDetailsModel, { });
 
   deleteArticleDetails = factory.deleteOne(ArticleDetailsModel);
 }

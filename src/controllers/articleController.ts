@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
+import APIFeatures from '../utils/apiFeatures';
 import catchAsync from '../utils/catchAsync';
 import HandlerFactory from './helpers/handlerFactory';
 import ArticleModel, { ArticleDoc } from '../models/articles/articleModel';
@@ -76,7 +77,12 @@ class ArticleController {
       next(new AppError('invalid store-id', 404));
       return;
     }
-    const articles = await ArticleModel.find({ store: storeId });
+    const features = new APIFeatures(ArticleModel.find({ store: storeId }), req.query)
+      .filter()
+      .sort()
+      .limitFields()
+      .paginate();
+    const articles = await features.query;
     res.status(200).json({
       status: 'success',
       data: { articles }

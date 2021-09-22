@@ -5,6 +5,7 @@ import OrderModel, { OrderDoc } from '../models/orderModel';
 import HandlerFactory from './helpers/handlerFactory';
 import AppError from '../utils/appError';
 import ArticleDetailsModel from '../models/articles/articleDetailsModel';
+import APIFeatures from '../utils/apiFeatures';
 
 const factory = new HandlerFactory<OrderDoc>('order');
 
@@ -59,7 +60,13 @@ class OrderController {
 
   getCustomerOrders = catchAsync(async (req: Request, res: Response) => {
     const userId = req.user?.id;
-    const orders = await OrderModel.find({ customer: userId });
+    const features = new APIFeatures(OrderModel.find({ customer: userId }), req.query)
+      .filter()
+      .sort()
+      .limitFields()
+      .paginate();
+
+    const orders = await features.query;
     res.status(201).json({
       status: 'success',
       data: { orders }
@@ -73,7 +80,13 @@ class OrderController {
       next(new AppError('You are not authorised to perform this action', 400));
       return;
     }
-    const orders = await OrderModel.find({ store: storeId });
+    const features = new APIFeatures(OrderModel.find({ store: storeId }), req.query)
+      .filter()
+      .sort()
+      .limitFields()
+      .paginate();
+
+    const orders = await features.query;
     res.status(201).json({
       status: 'success',
       data: { orders }
