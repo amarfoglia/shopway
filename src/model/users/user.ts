@@ -14,7 +14,7 @@ interface User {
   passwordResetExpires?: Date;
 }
 
-const getStoreId = (user?: User): string | undefined => user && (user as Seller).stores[0];
+const getStoreId = (user?: User): string | undefined => user && (user as Seller).stores?.[0];
 
 export { getStoreId };
 

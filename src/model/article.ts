@@ -11,7 +11,7 @@ interface ArticleDetails {
   articleId: string;
   color: string;
   price: number;
-  image: string;
+  image?: string | File;
   discount?: string;
   stockArticles: ArticleStock[];
   dateArticleAdded: Date;

@@ -125,11 +125,13 @@ const FormSection: React.FC<FormProps> = ({ initValues, articleId }) => {
   const storeId = getStoreId(user);
   const history = useHistory();
 
-  const _redirectToArticlePage = (data: Payload<Article>) =>
-    data?.data?.article &&
-    history.push(PATHS.ARTICLE_DETAILS_PAGE, {
-      article: data.data.article,
-    });
+  const _redirectToArticlePage = (data: Payload<Article>) => {
+    const article = data?.data?.article;
+    article?._id &&
+      history.replace(PATHS.ARTICLE_DETAILS_PAGE.replace(':id', article._id), {
+        article,
+      });
+  };
 
   const {
     error,

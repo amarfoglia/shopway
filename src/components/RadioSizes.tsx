@@ -27,11 +27,15 @@ const spanStyles = makeStyles<Theme, StyleProps>((theme) => ({
     borderRadius: 30,
     backgroundColor: 'white',
     verticalAlign: 'middle',
-    border: (props) => (props.checked ? `1px solid ${theme.palette.primary.main}` : ''),
+    display: 'flex',
+    alignItems: 'center',
+    border: (props) => `1px solid ${props.checked ? theme.palette.primary.main : 'grey'}`,
   },
   span: {
-    display: 'inline-block',
-    verticalAlign: 'sub',
+    // display: 'inline-block',
+    // verticalAlign: 'sub',
+    width: '100%',
+    textAlign: 'center',
     color: (props) => (props.checked ? theme.palette.primary.main : 'black'),
   },
 }));
@@ -56,6 +60,8 @@ const SizeIcon: React.FC<ItemProps> = ({ value, checked = false }) => {
     </Box>
   );
 };
+
+export { SizeIcon };
 
 const RadioSizes: React.FC<Props> = ({ sizes, handleSizeChange, selectedSize }) => {
   const classes = useStyles();

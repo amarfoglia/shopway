@@ -4,8 +4,6 @@ import { Container, makeStyles } from '@material-ui/core';
 import AuthRoute from './components/AuthRoute';
 import PATHS from './utils/routes';
 import Loader from './components/Loader';
-import ArticlePage from './pages/core/common/ArticlePage';
-import ArticleFormPage from './pages/core/seller/stocks/ArticleFormPage';
 
 const SignupPage = lazy(() => import('./pages/auth/SingupPage'));
 const Home = lazy(() => import('./pages/HomePage'));
@@ -22,6 +20,9 @@ const CustomerEditProfile = lazy(() => import('./pages/core/customer/EditProfile
 const ErrorPage = lazy(() => import('./pages/ErrorPage'));
 const SellerPage = lazy(() => import('./pages/core/seller/MainPage'));
 const ArticleDetailsPage = lazy(() => import('./pages/core/seller/stocks/ArticlesDetailsPage'));
+const ArticlePage = lazy(() => import('./pages/core/common/ArticlePage'));
+const ArticleFormPage = lazy(() => import('./pages/core/seller/stocks/ArticleFormPage'));
+const DetailsFormPage = lazy(() => import('./pages/core/seller/stocks/DetailsFormPage'));
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -54,12 +55,17 @@ const renderContent = () => {
               path={PATHS.ARTICLE_FORM}
               render={(props) => <ArticleFormPage {...props} />}
             />
+            <AuthRoute path={PATHS.SEARCH_ARTICLE} render={() => <SearchPage />} />
+            <AuthRoute path={PATHS.ARTICLE_PAGE} render={(props) => <ArticlePage {...props} />} />
             <AuthRoute
+              exact
               path={PATHS.ARTICLE_DETAILS_PAGE}
               render={(props) => <ArticleDetailsPage {...props} />}
             />
-            <AuthRoute path={PATHS.SEARCH_ARTICLE} render={() => <SearchPage />} />
-            <AuthRoute path={PATHS.ARTICLE_PAGE} render={(props) => <ArticlePage {...props} />} />
+            <AuthRoute
+              path={PATHS.ARTICLE_DETAILS_FORM}
+              render={(props) => <DetailsFormPage {...props} />}
+            />
             <AuthRoute path={PATHS.STORE_PAGE} render={() => <StorePage />} />
             <Route path={PATHS.NOT_AUTHORIZED} render={() => <NotAuthorized />} />
             <Route

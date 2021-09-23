@@ -1,12 +1,14 @@
 import React from 'react';
-import CorePage from '../../../../components/CorePage';
-import { Container, Grid, IconButton, makeStyles } from '@material-ui/core';
-import { RouteComponentProps, useHistory } from 'react-router-dom';
+import Grid from '@material-ui/core/Grid';
+import IconButton from '@material-ui/core/IconButton';
 import ArrowBackIosOutlined from '@material-ui/icons/ArrowBackIosOutlined';
+import { RouteComponentProps, useHistory } from 'react-router-dom';
 import TopBar from '../../../../components/TopBar';
-import Article from '../../../../model/article';
-import VariantsSection from './details/VariantsSection';
-import ArticleSection from './details/ArticleSection';
+import CorePage from '../../../../components/CorePage';
+import { Container, makeStyles } from '@material-ui/core';
+import { ArticleDetails } from '../../../../model/article';
+import MainFormSection from './details/forms/MainFormSection';
+import Category, { getSizes } from '../../../../model/category';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -17,24 +19,29 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type State = {
-  article: Article;
+  details?: ArticleDetails;
+  category: Category;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Props = RouteComponentProps<any, any, State | any>;
 
-const ArticleDetailsPage: React.FC<Props> = ({ location: { state } }): React.ReactElement => {
+const DetailsFormPage: React.FC<Props> = ({ location: { state } }): React.ReactElement => {
   const history = useHistory();
   const classes = useStyles();
-  const article = state && (state as State).article;
-  !article && history.goBack();
+  const _state: State = state && (state as State);
 
-  const sections = article
-    ? [
-        { node: <ArticleSection article={article} /> },
-        { node: <VariantsSection article={article} />, title: 'Variations' },
-      ]
-    : [];
+  !_state.category && history.goBack();
+
+  const Content = (
+    <MainFormSection
+      details={_state.details}
+      sizes={getSizes(_state.category)}
+      onSubmit={(v) => console.log(v)}
+    />
+  );
+
+  const sections = [{ node: Content }];
 
   return (
     <Container maxWidth="md" className={classes.container}>
@@ -44,7 +51,7 @@ const ArticleDetailsPage: React.FC<Props> = ({ location: { state } }): React.Rea
             variant="simple"
             position="relative"
             p={0}
-            centerTitle={'Article details'}
+            centerTitle={'Variations'}
             leftChild={
               <IconButton onClick={history.goBack} style={{ padding: 0 }}>
                 <ArrowBackIosOutlined titleAccess="go back" fontSize="small" />
@@ -60,4 +67,4 @@ const ArticleDetailsPage: React.FC<Props> = ({ location: { state } }): React.Rea
   );
 };
 
-export default ArticleDetailsPage;
+export default DetailsFormPage;

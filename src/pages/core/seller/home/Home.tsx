@@ -10,6 +10,8 @@ import { getStoreId } from '../../../../model/users/user';
 import StatsSections from './StatsSection';
 import OrdersSection from './OrdersSections';
 import Stats from '../../../../model/statistics';
+import { useEffect } from 'react';
+import { useState } from 'react';
 
 const getStoreStats = (id?: string) =>
   jsonClient.get<void, Payload<Stats>>(`/stores/${id}/stats`).then((res) => res);
@@ -19,7 +21,9 @@ const getStoreOrders = (id?: string) =>
 
 const SellerHome = (): React.ReactElement => {
   const { user } = useContext(AuthContext);
-  const storeId = getStoreId(user);
+  const [storeId, setStoreId] = useState<string>();
+
+  useEffect(() => user && setStoreId(getStoreId(user)), [user]);
 
   const { data: statsRes } = useQuery<Payload<Stats>, AppError>(
     ['getStoreStats', storeId],

@@ -18,6 +18,9 @@ interface TitleSectionProps {
 }
 
 const useStyles = makeStyles({
+  root: {
+    height: '100%',
+  },
   sectionTitle: {
     justifyContent: 'space-between',
     alignItems: 'baseline',
@@ -46,7 +49,7 @@ const CorePage: React.FC<Props & React.ReactNode> = ({ title, subtitle, sections
   );
 
   return (
-    <Grid container spacing={2}>
+    <Grid container spacing={2} className={classes.root}>
       {title && (
         <Grid item xs={12}>
           <Typography variant="h4" component="h1" gutterBottom>

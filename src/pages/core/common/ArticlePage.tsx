@@ -127,7 +127,7 @@ const ArticlePage: React.FC<Props> = ({ location: { state } }): React.ReactEleme
         {article?.articleDetails?.map((a) => (
           <div key={a._id}>
             <Image
-              src={`${BACKEND_URL}/img/articledetails/${article?.articleDetails?.[0]?.image}`}
+              src={`${BACKEND_URL}/img/articledetails/${a?.image}`}
               alt={`product image of ${article?.name}`}
               aspectRatio={4 / 3}
               style={{ objectFit: 'contain' }}

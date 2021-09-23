@@ -178,7 +178,7 @@ const OrderCard: React.FC<CardProps> = ({
           <Grid item xs={3} style={{ display: 'flex' }}>
             <Grid container justifyContent="center" alignItems="center">
               <MyAvatar
-                imagePath={details?.image}
+                imagePath={details?.image as string}
                 size="large"
                 subject="articledetail"
                 shape="square"

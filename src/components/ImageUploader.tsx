@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { FormControl, Grid, IconButton, Box } from '@material-ui/core';
+import { FormControl, Grid, IconButton, Box, makeStyles, Theme } from '@material-ui/core';
 import AddAPhotoOutlined from '@material-ui/icons/AddAPhotoOutlined';
-import baseStyles from '../style/styles';
+
+type Subject = 'user' | 'article';
 
 interface Props {
   image?: File;
   input: InputProps;
+  subject?: Subject;
 }
 
 interface InputProps {
@@ -34,33 +36,49 @@ const ImageInput: React.FC<InputProps> = ({ inputName, onImageUpload, id }) => {
   );
 };
 
-const ImageUploader: React.FC<Props> = ({ input: { inputName, onImageUpload, id }, image }) => {
+const useStyles = makeStyles<Theme, { subject: Subject }>({
+  photoPreview: {
+    width: 100,
+    height: (props) => (props.subject === 'user' ? 100 : 130),
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat',
+    backgroundSize: (props) => (props.subject === 'user' ? 'cover' : 'contain'),
+    borderRadius: (props) => (props.subject === 'user' ? '50%' : 12),
+    boxShadow: '0 10px 30px rgba(0,37,132,.06)',
+  },
+});
+
+const ImageUploader: React.FC<Props> = ({
+  input: { inputName, onImageUpload, id },
+  image,
+  subject = 'user',
+}) => {
   const [file, setFile] = useState<File>();
-  const classes = baseStyles();
+  const classes = useStyles({ subject });
 
   const ImageButton = () => (
-    <label htmlFor={id}>
-      <IconButton color="primary" component="span" aria-label="Add photo">
-        <AddAPhotoOutlined />
-      </IconButton>
-    </label>
+    <IconButton color="primary" component="span" aria-label="Add photo">
+      <AddAPhotoOutlined />
+    </IconButton>
   );
 
   const PhotoPaper = () => (
-    <Box
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-      className={classes.photoPreview}
-      style={{ backgroundImage: `url(${file ? getImageURL(file) : getImageURL(image)})` }}
-    >
-      {!file && !image && <ImageButton />}
-    </Box>
+    <label htmlFor={id}>
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        className={classes.photoPreview}
+        style={{ backgroundImage: `url(${file ? getImageURL(file) : getImageURL(image)})` }}
+      >
+        {!file && !image && <ImageButton />}
+      </Box>
+    </label>
   );
 
   return (
     <FormControl>
-      <Grid container spacing={2} className={classes.container}>
+      <Grid container spacing={2}>
         <ImageInput
           onImageUpload={(img) => {
             setFile(img);

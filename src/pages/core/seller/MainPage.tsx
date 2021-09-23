@@ -21,10 +21,10 @@ const TabPanels: React.FC<TabProps> = ({ currentTab }) => (
       <Home />
     </TabPanel>
     <TabPanel value={currentTab} index={1}>
-      <Orders />
+      <StocksPage />
     </TabPanel>
     <TabPanel value={currentTab} index={2}>
-      <StocksPage />
+      <Orders />
     </TabPanel>
     <TabPanel value={currentTab} index={3}>
       <Settings />

@@ -16,9 +16,11 @@ import {
 import ArrowForwardIosOutlined from '@material-ui/icons/ArrowForwardIosOutlined';
 import Skeleton from '@material-ui/lab/Skeleton';
 import AddOutlined from '@material-ui/icons/AddOutlined';
-import { ArticleDetails, ArticleStock } from '../../../../../model/article';
+import Article, { ArticleDetails, ArticleStock } from '../../../../../model/article';
 import MyPaper from '../../../../../components/MyPaper';
 import MyAvatar from '../../../../../components/MyAvatar';
+import { useHistory } from 'react-router-dom';
+import PATHS from '../../../../../utils/routes';
 
 const datailsStyles = makeStyles<Theme, { color: string }>((theme) => ({
   colorSquare: {
@@ -32,20 +34,27 @@ const datailsStyles = makeStyles<Theme, { color: string }>((theme) => ({
 }));
 
 const computeQuantity = (stocks: ArticleStock[]) =>
-  (stocks?.length > 0 && stocks?.flatMap((s) => s.quantity).reduce((s1, s2) => s1 + s2)) ?? 0;
+  (stocks?.length > 0 && stocks?.flatMap((s) => s.quantity).reduce((s1, s2) => s1 + s2), 0) ?? 0;
 
-const DetailsItem: React.FC<ArticleDetails> = ({ image, stockArticles, color }) => {
+interface ItemProps {
+  details: ArticleDetails;
+  handleClick: () => void;
+}
+
+const DetailsItem: React.FC<ItemProps> = ({ handleClick, details }) => {
+  const { image, stockArticles, color } = details;
   const quantity = computeQuantity(stockArticles);
   const classes = datailsStyles({ color });
+
   return (
-    <ListItem>
+    <ListItem onClick={handleClick}>
       <ListItemAvatar>
         <MyAvatar
           shape="square"
           subject="articledetail"
           size="medium"
           alt="article image"
-          imagePath={image}
+          imagePath={image as string}
         />
       </ListItemAvatar>
       <ListItemText
@@ -61,20 +70,32 @@ const DetailsItem: React.FC<ArticleDetails> = ({ image, stockArticles, color }) 
         }
         secondary={`Qty: ${quantity}`}
       />
-      <ListItemSecondaryAction onClick={() => console.log('go To detail form!')}>
+      <ListItemSecondaryAction onClick={handleClick}>
         <ArrowForwardIosOutlined fontSize="small" className={classes.greyColor} />
       </ListItemSecondaryAction>
     </ListItem>
   );
 };
 
-const VariantsSection: React.FC<{ details?: ArticleDetails[] }> = ({ details }) => {
+interface Props {
+  article: Article;
+}
+
+const VariantsSection: React.FC<Props> = ({ article }) => {
+  const history = useHistory();
+  !article && history.goBack();
+  const { articleDetails: details, category } = article;
+
+  const _goTodetailsForm = () =>
+    article._id &&
+    history.push(PATHS.ARTICLE_DETAILS_FORM.replace(':id', article._id), { details, category });
+
   const _renderItems = (items: ArticleDetails[]) => (
     <List dense>
-      {items.map((o) => (
-        <React.Fragment key={o._id}>
-          <DetailsItem {...o} />
-          {items.indexOf(o) === items.length - 1 ? '' : <Divider variant="inset" component="li" />}
+      {items.map((d, i) => (
+        <React.Fragment key={d._id}>
+          <DetailsItem details={d} handleClick={_goTodetailsForm} />
+          {i === items.length - 1 ? '' : <Divider variant="inset" component="li" />}
         </React.Fragment>
       ))}
     </List>
@@ -99,7 +120,7 @@ const VariantsSection: React.FC<{ details?: ArticleDetails[] }> = ({ details }) 
         </MyPaper>
       </Grid>
       <Grid item xs={12} style={{ textAlign: 'right' }}>
-        <Fab color="primary" aria-label="add" size="medium">
+        <Fab color="primary" aria-label="add" size="medium" onClick={_goTodetailsForm}>
           <AddOutlined />
         </Fab>
       </Grid>

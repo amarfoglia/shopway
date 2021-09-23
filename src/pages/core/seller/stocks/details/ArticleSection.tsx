@@ -67,7 +67,7 @@ const ArticleSection: React.FC<Props> = ({ article }) => {
               alt="article photo"
               size="fullWidth"
               shape="square"
-              imagePath={previewPhoto}
+              imagePath={previewPhoto as string}
             />
           </Grid>
           <Grid item xs={8}>

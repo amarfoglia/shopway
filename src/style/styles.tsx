@@ -42,15 +42,6 @@ const baseStyles = makeStyles((theme) => ({
     paddingLeft: theme.spacing(4),
     height: 28,
   },
-  photoPreview: {
-    width: 100,
-    height: 100,
-    backgroundPosition: 'center',
-    backgroundRepeat: 'no-repeat',
-    backgroundSize: 'cover',
-    borderRadius: 70,
-    boxShadow: shadow,
-  },
 }));
 
 const roleStyles = makeStyles((theme) => ({

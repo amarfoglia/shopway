@@ -1,5 +1,5 @@
 import React from 'react';
-import { Fab, Grid, makeStyles, Typography } from '@material-ui/core';
+import { Fab, Grid, Typography } from '@material-ui/core';
 import AddOutlined from '@material-ui/icons/AddOutlined';
 import { Line } from 'react-chartjs-2';
 import DetailPaper from '../../../../components/DetailPaper';
@@ -11,7 +11,6 @@ import Skeleton from '@material-ui/lab/Skeleton';
 import Stats from '../../../../model/statistics';
 import { useHistory } from 'react-router-dom';
 import PATHS from '../../../../utils/routes';
-import clsx from 'clsx';
 
 interface Props {
   stats?: Stats;
@@ -22,29 +21,13 @@ const computeAvgProfit = (total?: number, num?: number) =>
 
 const _sum = (x: number, y: number) => x + y;
 
-const useStyles = makeStyles((theme) => ({
-  successIcon: {
-    backgroundColor: theme.palette.success.light,
-    color: theme.palette.success.dark,
-  },
-  infoIcon: {
-    backgroundColor: theme.palette.secondary.main,
-    color: theme.palette.primary.dark,
-  },
-  roundedIcon: {
-    borderRadius: 30,
-    padding: theme.spacing(1),
-  },
-}));
-
 const StatsSections: React.FC<Props> = ({ stats }) => {
   const dates = stats?.salesStore?.flatMap((s) => moment(s._id).format('DD MMM'));
   const profits = stats?.salesStore?.flatMap((s) => s.profit);
-  const weeklyProfit = profits?.reduce((p1, p2) => p1 + p2);
-  const weeklyVisits = stats?.viewsStore?.flatMap((v) => v.numberOfViews).reduce(_sum);
-  const weeklyOrders = stats?.salesStore?.flatMap((s) => s.numberOfOrders).reduce(_sum);
+  const weeklyProfit = profits?.reduce(_sum, 0);
+  const weeklyVisits = stats?.viewsStore?.flatMap((v) => v.numberOfViews).reduce(_sum, 0);
+  const weeklyOrders = stats?.salesStore?.flatMap((s) => s.numberOfOrders).reduce(_sum, 0);
   const history = useHistory();
-  const classes = useStyles();
 
   const options = {
     responsive: true,
@@ -119,25 +102,12 @@ const StatsSections: React.FC<Props> = ({ stats }) => {
         <DetailPaper
           title={'Profits per day'}
           value={computeAvgProfit(weeklyProfit, weeklyOrders)}
-          icon={
-            <ArrowUpwardOutlined
-              fontSize="medium"
-              className={clsx(classes.roundedIcon, classes.successIcon)}
-            />
-          }
+          Icon={ArrowUpwardOutlined}
+          iconColor="success"
         />
       </Grid>
       <Grid item xs={6}>
-        <DetailPaper
-          title={'Weekly visits'}
-          value={weeklyVisits ?? 0}
-          icon={
-            <VisibilityOutlined
-              fontSize="medium"
-              className={clsx(classes.roundedIcon, classes.infoIcon)}
-            />
-          }
-        />
+        <DetailPaper title={'Weekly visits'} value={weeklyVisits ?? 0} Icon={VisibilityOutlined} />
       </Grid>
     </Grid>
   );
