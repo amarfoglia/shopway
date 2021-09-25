@@ -14,7 +14,8 @@ interface ArticleDetails {
   image?: string | File;
   discount?: string;
   stockArticles: ArticleStock[];
-  dateArticleAdded: Date;
+  dateArticleAdded?: Date;
+  storeId: string;
 }
 
 interface Article {

@@ -89,6 +89,12 @@ const articleValidation = Yup.object().shape({
   }),
 });
 
+const detailsValidation = Yup.object().shape({
+  color: Yup.string().required('Color is required'),
+  price: Yup.number().required('Price is required'),
+  discount: Yup.number().optional(),
+});
+
 export {
   signupValidation,
   loginValidation,
@@ -96,4 +102,5 @@ export {
   editProfileValidation,
   changePasswordValidation,
   articleValidation,
+  detailsValidation,
 };

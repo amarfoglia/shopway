@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { FormControl, Grid, IconButton, Box, makeStyles, Theme } from '@material-ui/core';
+import { FormControl, IconButton, Box, makeStyles, Theme } from '@material-ui/core';
 import AddAPhotoOutlined from '@material-ui/icons/AddAPhotoOutlined';
+import MyAvatar from './MyAvatar';
 
-type Subject = 'user' | 'article';
+type Subject = 'user' | 'store' | 'articledetail';
 
 interface Props {
-  image?: File;
+  image?: File | string;
   input: InputProps;
   subject?: Subject;
 }
@@ -42,7 +43,8 @@ const useStyles = makeStyles<Theme, { subject: Subject }>({
     height: (props) => (props.subject === 'user' ? 100 : 130),
     backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat',
-    backgroundSize: (props) => (props.subject === 'user' ? 'cover' : 'contain'),
+    // backgroundSize: (props) => (props.subject === 'user' ? 'cover' : 'contain'),
+    backgroundSize: 'cover',
     borderRadius: (props) => (props.subject === 'user' ? '50%' : 12),
     boxShadow: '0 10px 30px rgba(0,37,132,.06)',
   },
@@ -64,33 +66,41 @@ const ImageUploader: React.FC<Props> = ({
 
   const PhotoPaper = () => (
     <label htmlFor={id}>
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        className={classes.photoPreview}
-        style={{ backgroundImage: `url(${file ? getImageURL(file) : getImageURL(image)})` }}
-      >
-        {!file && !image && <ImageButton />}
-      </Box>
+      {typeof image === 'string' ? (
+        <MyAvatar
+          imagePath={image}
+          subject={subject}
+          size="fullWidth"
+          shape="square"
+          alt="image uploader"
+        />
+      ) : (
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          className={classes.photoPreview}
+          style={{
+            backgroundImage: `url(${file ? getImageURL(file) : getImageURL(image as File)})`,
+          }}
+        >
+          {!file && !image && <ImageButton />}
+        </Box>
+      )}
     </label>
   );
 
   return (
-    <FormControl>
-      <Grid container spacing={2}>
-        <ImageInput
-          onImageUpload={(img) => {
-            setFile(img);
-            onImageUpload(img);
-          }}
-          id={id}
-          inputName={inputName}
-        />
-        <Grid item xs={12}>
-          <PhotoPaper />
-        </Grid>
-      </Grid>
+    <FormControl style={{ display: 'contents' }}>
+      <ImageInput
+        onImageUpload={(img) => {
+          setFile(img);
+          onImageUpload(img);
+        }}
+        id={id}
+        inputName={inputName}
+      />
+      <PhotoPaper />
     </FormControl>
   );
 };

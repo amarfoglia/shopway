@@ -43,10 +43,10 @@ const deleteArticle = (id: string) =>
 const ArticleSection: React.FC<Props> = ({ article }) => {
   const classes = useStyles();
   const history = useHistory();
-  const previewPhoto = article.articleDetails?.[0]?.image;
+  const previewPhoto = article.articleDetails?.find((d) => d.image != null)?.image;
 
   const _redirectToStocksPage = () =>
-    history.push({ pathname: PATHS.SELLER_MAIN, search: 'tab=2' });
+    history.push({ pathname: PATHS.SELLER_MAIN, search: 'tab=1' });
 
   const {
     error,

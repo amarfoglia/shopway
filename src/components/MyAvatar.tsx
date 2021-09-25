@@ -23,7 +23,13 @@ const useStyles = makeStyles<Theme, { shape: Shape }>((theme) => ({
   textAvatar: {
     textTransform: 'uppercase',
     backgroundColor: theme.palette.primary.light,
-    borderRadius: ({ shape }) => (shape === 'circle' ? '50%' : theme.spacing(1.5)),
+    borderRadius: ({ shape }) => (shape === 'circle' ? '50%' : theme.spacing(1)),
+  },
+  imageAvatarContainer: {
+    borderRadius: ({ shape }) => (shape === 'circle' ? '50%' : theme.spacing(1)),
+  },
+  imageAvatar: {
+    borderRadius: ({ shape }) => (shape === 'circle' ? '50%' : theme.spacing(1)),
   },
   smallAvatar: {
     width: theme.spacing(3),
@@ -50,6 +56,8 @@ const useStyles = makeStyles<Theme, { shape: Shape }>((theme) => ({
   fullWidth: {
     width: '100%',
     height: '100%',
+    verticalAlign: 'middle',
+    display: 'inline-grid',
   },
 }));
 
@@ -67,7 +75,7 @@ const MyAvatar: React.FC<AvatarProps> = ({
     size === 'small'
       ? classes.smallAvatar
       : size === 'medium'
-      ? classes.medium
+      ? classes.mediumAvatar
       : size === 'large'
       ? classes.largeAvatar
       : size === 'xl'
@@ -79,15 +87,15 @@ const MyAvatar: React.FC<AvatarProps> = ({
   );
 
   const renderImageAvatar = (path: string) => {
-    const radius = shape === 'circle' ? '50%' : '10%';
     return (
       <div className={sizeClass}>
         {path ? (
           <Image
-            style={{ borderRadius: radius }}
-            imageStyle={{ borderRadius: radius }}
+            className={classes.imageAvatarContainer}
+            imageStyle={{ borderRadius: classes.imageAvatar }}
             src={`${BACKEND_URL}/img/${subject}s/${path}`}
             alt={alt}
+            cover
             loading={ImageSkeleton}
             onClick={handleClick}
           />

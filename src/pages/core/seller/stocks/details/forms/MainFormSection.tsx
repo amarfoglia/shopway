@@ -1,15 +1,17 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import Grid from '@material-ui/core/Grid';
-import { FormikHelpers, Field, useFormikContext } from 'formik';
+import { FormikHelpers, Field, useFormikContext, FormikValues } from 'formik';
 import DebouncedInput from '../../../../../../components/formFields/DebouncedInput';
 import Typography from '@material-ui/core/Typography';
-import { ArticleDetails } from '../../../../../../model/article';
+import { ArticleDetails, ArticleStock } from '../../../../../../model/article';
 import SelectField from '../../../../../../components/formFields/SelectField';
 import MyForm from '../../../../../../components/MyForm';
 import NumericField from '../../../../../../components/formFields/NumericField';
 import MyPaper from '../../../../../../components/MyPaper';
 import { SizeIcon } from '../../../../../../components/RadioSizes';
 import ImageUploader from '../../../../../../components/ImageUploader';
+import { detailsValidation } from '../../../../../../model/validation/validationSchema';
+import objectToFormData from '../../../../../../utils/formdata';
 
 const colors = ['red', 'blue', 'green', 'yellow'];
 
@@ -17,15 +19,21 @@ interface FieldsProps {
   onChange: (e: React.ChangeEvent<string>) => void;
 }
 
-type Values = Partial<ArticleDetails>;
+interface FormProps {
+  color: string;
+  price: number;
+  image?: string | File;
+  discount?: string;
+  stockArticles: ArticleStock[];
+}
 
-interface StockProps {
+interface StockFieldProps {
   value: number;
   handleChange: (field: string, value: number) => void;
   name: string;
 }
 
-const StockField: React.FC<StockProps> = ({ value, handleChange, name }) => (
+const StockField: React.FC<StockFieldProps> = ({ value, handleChange, name }) => (
   <NumericField
     value={value}
     handleInc={() => handleChange(name, value + 1)}
@@ -34,8 +42,42 @@ const StockField: React.FC<StockProps> = ({ value, handleChange, name }) => (
   />
 );
 
+interface StockProps {
+  value: ArticleStock;
+  handleChange: (field: string, value: number) => void;
+  index: number;
+}
+
+const StockItem: React.FC<StockProps> = ({ value, index, handleChange }) => (
+  <Grid item xs={12}>
+    <Grid container justifyContent="space-between">
+      <Grid item>
+        <SizeIcon value={value.size} />
+      </Grid>
+      <Grid item>
+        <StockField
+          name={`stockArticles.${index}.quantity`}
+          value={value.quantity ?? 0}
+          handleChange={handleChange}
+        />
+      </Grid>
+    </Grid>
+  </Grid>
+);
+
 const Fields: React.FC<FieldsProps> = ({ onChange }) => {
-  const { values, setFieldValue } = useFormikContext<Values>();
+  const { values, setFieldValue } = useFormikContext<FormProps>();
+  const inputParams = {
+    id: 'articledetails-image-input',
+    inputName: 'articledetails-image',
+    onImageUpload: (f: File) => setFieldValue('image', f),
+  };
+  const Uploader = useMemo(
+    () => (
+      <ImageUploader input={inputParams} image={values.image as File} subject="articledetail" />
+    ),
+    [values.image],
+  );
   return (
     <Grid container spacing={2} justifyContent="space-between">
       <Grid item xs={12}>
@@ -44,15 +86,7 @@ const Fields: React.FC<FieldsProps> = ({ onChange }) => {
       <Grid item xs={12}>
         <Grid container spacing={2}>
           <Grid item xs={4}>
-            <ImageUploader
-              input={{
-                id: 'articledetails-image-input',
-                inputName: 'articledetails-image',
-                onImageUpload: (f) => setFieldValue('image', f),
-              }}
-              image={values.image as File}
-              subject="article"
-            />
+            {Uploader}
           </Grid>
 
           <Grid item xs={8}>
@@ -106,20 +140,7 @@ const Fields: React.FC<FieldsProps> = ({ onChange }) => {
         <MyPaper style={{ overflowY: 'auto', maxHeight: '34vh' }}>
           <Grid container spacing={2} alignItems="center">
             {values.stockArticles?.map((v, i) => (
-              <Grid item key={`stock-${i}`} xs={12}>
-                <Grid container justifyContent="space-between">
-                  <Grid item>
-                    <SizeIcon value={v.size} />
-                  </Grid>
-                  <Grid item>
-                    <StockField
-                      name={`stockArticles.${i}.quantity`}
-                      value={v.quantity ?? 0}
-                      handleChange={setFieldValue}
-                    />
-                  </Grid>
-                </Grid>
-              </Grid>
+              <StockItem key={`stock-${i}`} value={v} index={i} handleChange={setFieldValue} />
             ))}
           </Grid>
         </MyPaper>
@@ -128,19 +149,38 @@ const Fields: React.FC<FieldsProps> = ({ onChange }) => {
   );
 };
 
-interface FormProps {
+interface Props {
   sizes: string[];
   details?: ArticleDetails;
-  onSubmit: (article: ArticleDetails) => void;
+  articleId: string;
+  storeId: string;
+  onSubmit: (formData: FormData) => void;
+  errorMessage?: string;
+  isLoading: boolean;
 }
-
-const MainFormSection: React.FC<FormProps> = ({ details, sizes }) => {
-  const handleSubmit = (values: Values, helpers: FormikHelpers<Values>) => {
-    console.log(values);
+const MainFormSection: React.FC<Props> = ({
+  details,
+  sizes,
+  articleId,
+  storeId,
+  onSubmit,
+  errorMessage,
+  isLoading,
+}) => {
+  const handleSubmit = (values: FormikValues, helpers: FormikHelpers<FormikValues>) => {
+    const { image, ...detailsItem } = values as FormProps;
+    const formData: FormData = objectToFormData({
+      articleId,
+      storeId,
+      // stockArticles: stockArticles.filter((s) => s.quantity > 0),
+      photo: image,
+      ...detailsItem,
+    });
+    onSubmit(formData);
     helpers.setSubmitting(false);
   };
 
-  const initValues = {
+  const initValues: FormProps = {
     color: '',
     price: 0,
     stockArticles: sizes.flatMap((s) => ({ quantity: 0, size: s })),
@@ -148,12 +188,12 @@ const MainFormSection: React.FC<FormProps> = ({ details, sizes }) => {
 
   return (
     <MyForm
-      // errors={error?.message}
-      initialValues={initValues}
+      errors={errorMessage}
+      initialValues={details ?? initValues}
       handleSubmit={handleSubmit}
-      // validationSchema={articleValidation}
+      validationSchema={detailsValidation}
       formId={'article-details-form'}
-      isSubmitting={false}
+      isSubmitting={isLoading}
       form={(h) => <Fields onChange={h} />}
       submitText={details?.articleId ? 'Update' : 'Add'}
     />

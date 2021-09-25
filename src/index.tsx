@@ -7,7 +7,6 @@ import App from './App';
 import theme from './style/theme';
 import { QueryClient, QueryClientProvider } from 'react-query';
 // import reportWebVitals from './reportWebVitals';
-// reportWebVitals(console.log);
 
 const queryClient = new QueryClient();
 
