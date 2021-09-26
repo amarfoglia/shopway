@@ -30,7 +30,11 @@ class StoreController {
       next(new AppError('No seller found with that ID', 404));
       return;
     }
-    store.logo = await setPhoto('logo', [uuidv4(), new Date().getTime().toString()], 'public/img/stores', req, next);
+
+    if (req.file) {
+      const fileName = 'logo'.concat('-', uuidv4());
+      store.logo = await setPhoto(fileName, 'public/img/stores', req.file);
+    }
 
     const newStore = await StoreModel.create(store);
     const visitObj = { storeId: newStore.id, visits: [] };
@@ -64,7 +68,8 @@ class StoreController {
 
     if (isEmpty(visitSearched)) {
       await VisitStoreModel.updateOne({ storeId: storeObjectId },
-        { $addToSet: { visits: newVisit } });
+        { $addToSet: { visits: newVisit } },
+        { new: true, upsert: true, setDefaultsOnInsert: true });
     } else {
       await VisitStoreModel.updateOne({ storeId: storeObjectId, 'visits.date': today },
         {
@@ -156,7 +161,8 @@ class StoreController {
   };
 
   getStorePopularProducts = catchAsync(async (req: Request, res: Response) => {
-    const storeObjectId = mongoose.Types.ObjectId(req.params.id);
+    const storeId = req.params.id;
+    const storeObjectId = mongoose.Types.ObjectId(storeId);
     const stats = await OrderModel.aggregate([
       {
         $match: { store: storeObjectId, sold: false }
@@ -173,17 +179,18 @@ class StoreController {
       {
         $group:
         {
-          _id: '$nameArticle',
-          numberOfArticleSold: { $sum: 1 },
-          brandArticle: { $first: '$brandArticle' }
+          _id: '$_id',
+          numberOfArticleSold: { $sum: 1 }
         }
       },
       { $sort: { numberOfArticleSold: -1 } },
       { $limit: 5 }
     ]);
+    const articlesId = stats.flatMap((x) => x.id);
+    const articles = ArticleModel.find({ store: storeId, _id: { $in: articlesId } });
     res.status(200).json({
       status: 'success',
-      data: { stats }
+      data: { articles }
     });
   });
 
@@ -200,7 +207,8 @@ class StoreController {
     const newStore: Store = req.body;
 
     if (req.file) {
-      newStore.logo = await setPhoto('logo', [req.user?.id, storeId], 'public/img/stores', req, next);
+      const fileName = 'logo'.concat('-', req.user?.id, '-', storeId);
+      newStore.logo = await setPhoto(fileName, 'public/img/stores', req.file);
     }
     const updatedStore = await StoreModel.updateOne(
       { $and: [{ _id: storeId }, { _id: { $in: seller?.stores } }] },

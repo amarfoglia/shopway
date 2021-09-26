@@ -13,6 +13,11 @@ const customerSchema = new mongoose.Schema({
   }
 }, options);
 
+customerSchema.pre(/^find/, function _(next) {
+  this.populate({ path: 'followerList' });
+  next();
+});
+
 export { CustomerDoc };
 
 export default UserModel.discriminator<CustomerDoc>('Customer', customerSchema);

@@ -34,7 +34,7 @@ class CustomerController {
       next(new AppError('Invalid customer ID', 400));
       return;
     }
-    const followers = await CustomerModel.find({ _id: customer.id }, 'followerList');
+    const followers = await CustomerModel.findOne({ _id: customer.id });
     res.status(200).json({
       status: 'success',
       data: followers

@@ -59,7 +59,10 @@ class AuthController {
     switch (role) {
       case Role.CUSTOMER:
         customer = req.body as Customer;
-        customer.photo = await setPhoto('photo', [uuidv4(), new Date().getTime().toString()], 'public/img/users', req, next);
+        if (req.file) {
+          const filename = 'photo'.concat('-', uuidv4());
+          customer.photo = await setPhoto(filename, 'public/img/users', req.file);
+        }
         newUser = await CustomerModel.create(customer);
         break;
       case Role.SELLER:
@@ -79,7 +82,10 @@ class AuthController {
   // visitStore
   createSellerWithStore = async (req: Request, next: NextFunction) => {
     const { store, ...seller } = req.body;
-    store.logo = await setPhoto('logo', [uuidv4(), new Date().getTime().toString()], 'public/img/stores', req, next);
+    if (req.file) {
+      const filename = 'logo'.concat('-', uuidv4());
+      store.photo = await setPhoto(filename, 'public/img/stores', req.file);
+    }
     const newStore = await StoreModel.create(store);
     const storeId = newStore.id ?? 'invalid-id';
     if (storeId === 'invalid-id') { next(new AppError('invalid store id', 500)); }

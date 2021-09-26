@@ -3,6 +3,7 @@ import {
 } from 'express';
 import multer, { FileFilterCallback } from 'multer';
 import sharp from 'sharp';
+import { access, mkdir } from 'fs/promises';
 import catchAsync from '../../utils/catchAsync';
 import AppError from '../../utils/appError';
 
@@ -19,33 +20,29 @@ const upload = multer({ storage, fileFilter });
 class ImageController {
   uploadPhoto = upload.single('photo');
 
-  resizePhoto = catchAsync(async (req: Request, res: Response,
+  resizePhoto = (isAvatar: Boolean) => catchAsync(async (req: Request, res: Response,
     next: NextFunction) => {
     if (req.file) {
       const { file } = req;
-      const loadedFile = await sharp(file.buffer)
-        .resize(500, 500)
-        .toFormat('jpeg')
-        .jpeg({ quality: 90 });
-      req.file = loadedFile;
+      const height = isAvatar ? 500 : 700;
+      req.file = await sharp(file.buffer)
+        .toFormat('png')
+        .png({ quality: 80 })
+        .resize(500, height);
     }
     next();
   });
 }
-const setPhoto = async (key: string, names: string[],
-  filepath: string, req:Request, next: NextFunction): Promise<string> => {
-  let filename: string = key;
-  names.forEach((e) => {
-    filename += `-${e}`;
-  });
-  filename += '.jpeg';
+
+const setPhoto = async (fileName: string, filepath: string, file: any): Promise<string> => {
+  const myFileName = fileName.concat('.png');
   try {
-    await req.file?.toFile(`${filepath}/${filename}`);
+    await access(filepath);
   } catch (err) {
-    next(new AppError(`impossible to save the file: ${err} `, 500));
-    return ' ';
+    await mkdir(filepath);
   }
-  return filename;
+  return file.toFile(`${filepath}/${myFileName}`).then(() => myFileName);
 };
+
 export { setPhoto };
 export default ImageController;

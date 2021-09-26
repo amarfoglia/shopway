@@ -36,6 +36,10 @@ const articleSchema = new mongoose.Schema({
       type: String,
       required: [true, 'Please, provide the categoryType of the article']
     }
+  },
+  createdAt: {
+    type: Date,
+    default: new Date(Date.now())
   }
 });
 

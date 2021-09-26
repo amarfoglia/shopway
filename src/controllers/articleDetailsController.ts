@@ -30,7 +30,10 @@ class ArticleDetailsController {
       return;
     }
 
-    if (req.file) { articleDetails.image = await setPhoto('photo', [uuidv4(), new Date().getTime().toString()], 'public/img/articledetails', req, next); }
+    if (req.file) {
+      const filename = 'photo'.concat('-', uuidv4(), '-');
+      articleDetails.image = await setPhoto(filename, 'public/img/articledetails', req.file);
+    }
 
     const newArticleDetails = await ArticleDetailsModel.create(articleDetails);
 
@@ -50,6 +53,11 @@ class ArticleDetailsController {
        c'è una ripetizione di size es: [{size: M, qnt: 10}, {size: M, qnt: 2}, {size: S, qnt:3}]
        unique.lenght = 2 (cioè size M e S).
     */
+    /*
+    if (!stockArticles) {
+      return false;
+    }
+    */
     const unique = [...new Set(stockArticles.map((elem) => elem.size))];
     return unique.length === stockArticles.length;
   }
@@ -59,7 +67,10 @@ class ArticleDetailsController {
     const seller = req.user as Seller;
     const newArticleDetails: ArticleDetails = req.body;
 
-    if (req.file) { newArticleDetails.image = await setPhoto('photo', [newArticleDetails?.storeId, articleDetailsId], 'public/img/articledetails', req, next); }
+    if (req.file) {
+      const filename = 'photo'.concat('-', newArticleDetails?.storeId, '-', articleDetailsId);
+      newArticleDetails.image = await setPhoto(filename, 'public/img/articledetails', req.file);
+    }
 
     const updatedArticleDetails: any = await ArticleDetailsModel.updateOne(
       { $and: [{ _id: articleDetailsId }, { storeId: { $in: seller?.stores } }] },
