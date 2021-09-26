@@ -32,7 +32,7 @@ interface LoginProps {
 }
 
 const LoginPage: React.FC = () => {
-  const baseClasses = baseStyles();
+  const classes = baseStyles();
   const { login } = useContext(AuthContext);
   const {
     error,
@@ -49,7 +49,7 @@ const LoginPage: React.FC = () => {
   const FormFooter = (
     <Typography variant="body2">
       Don&apos;t have an account?&nbsp;
-      <Link to={PATHS.SIGN_UP} className={baseClasses.link}>
+      <Link to={PATHS.SIGN_UP} className={classes.link}>
         Sign up
       </Link>
     </Typography>

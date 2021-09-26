@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box, CircularProgress, makeStyles } from '@material-ui/core';
+import Skeleton from '@material-ui/lab/Skeleton';
 
 const style = makeStyles({
   pageLoader: {
@@ -20,5 +21,11 @@ const Loader: React.FC = () => (
     <CircularProgress thickness={4.0} />
   </Box>
 );
+
+const SkeletonLoader = (): React.ReactElement => (
+  <Skeleton variant="rect" width={'100%'} height={118} />
+);
+
+export { SkeletonLoader };
 
 export default Loader;

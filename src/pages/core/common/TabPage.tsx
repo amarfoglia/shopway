@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { Container, makeStyles, Paper, Tabs, Tab, AppBar, Grid } from '@material-ui/core';
 import TopBar from '../../../components/TopBar';
 import AuthContext from '../../../hooks/useAuth';
-import { useLocation } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import Loader from '../../../components/Loader';
 
 const useStyles = makeStyles((theme) => ({
@@ -45,13 +45,18 @@ interface Props {
 
 const TabsPage: React.FC<Props> = ({ tabs, TabPanels, role = 'customer' }): React.ReactElement => {
   const classes = useStyles();
-  const search = useLocation().search;
+  // const search = useLocation().search;
+  const history = useHistory();
+  const search = useHistory().location.search;
   const tab = new URLSearchParams(search).get('tab') ?? '0';
   const [currentTab, setCurrentTab] = useState<number>(parseInt(tab, 10));
   const { user } = useContext(AuthContext);
 
   // eslint-disable-next-line @typescript-eslint/ban-types
-  const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => setCurrentTab(newValue);
+  const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
+    setCurrentTab(newValue);
+    history.replace({ pathname: history.location.pathname, search: `tab=${newValue}` });
+  };
 
   const BottomTabs = () => (
     <Paper square>

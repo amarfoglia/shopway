@@ -49,7 +49,7 @@ const CorePage: React.FC<Props & React.ReactNode> = ({ title, subtitle, sections
   );
 
   return (
-    <Grid container spacing={2} className={classes.root}>
+    <Grid container spacing={3} className={classes.root}>
       {title && (
         <Grid item xs={12}>
           <Typography variant="h4" component="h1" gutterBottom>

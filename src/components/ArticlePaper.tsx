@@ -2,13 +2,13 @@ import React from 'react';
 import { Grid, makeStyles, Typography } from '@material-ui/core';
 import Image from 'material-ui-image';
 import StoreAvatar from './MyAvatar';
-import { Skeleton } from '@material-ui/lab';
 import MyPaper from './MyPaper';
 import Article from '../model/article';
 import { BACKEND_URL } from '../utils/axiosClient';
 import { useHistory } from 'react-router-dom';
 import PATHS from '../utils/routes';
 import Store from '../model/users/store';
+import { SkeletonLoader } from './Loader';
 
 interface ProductProps {
   article: Article;
@@ -25,6 +25,9 @@ const useStyles = makeStyles((theme) => ({
     opacity: 0.8,
     marginRight: theme.spacing(1),
   },
+  pruductImageContainer: {
+    minHeight: 130,
+  },
 }));
 
 const ArticlePaper: React.FC<ProductProps> = ({ article, hideHeader = false }) => {
@@ -33,7 +36,10 @@ const ArticlePaper: React.FC<ProductProps> = ({ article, hideHeader = false }) =
   const { store, articleDetails, name, _id: articleId } = article;
   const details = articleDetails?.[0];
   const _store = store as Store;
-  const goToStorePage = () => history.push(PATHS.STORE_PAGE.replace(':id', _store?._id));
+  const goToStorePage = () => {
+    console.log(_store?._id);
+    history.push(PATHS.STORE_PAGE.replace(':id', _store?._id));
+  };
   const goToArticleDetails = () =>
     articleId && history.push(PATHS.ARTICLE_PAGE.replace(':id', articleId), { article, store });
   const renderPrice = (price = 0, discountPrice?: string) =>
@@ -61,7 +67,7 @@ const ArticlePaper: React.FC<ProductProps> = ({ article, hideHeader = false }) =
       <Grid container spacing={1}>
         {!hideHeader && (
           <Grid item xs={12}>
-            <Grid container spacing={1} alignItems={'center'}>
+            <Grid container spacing={1} alignItems={'center'} onClick={goToStorePage}>
               <Grid item>
                 <StoreAvatar
                   size={'small'}
@@ -69,7 +75,6 @@ const ArticlePaper: React.FC<ProductProps> = ({ article, hideHeader = false }) =
                   text={_store?.name}
                   alt={`logo of store ${_store?.name}`}
                   subject="store"
-                  handleClick={goToStorePage}
                 />
               </Grid>
               <Grid item>
@@ -78,15 +83,15 @@ const ArticlePaper: React.FC<ProductProps> = ({ article, hideHeader = false }) =
             </Grid>
           </Grid>
         )}
-        <Grid item xs={12}>
-          <Image
-            src={`${BACKEND_URL}/img/articledetails/${details?.image}`}
-            alt={name}
-            loading={
-              <Skeleton variant="rect" animation="wave" width={'inherit'} height={'inherit'} />
-            }
-            onClick={goToArticleDetails}
-          />
+        <Grid item xs={12} className={classes.pruductImageContainer}>
+          {details?.image && (
+            <Image
+              src={`${BACKEND_URL}/img/articledetails/${details?.image}`}
+              alt={name}
+              loading={<SkeletonLoader />}
+              onClick={goToArticleDetails}
+            />
+          )}
         </Grid>
         <Grid item xs={12}>
           <Typography variant="body2" className={classes.productName}>

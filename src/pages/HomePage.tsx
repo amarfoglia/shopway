@@ -16,6 +16,8 @@ const Home = (): React.ReactElement => {
 
   const handlePath = !user ? SIGN_IN : user.role === Role.CUSTOMER ? CUSTOMER_MAIN : SELLER_MAIN;
 
+  console.log(user, handlePath);
+
   return (
     <IllustrationPage
       title="Get local fashion from home"

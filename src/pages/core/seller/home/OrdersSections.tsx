@@ -15,7 +15,7 @@ import Order from '../../../../model/order';
 import moment from 'moment';
 import clsx from 'clsx';
 import { getTimeLeft } from '../../../../utils/time';
-import Skeleton from '@material-ui/lab/Skeleton';
+import { SkeletonLoader } from '../../../../components/Loader';
 
 const useStyles = makeStyles((theme) => ({
   orderIcon: {
@@ -69,7 +69,7 @@ const OrdersSection: React.FC<{ orders?: Order[] }> = ({ orders }) => {
           ))}
         </List>
       ) : (
-        <Skeleton variant="rect" width={'100%'} height={118} />
+        <SkeletonLoader />
       )}
     </MyPaper>
   );

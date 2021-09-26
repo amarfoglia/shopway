@@ -42,8 +42,8 @@ const useStyles = makeStyles<Theme>((theme) => ({
 const getArticle = (id: string) =>
   jsonClient.get<void, Payload<Article>>(`/articles/${id}`).then((res) => res);
 
-const createOrder = (order: Partial<Order>, id?: string) =>
-  jsonClient.post<Partial<Order>, Payload<Order>>(`/users/${id}/orders`, order).then((res) => res);
+const createOrder = (order: Partial<Order>) =>
+  jsonClient.post<Partial<Order>, Payload<Order>>(`/orders`, order).then((res) => res);
 
 const createInitialOrder = (article: Article, user: User, store: Store): Partial<Order> => {
   const details = article.articleDetails?.[0];
@@ -86,7 +86,7 @@ const ArticlePage: React.FC<Props> = ({ location: { state } }): React.ReactEleme
     error: orderError,
     isLoading: isOrderLoading,
     mutate: _createOrder,
-  } = useMutation<Payload<Order>, AppError, void>(() => createOrder(order, user?._id), {
+  } = useMutation<Payload<Order>, AppError, Partial<Order>>(createOrder, {
     onSuccess: () => history.push({ pathname: PATHS.CUSTOMER_MAIN, search: 'tab=2' }),
   });
 
@@ -116,7 +116,7 @@ const ArticlePage: React.FC<Props> = ({ location: { state } }): React.ReactEleme
       handleQuantityChange={(q) => setOrder({ ...order, quantity: q })}
       price={order?.totalPrice}
       handlePriceChange={(p) => setOrder({ ...order, totalPrice: p })}
-      handleClick={_createOrder}
+      handleClick={() => _createOrder(order)}
       isLoading={isOrderLoading}
     />
   );
@@ -141,7 +141,7 @@ const ArticlePage: React.FC<Props> = ({ location: { state } }): React.ReactEleme
           {DetailsNode}
         </Grid>
       </Grid>
-      {QuantityNode}
+      {user?.role === 'Customer' && QuantityNode}
     </React.Fragment>
   );
 

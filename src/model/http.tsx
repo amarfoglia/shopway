@@ -8,7 +8,8 @@ type payload =
   | 'store'
   | 'stats'
   | 'orders'
-  | 'articleDetails';
+  | 'articleDetails'
+  | 'followerList';
 
 export default interface JSONResponse<T> {
   status: string;

@@ -12,7 +12,7 @@ import Store from '../../../model/users/store';
 import Loader from '../../../components/Loader';
 
 const getStoreArticles = (id: string) =>
-  jsonClient.get<void, Payload<Article[]>>(`/stores/${id}/articles`).then((res) => res);
+  jsonClient.get<void, Payload<Article[]>>(`/stores/${id}/mostpopulararticles`).then((res) => res);
 
 const getStore = (id: string) =>
   jsonClient.get<void, Payload<Store>>(`/stores/${id}`).then((res) => res);
@@ -25,6 +25,8 @@ const StorePage = (): React.ReactElement => {
     () => getStoreArticles(id),
   );
 
+  console.log(articlesRes);
+
   const { data: storeRes } = useQuery<Payload<Store>, AppError>(['getStore', id], () =>
     getStore(id),
   );
@@ -32,7 +34,7 @@ const StorePage = (): React.ReactElement => {
   const store = storeRes?.data?.store;
   const articles = articlesRes?.data?.article;
 
-  const NewProductsSection = () => (
+  const PopularProductsSection = () => (
     <Grid container spacing={2}>
       {isLoading ? (
         <Loader />
@@ -46,7 +48,7 @@ const StorePage = (): React.ReactElement => {
     </Grid>
   );
 
-  const sections = [{ title: 'Store products', node: <NewProductsSection /> }];
+  const sections = [{ title: 'Popular products', node: <PopularProductsSection /> }];
 
   return (
     <ProfilePage

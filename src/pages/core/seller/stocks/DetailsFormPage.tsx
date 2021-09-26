@@ -83,9 +83,11 @@ const DetailsFormPage: React.FC<Props> = ({ location: { state } }): React.ReactE
     onSuccess: _redirectToStocksPage,
   });
 
-  const errorMessage = createError?.message
-    .concat(updateError?.message ?? '')
-    .concat(deleteError?.message ?? '');
+  const errorMessage = ''.concat(
+    createError?.message ?? '',
+    updateError?.message ?? '',
+    deleteError?.message ?? '',
+  );
 
   const isLoading = isLoadingOnCreate || isLoadingOnUpdate || isLoadingOnDelete;
 

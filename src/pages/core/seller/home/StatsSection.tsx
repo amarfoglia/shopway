@@ -7,10 +7,10 @@ import ArrowUpwardOutlined from '@material-ui/icons/ArrowUpwardOutlined';
 import VisibilityOutlined from '@material-ui/icons/VisibilityOutlined';
 import MyPaper from '../../../../components/MyPaper';
 import moment from 'moment';
-import Skeleton from '@material-ui/lab/Skeleton';
 import Stats from '../../../../model/statistics';
 import { useHistory } from 'react-router-dom';
 import PATHS from '../../../../utils/routes';
+import { SkeletonLoader } from '../../../../components/Loader';
 
 interface Props {
   stats?: Stats;
@@ -94,7 +94,7 @@ const StatsSections: React.FC<Props> = ({ stats }) => {
               redraw={false}
             />
           ) : (
-            <Skeleton variant="rect" width={'100%'} height={118} />
+            <SkeletonLoader />
           )}
         </MyPaper>
       </Grid>

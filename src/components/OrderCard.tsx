@@ -5,7 +5,6 @@ import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 import MyAvatar from './MyAvatar';
 import QueryBuilder from '@material-ui/icons/QueryBuilder';
 import MyPaper from './MyPaper';
@@ -15,6 +14,7 @@ import { useHistory } from 'react-router-dom';
 import PATHS from '../utils/routes';
 import { ArticleDetails } from '../model/article';
 import { getTimeLeft } from '../utils/time';
+import DeleteOutlined from '@material-ui/icons/DeleteOutlined';
 
 type Props = {
   label: string;
@@ -33,8 +33,8 @@ const useItemStyles = makeStyles({
 const DetailItem: React.FC<Props> = ({ label, value, node }) => {
   const classes = useItemStyles();
   return (
-    <Grid item xs={6} className={classes.detail}>
-      <Typography variant="body2" style={{ color: '#757575' }}>
+    <Grid item className={classes.detail}>
+      <Typography variant="caption" color="textSecondary">
         {label}&nbsp;&nbsp;
       </Typography>
       {value && <Typography variant="body2">{value}</Typography>}
@@ -61,8 +61,8 @@ interface DetailsProps {
 const Details: React.FC<DetailsProps> = ({ brand, quantity, size, color }) => {
   const classes = useDetailStyles({ color });
   return (
-    <Grid container spacing={4}>
-      <Grid item xs={6}>
+    <Grid container spacing={2}>
+      <Grid item xs={7}>
         <Grid container>
           <Grid item xs={12}>
             <DetailItem label="Brand" value={brand} />
@@ -73,7 +73,7 @@ const Details: React.FC<DetailsProps> = ({ brand, quantity, size, color }) => {
         </Grid>
       </Grid>
 
-      <Grid item xs={6}>
+      <Grid item xs={5}>
         <Grid container>
           <Grid item xs={12}>
             <DetailItem label="Quantity" value={quantity} />
@@ -114,11 +114,13 @@ type Subject = 'customer' | 'seller';
 interface CardProps {
   order: Order;
   subject?: Subject;
+  handleOrderDelete?: (orderId: string) => void;
 }
 
 const OrderCard: React.FC<CardProps> = ({
   order: { store, articleDetails, ...order },
   subject = 'customer',
+  handleOrderDelete,
 }) => {
   const timeLeft = getTimeLeft(order.orderExpireAt).asHours();
   const classes = useStyles({ timeLeft, sold: order.sold });
@@ -131,7 +133,10 @@ const OrderCard: React.FC<CardProps> = ({
     });
 
   const isCustomer = subject === 'customer';
-  const goToStorePage = () => history.push(PATHS.STORE_PAGE.replace(':id', store?._id));
+  const goToStorePage = () => {
+    console.log('goo');
+    history.push(PATHS.STORE_PAGE.replace(':id', store?._id));
+  };
   const goToCustomerPage = () =>
     history.push(PATHS.USER_PROFILE.replace(':id', customer?._id ?? '-'));
 
@@ -151,14 +156,16 @@ const OrderCard: React.FC<CardProps> = ({
           alt={`logo of ${name}`}
           subject={subject === 'seller' ? 'store' : 'user'}
           imagePath={imagePath}
+          handleClick={goToPage}
         />
       }
       action={
-        <IconButton aria-label="settings">
-          <MoreVertIcon />
-        </IconButton>
+        handleOrderDelete && (
+          <IconButton onClick={() => order._id && handleOrderDelete(order._id)}>
+            <DeleteOutlined titleAccess="delete stock" fontSize="medium" color="error" />
+          </IconButton>
+        )
       }
-      onClick={goToPage}
       title={name}
       subheader={<Moment date={bookDate} format={'MMMM D, YYYY'} />}
     />
@@ -179,7 +186,7 @@ const OrderCard: React.FC<CardProps> = ({
             <Grid container justifyContent="center" alignItems="center">
               <MyAvatar
                 imagePath={details?.image as string}
-                size="large"
+                size="fullWidth"
                 subject="articledetail"
                 shape="square"
                 alt={`image of article ${details.articleId}`}
@@ -187,7 +194,7 @@ const OrderCard: React.FC<CardProps> = ({
             </Grid>
           </Grid>
           <Grid item xs={9}>
-            <Grid container direction="column">
+            <Grid container direction="column" spacing={1}>
               <Grid item>
                 <Typography variant="body1">
                   <b>{order.nameArticle}</b>

@@ -17,7 +17,9 @@ import Loader from '../../../components/Loader';
 const categoriesPath = process.env.PUBLIC_URL + '/categories';
 
 const getAllArticles = () =>
-  jsonClient.get<void, Payload<Article[]>>(`/articles`).then((res) => res);
+  jsonClient
+    .get<void, Payload<Article[]>>(`/articles?page=1&limit=8&sort=-createdAt`)
+    .then((res) => res);
 
 const CustomerHome = (): React.ReactElement => {
   const baseClasses = baseStyles();
@@ -56,7 +58,7 @@ const CustomerHome = (): React.ReactElement => {
     },
     {
       node: <ArticlesNode />,
-      title: 'Popular Products',
+      title: 'Newest Products',
     },
   ];
 

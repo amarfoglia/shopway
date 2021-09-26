@@ -14,13 +14,13 @@ import {
   Typography,
 } from '@material-ui/core';
 import ArrowForwardIosOutlined from '@material-ui/icons/ArrowForwardIosOutlined';
-import Skeleton from '@material-ui/lab/Skeleton';
 import AddOutlined from '@material-ui/icons/AddOutlined';
 import Article, { ArticleDetails, ArticleStock } from '../../../../../model/article';
 import MyPaper from '../../../../../components/MyPaper';
 import MyAvatar from '../../../../../components/MyAvatar';
 import { useHistory } from 'react-router-dom';
 import PATHS from '../../../../../utils/routes';
+import { SkeletonLoader } from '../../../../../components/Loader';
 
 const datailsStyles = makeStyles<Theme, { color: string }>((theme) => ({
   colorSquare: {
@@ -119,7 +119,7 @@ const VariantsSection: React.FC<Props> = ({ article }) => {
       <Grid item xs={12}>
         {!details ? (
           <MyPaper>
-            <Skeleton variant="rect" width={'100%'} height={118} />
+            <SkeletonLoader />
           </MyPaper>
         ) : (
           <MyPaper customStyle={classes.detailsPaper}>

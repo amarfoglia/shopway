@@ -107,7 +107,7 @@ const MyAvatar: React.FC<AvatarProps> = ({
   };
 
   const renderTextAvatar = () => (
-    <Avatar className={clsx(sizeClass, classes.textAvatar)} alt={alt}>
+    <Avatar className={clsx(sizeClass, classes.textAvatar)} alt={alt} onClick={handleClick}>
       <Typography variant={'body2'}>{text?.charAt(0)}</Typography>
     </Avatar>
   );
