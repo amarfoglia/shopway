@@ -12,11 +12,12 @@ import sendEmail from '../utils/email';
 import { ONE_DAY_IN_MS } from '../utils/time';
 import CustomerModel from '../models/users/customerModel';
 import SellerModel from '../models/users/sellerModel';
-import Role from '../models/role';
 import StoreModel from '../models/storeModel';
 import VisitStoreModel from '../models/visitStoreModel';
 import Customer from '../models/users/customer';
 import { setPhoto } from './helpers/imageController';
+import Store from '../models/store';
+import Seller from '../models/users/seller';
 
 const getJwtSecret = () => (process.env.JWT_SECRET || 'invalid-token');
 
@@ -26,7 +27,7 @@ const generateToken = (id: string): string => jwt.sign(
   { expiresIn: process.env.JWT_EXPIRES_IN }
 );
 
-const sendFreshToken = (user: User, statusCode: number, res: Response) => {
+const sendFreshToken = (user: User | Customer, statusCode: number, res: Response) => {
   const token = generateToken(user.id ?? 'invalid-id');
   const cookieOptions = {
     expires: new Date(Date.now() + Number(process.env.JWT_COOKIE_EXPIRES_IN) * ONE_DAY_IN_MS),
@@ -36,14 +37,16 @@ const sendFreshToken = (user: User, statusCode: number, res: Response) => {
 
   res.cookie('jwt', token, cookieOptions);
   const {
-    password, ...userDoc
+    fullName, email, photo, role
   } = user; // exclude password
 
   res.status(statusCode).json({
     status: 'success',
     token,
     data: {
-      user: userDoc
+      user: {
+        fullName, email, photo, role
+      }
     }
   });
 };
@@ -51,26 +54,31 @@ const sendFreshToken = (user: User, statusCode: number, res: Response) => {
 const promisify = new Promisify<jwt.JwtPayload | string>();
 const verifyToken = (token: string) => jwt.verify(token, getJwtSecret());
 
+const createCustomer = async (customer: Customer, file: any) => {
+  const filename = 'photo'.concat('-', uuidv4());
+  const photo = file && await setPhoto(filename, 'public/img/users', file);
+  return CustomerModel.create({ ...customer, photo });
+};
+
+const createStore = async (store: Store, file?: any) => {
+  const logo = file && await setPhoto('logo'.concat('-', uuidv4()), 'public/img/stores', file);
+  return StoreModel.create({ ...store, logo });
+};
+
+const createSeller = async (seller: Seller, store: Store, file: any) => {
+  const storeDoc = await createStore(store, file);
+  await VisitStoreModel.create({ storeId: storeDoc.id, visits: [] });
+  return SellerModel.create({ ...seller, stores: [storeDoc.id] });
+};
+
 class AuthController {
   signup = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    let newUser: User | undefined;
-    const { role } = req.body;
-    let customer;
-    switch (role) {
-      case Role.CUSTOMER:
-        customer = req.body as Customer;
-        if (req.file) {
-          const filename = 'photo'.concat('-', uuidv4());
-          customer.photo = await setPhoto(filename, 'public/img/users', req.file);
-        }
-        newUser = await CustomerModel.create(customer);
-        break;
-      case Role.SELLER:
-        newUser = await this.createSellerWithStore(req, next);
-        break;
-      default:
-        newUser = undefined;
-        break;
+    const { store, ...user } = req.body;
+    let newUser;
+    if (user.role === 'Customer') {
+      newUser = await createCustomer(user, req.file);
+    } else if (user.role === 'Seller') {
+      newUser = await createSeller(user, store, req.file);
     }
     if (!newUser) {
       next(new AppError('Please provide a valid role!', 400));
@@ -78,23 +86,6 @@ class AuthController {
     }
     sendFreshToken(newUser, 201, res);
   });
-
-  // visitStore
-  createSellerWithStore = async (req: Request, next: NextFunction) => {
-    const { store, ...seller } = req.body;
-    if (req.file) {
-      const filename = 'logo'.concat('-', uuidv4());
-      store.photo = await setPhoto(filename, 'public/img/stores', req.file);
-    }
-    const newStore = await StoreModel.create(store);
-    const storeId = newStore.id ?? 'invalid-id';
-    if (storeId === 'invalid-id') { next(new AppError('invalid store id', 500)); }
-    const visitObj = { storeId, visits: [] };
-    await VisitStoreModel.create(visitObj);
-    seller.stores = [];
-    seller.stores.push(storeId);
-    return SellerModel.create(seller);
-  }
 
   login = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const { email, password } = req.body;

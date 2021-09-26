@@ -20,15 +20,18 @@ const upload = multer({ storage, fileFilter });
 class ImageController {
   uploadPhoto = upload.single('photo');
 
-  resizePhoto = (isAvatar: Boolean) => catchAsync(async (req: Request, res: Response,
+  resizePhoto = (isAvatar: boolean) => catchAsync(async (req: Request, res: Response,
     next: NextFunction) => {
     if (req.file) {
       const { file } = req;
-      const height = isAvatar ? 500 : 700;
+      const options = isAvatar ? { height: 500, width: 500 } : {
+        fit: sharp.fit.contain,
+        width: 800
+      };
       req.file = await sharp(file.buffer)
         .toFormat('png')
         .png({ quality: 80 })
-        .resize(500, height);
+        .resize(options);
     }
     next();
   });

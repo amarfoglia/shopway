@@ -14,10 +14,13 @@ router.get('/', articleDetailsController.getAllArticlesDetails);
 router.get('/:id', articleDetailsController.getArticleDetails);
 
 router.use(authController.restrictTo(Role.SELLER));
-router.post('/', imageController.uploadPhoto, imageController.resizePhoto, articleDetailsController.addArticleDetails);
+router.post('/',
+  imageController.uploadPhoto,
+  imageController.resizePhoto(false),
+  articleDetailsController.addArticleDetails);
 router.patch('/:id',
   imageController.uploadPhoto,
-  imageController.resizePhoto,
+  imageController.resizePhoto(false),
   articleDetailsController.updateArticleDetails);
 router.delete('/:id', articleDetailsController.deleteArticleDetails);
 

@@ -10,8 +10,10 @@ const authController = new AuthController();
 const imageController = new ImageController();
 
 router.use('/:id/stores', storeRouter);
-
-router.post('/signup', imageController.uploadPhoto, imageController.resizePhoto, authController.signup);
+router.post('/signup',
+  imageController.uploadPhoto,
+  imageController.resizePhoto(true),
+  authController.signup);
 router.post('/login', authController.login);
 
 router.post('/forgotPassword', authController.forgotPassword);
@@ -23,7 +25,7 @@ router.get('/me', userController.getMe, userController.getUser);
 router.patch(
   '/updateMe',
   imageController.uploadPhoto,
-  imageController.resizePhoto,
+  imageController.resizePhoto(true),
   userController.updateMe
 );
 

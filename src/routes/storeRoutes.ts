@@ -27,9 +27,12 @@ router.get('/:id/orders', orderController.getOrdersFromStore);
 router.get('/:id/stats', storeController.getStatsStore);
 router.patch('/:id',
   imageController.uploadPhoto,
-  imageController.resizePhoto,
+  imageController.resizePhoto(true),
   storeController.updateStore);
-router.post('/', imageController.uploadPhoto, imageController.resizePhoto, storeController.addStore);
+router.post('/',
+  imageController.uploadPhoto,
+  imageController.resizePhoto(true),
+  storeController.addStore);
 router.delete('/:id', storeController.deleteStore);
 
 export default router;

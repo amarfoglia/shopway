@@ -179,15 +179,16 @@ class StoreController {
       {
         $group:
         {
-          _id: '$_id',
+          _id: '$ad.articleId',
           numberOfArticleSold: { $sum: 1 }
         }
       },
       { $sort: { numberOfArticleSold: -1 } },
-      { $limit: 5 }
+      { $limit: 4 }
     ]);
-    const articlesId = stats.flatMap((x) => x.id);
-    const articles = ArticleModel.find({ store: storeId, _id: { $in: articlesId } });
+    // eslint-disable-next-line no-underscore-dangle
+    const articlesId = stats.flatMap((x) => x._id);
+    const articles = await ArticleModel.find({ _id: { $in: articlesId } });
     res.status(200).json({
       status: 'success',
       data: { articles }
