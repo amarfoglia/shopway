@@ -168,12 +168,12 @@ const MainFormSection: React.FC<Props> = ({
   isLoading,
 }) => {
   const handleSubmit = (values: FormikValues, helpers: FormikHelpers<FormikValues>) => {
-    const { image, ...detailsItem } = values as FormProps;
+    const { image, stockArticles, ...detailsItem } = values as FormProps;
     const formData: FormData = objectToFormData({
       articleId,
       storeId,
-      // stockArticles: stockArticles.filter((s) => s.quantity > 0),
       photo: image,
+      stockArticles: stockArticles.filter((s) => s.quantity > 0),
       ...detailsItem,
     });
     onSubmit(formData);

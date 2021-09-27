@@ -128,7 +128,7 @@ const ChangePasswordPage = (): React.ReactElement => {
   const sections = [{ node: <PasswordForm /> }];
   return (
     <React.Fragment>
-      <ProfilePage topTitle="Change password" sections={sections} />
+      <ProfilePage topTitle="Change password" sections={sections} subject="user" />
     </React.Fragment>
   );
 };

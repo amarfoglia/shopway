@@ -15,6 +15,7 @@ import PATHS from '../utils/routes';
 import { ArticleDetails } from '../model/article';
 import { getTimeLeft } from '../utils/time';
 import DeleteOutlined from '@material-ui/icons/DeleteOutlined';
+import { SRole } from '../model/users/role';
 
 type Props = {
   label: string;
@@ -109,17 +110,15 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
   },
 }));
 
-type Subject = 'customer' | 'seller';
-
 interface CardProps {
   order: Order;
-  subject?: Subject;
+  subject?: SRole;
   handleOrderDelete?: (orderId: string) => void;
 }
 
 const OrderCard: React.FC<CardProps> = ({
   order: { store, articleDetails, ...order },
-  subject = 'customer',
+  subject = 'Customer',
   handleOrderDelete,
 }) => {
   const timeLeft = getTimeLeft(order.orderExpireAt).asHours();
@@ -132,9 +131,8 @@ const OrderCard: React.FC<CardProps> = ({
       store,
     });
 
-  const isCustomer = subject === 'customer';
+  const isCustomer = subject === 'Customer';
   const goToStorePage = () => {
-    console.log('goo');
     history.push(PATHS.STORE_PAGE.replace(':id', store?._id));
   };
   const goToCustomerPage = () =>
@@ -154,7 +152,7 @@ const OrderCard: React.FC<CardProps> = ({
           text={name}
           size={'medium'}
           alt={`logo of ${name}`}
-          subject={subject === 'seller' ? 'store' : 'user'}
+          subject={isCustomer ? 'user' : 'store'}
           imagePath={imagePath}
           handleClick={goToPage}
         />

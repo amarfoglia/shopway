@@ -55,6 +55,7 @@ const UserProfile = (): React.ReactElement => {
       name={user?.fullName}
       subinfo1={user?.email}
       subinfo2={user?.role}
+      subject="user"
       sections={sections}
     />
   );

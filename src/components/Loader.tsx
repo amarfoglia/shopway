@@ -1,14 +1,16 @@
 import React from 'react';
-import { Box, CircularProgress, makeStyles } from '@material-ui/core';
+import { Box, CircularProgress, makeStyles, Theme } from '@material-ui/core';
 import Skeleton from '@material-ui/lab/Skeleton';
 
-const style = makeStyles({
+type Position = 'static' | 'relative' | 'absolute' | 'sticky' | 'fixed';
+
+const style = makeStyles<Theme, { position: Position }>({
   pageLoader: {
     display: 'flex',
     alignItems: 'center',
     flexDirection: 'column',
     justifyContent: 'center',
-    position: 'absolute',
+    position: ({ position }) => position,
     top: 0,
     right: 0,
     left: 0,
@@ -16,9 +18,13 @@ const style = makeStyles({
   },
 });
 
-const Loader: React.FC = () => (
-  <Box className={style().pageLoader}>
-    <CircularProgress thickness={4.0} />
+interface Props {
+  position?: Position;
+}
+
+const Loader: React.FC<Props> = ({ position = 'absolute' }) => (
+  <Box className={style({ position }).pageLoader}>
+    <CircularProgress thickness={5.0} />
   </Box>
 );
 

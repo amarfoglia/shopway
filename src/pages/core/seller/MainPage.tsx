@@ -8,7 +8,7 @@ import TabPanel from '../../../components/TabPanel';
 import StocksPage from './Stocks';
 
 const Home = lazy(() => import('./home/Home'));
-const Orders = lazy(() => import('./Orders'));
+const Orders = lazy(() => import('../common/Orders'));
 const Settings = lazy(() => import('../common/Settings'));
 
 interface TabProps {
@@ -24,7 +24,7 @@ const TabPanels: React.FC<TabProps> = ({ currentTab }) => (
       <StocksPage />
     </TabPanel>
     <TabPanel value={currentTab} index={2}>
-      <Orders />
+      <Orders role="Seller" />
     </TabPanel>
     <TabPanel value={currentTab} index={3}>
       <Settings />

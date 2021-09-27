@@ -77,6 +77,7 @@ const DetailsSection: React.FC<Props> = ({
                   imagePath={storeLogo}
                   subject="store"
                   handleClick={goToStorePage}
+                  shape="circle"
                 />
               </Grid>
               <Grid item>

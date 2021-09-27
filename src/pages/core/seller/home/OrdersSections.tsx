@@ -59,20 +59,24 @@ const OrderItem: React.FC<Order> = (props) => {
   );
 };
 
-const OrdersSection: React.FC<{ orders?: Order[] }> = ({ orders }) => {
-  return (
-    <MyPaper>
-      {orders ? (
+interface Props {
+  isLoading: boolean;
+  orders?: Order[];
+}
+
+const OrdersSection: React.FC<Props> = ({ orders, isLoading }) => (
+  <React.Fragment>
+    {orders && orders.length > 0 && (
+      <MyPaper>
         <List dense>
           {orders?.map((o) => (
             <OrderItem key={o._id} {...o} />
           ))}
         </List>
-      ) : (
-        <SkeletonLoader />
-      )}
-    </MyPaper>
-  );
-};
+      </MyPaper>
+    )}
+    {isLoading && !orders && <SkeletonLoader />}
+  </React.Fragment>
+);
 
 export default OrdersSection;

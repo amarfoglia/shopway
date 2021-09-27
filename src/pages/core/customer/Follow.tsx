@@ -6,6 +6,7 @@ import {
   ListItemText,
   ListItem,
   ListItemSecondaryAction,
+  Grid,
 } from '@material-ui/core';
 import FavoriteOutlined from '@material-ui/icons/FavoriteOutlined';
 import CorePage from '../../../components/CorePage';
@@ -79,10 +80,17 @@ const CustomerFollow = (): React.ReactElement => {
     ));
 
   const FollowedStoresSection = () => (
-    <MyPaper>
-      {error?.message && <ErrorDisplay text={error?.message} />}
-      <List dense>{isLoading ? <SkeletonLoader /> : _renderItems()}</List>
-    </MyPaper>
+    <Grid container spacing={2}>
+      <Grid item xs={12}>
+        {error?.message && <ErrorDisplay text={error?.message} />}
+        {isLoading && <SkeletonLoader />}
+        {followedStores && followedStores?.length > 0 && (
+          <MyPaper>
+            <List dense>{isLoading ? <SkeletonLoader /> : _renderItems()}</List>
+          </MyPaper>
+        )}
+      </Grid>
+    </Grid>
   );
 
   const sections = [{ node: <FollowedStoresSection /> }];

@@ -91,7 +91,7 @@ const SearchPage = (): React.ReactElement => {
               </Grid>
             </Grid>
             <Grid item xs={12}>
-              <ProductsSection articles={[]} />
+              <ProductsSection articles={[]} isLoading={false} />
             </Grid>
           </Grid>
         </Grid>

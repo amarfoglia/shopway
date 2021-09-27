@@ -5,6 +5,7 @@ import { formDataClient, jsonClient, Payload } from '../utils/axiosClient';
 import User from '../model/users/user';
 import Store from '../model/users/store';
 import { AppError } from '../model/http';
+import objectToFormData from '../utils/formdata';
 
 interface Props {
   children: ReactNode;
@@ -73,12 +74,13 @@ export const AuthProvider = (props: Props): React.ReactElement => {
   const updateMe = (user: Partial<User>): Promise<Payload<User>> =>
     formDataClient.patch<FormData, Payload<User>>('/users/updateMe', serialize(user)).then(_onUser);
 
-  const register = (props: SignupProps): Promise<Payload<User>> => {
-    const { user, store, photo } = props;
-    return formDataClient
-      .post<SignupProps, Payload<User>>(`/users/signup`, serialize({ ...user, store, photo }))
+  const register: (props: SignupProps) => Promise<Payload<User>> = ({ user, store, photo }) =>
+    formDataClient
+      .post<SignupProps, Payload<User>>(
+        `/users/signup`,
+        objectToFormData({ ...user, store, photo }),
+      )
       .then(_onUser);
-  };
 
   const login = (props: LoginProps): Promise<Payload<User>> =>
     jsonClient.post<LoginProps, Payload<User>>(`/users/login`, props).then(_onUser);

@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(1),
   },
   pruductImageContainer: {
-    minHeight: 130,
+    minHeight: 135.5,
   },
 }));
 
@@ -36,10 +36,8 @@ const ArticlePaper: React.FC<ProductProps> = ({ article, hideHeader = false }) =
   const { store, articleDetails, name, _id: articleId } = article;
   const details = articleDetails?.[0];
   const _store = store as Store;
-  const goToStorePage = () => {
-    console.log(_store?._id);
-    history.push(PATHS.STORE_PAGE.replace(':id', _store?._id));
-  };
+  const goToStorePage = () => history.push(PATHS.STORE_PAGE.replace(':id', _store?._id));
+
   const goToArticleDetails = () =>
     articleId && history.push(PATHS.ARTICLE_PAGE.replace(':id', articleId), { article, store });
   const renderPrice = (price = 0, discountPrice?: string) =>

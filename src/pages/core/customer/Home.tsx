@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box } from '@material-ui/core';
+import { Box, Grid } from '@material-ui/core';
 import baseStyles from '../../../style/styles';
 import CorePage from '../../../components/CorePage';
 import CategoryPaper from '../../../components/CategoryPaper';
@@ -12,22 +12,24 @@ import { jsonClient, Payload } from '../../../utils/axiosClient';
 import Article from '../../../model/article';
 import { useQuery } from 'react-query';
 import { AppError } from '../../../model/http';
-import Loader from '../../../components/Loader';
+import { useState } from 'react';
+import Pagination from '../../../components/Pagination';
 
 const categoriesPath = process.env.PUBLIC_URL + '/categories';
+const limit = 4;
 
-const getAllArticles = () =>
+const getAllArticles = (page: number) =>
   jsonClient
-    .get<void, Payload<Article[]>>(`/articles?page=1&limit=8&sort=-createdAt`)
+    .get<void, Payload<Article[]>>(`/articles?page=${page}&limit=${limit}&sort=-createdAt`)
     .then((res) => res);
 
 const CustomerHome = (): React.ReactElement => {
+  const [page, setPage] = useState(1);
   const baseClasses = baseStyles();
   const history = useHistory();
 
-  const { data, isLoading } = useQuery<Payload<Article[]>, AppError>(
-    'getAllArticles',
-    getAllArticles,
+  const { data, isLoading } = useQuery<Payload<Article[]>, AppError>(['getAllArticles', page], () =>
+    getAllArticles(page),
   );
 
   const articles = data?.data?.article;
@@ -46,7 +48,22 @@ const CustomerHome = (): React.ReactElement => {
     </Box>
   );
 
-  const ArticlesNode = () => (isLoading ? <Loader /> : <ProductsSection articles={articles} />);
+  const ArticlesNode = () => (
+    <Grid container spacing={1}>
+      <Grid item xs={12}>
+        <ProductsSection articles={articles} isLoading={isLoading} />
+      </Grid>
+      <Grid item xs={12}>
+        <Pagination
+          onNext={() => setPage(page + 1)}
+          onPrev={() => setPage(page - 1)}
+          currentPage={page}
+          limit={limit}
+          numberOfItems={articles?.length ?? 0}
+        />
+      </Grid>
+    </Grid>
+  );
 
   const sections = [
     {

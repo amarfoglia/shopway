@@ -2,7 +2,6 @@ import React from 'react';
 import {
   Box,
   Divider,
-  Fab,
   Grid,
   List,
   ListItem,
@@ -14,13 +13,13 @@ import {
   Typography,
 } from '@material-ui/core';
 import ArrowForwardIosOutlined from '@material-ui/icons/ArrowForwardIosOutlined';
-import AddOutlined from '@material-ui/icons/AddOutlined';
 import Article, { ArticleDetails, ArticleStock } from '../../../../../model/article';
 import MyPaper from '../../../../../components/MyPaper';
 import MyAvatar from '../../../../../components/MyAvatar';
 import { useHistory } from 'react-router-dom';
 import PATHS from '../../../../../utils/routes';
 import { SkeletonLoader } from '../../../../../components/Loader';
+import BottomFab from '../../../../../components/BottomFab';
 
 const datailsStyles = makeStyles<Theme, { color: string }>((theme) => ({
   colorSquare: {
@@ -128,9 +127,7 @@ const VariantsSection: React.FC<Props> = ({ article }) => {
         )}
       </Grid>
       <Grid item xs={12} className={classes.moveRight}>
-        <Fab color="primary" aria-label="add" size="medium" onClick={() => _goTodetailsForm()}>
-          <AddOutlined />
-        </Fab>
+        <BottomFab handleClick={() => _goTodetailsForm()} />
       </Grid>
     </Grid>
   );

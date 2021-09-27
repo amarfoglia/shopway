@@ -25,14 +25,12 @@ const StorePage = (): React.ReactElement => {
     () => getStoreArticles(id),
   );
 
-  console.log(articlesRes);
-
   const { data: storeRes } = useQuery<Payload<Store>, AppError>(['getStore', id], () =>
     getStore(id),
   );
 
   const store = storeRes?.data?.store;
-  const articles = articlesRes?.data?.article;
+  const articles = articlesRes?.data?.articles;
 
   const PopularProductsSection = () => (
     <Grid container spacing={2}>
@@ -48,7 +46,9 @@ const StorePage = (): React.ReactElement => {
     </Grid>
   );
 
-  const sections = [{ title: 'Popular products', node: <PopularProductsSection /> }];
+  const sections = articles
+    ? [{ title: 'Popular products', node: <PopularProductsSection /> }]
+    : [];
 
   return (
     <ProfilePage
@@ -57,6 +57,7 @@ const StorePage = (): React.ReactElement => {
       name={store?.name}
       subinfo1={store?.address}
       subinfo2={store?.phone}
+      subject="store"
       rightChild={
         <IconButton>
           <FavoriteOutlined color={'primary'} titleAccess="set favority store" />

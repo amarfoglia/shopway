@@ -1,7 +1,6 @@
 import React from 'react';
-import { Fab, Grid, Typography } from '@material-ui/core';
+import { Fab, Grid, Typography, useTheme } from '@material-ui/core';
 import AddOutlined from '@material-ui/icons/AddOutlined';
-import { Line } from 'react-chartjs-2';
 import DetailPaper from '../../../../components/DetailPaper';
 import ArrowUpwardOutlined from '@material-ui/icons/ArrowUpwardOutlined';
 import VisibilityOutlined from '@material-ui/icons/VisibilityOutlined';
@@ -11,53 +10,25 @@ import Stats from '../../../../model/statistics';
 import { useHistory } from 'react-router-dom';
 import PATHS from '../../../../utils/routes';
 import { SkeletonLoader } from '../../../../components/Loader';
+import Chart from 'react-apexcharts';
 
 interface Props {
   stats?: Stats;
+  isLoading: boolean;
 }
 
 const computeAvgProfit = (total?: number, num?: number) =>
-  total && num && total > 0 && num > 0 ? total / num : 0;
+  total && num && total > 0 && num > 0 ? (total / num).toFixed(2) : 0;
 
 const _sum = (x: number, y: number) => x + y;
 
-const StatsSections: React.FC<Props> = ({ stats }) => {
+const StatsSections: React.FC<Props> = ({ stats, isLoading }) => {
   const dates = stats?.salesStore?.flatMap((s) => moment(s._id).format('DD MMM'));
   const profits = stats?.salesStore?.flatMap((s) => s.profit);
   const weeklyProfit = profits?.reduce(_sum, 0);
   const weeklyVisits = stats?.viewsStore?.flatMap((v) => v.numberOfViews).reduce(_sum, 0);
   const weeklyOrders = stats?.salesStore?.flatMap((s) => s.numberOfOrders).reduce(_sum, 0);
   const history = useHistory();
-
-  const options = {
-    responsive: true,
-    plugins: {
-      legend: {
-        display: false,
-      },
-    },
-  };
-
-  const _prepareData = (labels: string[], data: number[]) => {
-    return {
-      labels,
-      datasets: [
-        {
-          lineTension: 0.6,
-          borderColor: '#4f52ff',
-          pointBackgroundColor: '#fff',
-          pointBorderColor: '#4f52ff',
-          pointHoverBackgroundColor: '#4f52ff',
-          pointHoverBorderColor: '#fff',
-          pointRadius: 4,
-          pointHoverRadius: 4,
-          fill: false,
-          label: 'Profit per day',
-          data,
-        },
-      ],
-    };
-  };
 
   const TopStats = () => (
     <Grid container justifyContent="space-between">
@@ -82,21 +53,40 @@ const StatsSections: React.FC<Props> = ({ stats }) => {
     </Grid>
   );
 
+  const theme = useTheme();
+  const options = {
+    chart: {
+      id: 'profits-chart',
+      fontFamily: 'DM Sans, sans-serif',
+      stroke: {
+        curve: 'smooth',
+      },
+      toolbar: {
+        show: false,
+      },
+    },
+    colors: [theme.palette.primary.main],
+    xaxis: {
+      categories: dates,
+    },
+    dataLabels: {
+      enabled: false,
+    },
+  };
+  const series = [
+    {
+      name: 'profits',
+      data: profits,
+    },
+  ];
+
   const MainStats = () => (
     <Grid container spacing={2}>
       <Grid item xs={12}>
-        <MyPaper>
-          {profits && dates ? (
-            <Line
-              data={_prepareData(dates, profits)}
-              height={220}
-              options={options}
-              redraw={false}
-            />
-          ) : (
-            <SkeletonLoader />
-          )}
+        <MyPaper p={0}>
+          {profits && dates && <Chart type="area" options={options} series={series} />}
         </MyPaper>
+        {isLoading && !profits && <SkeletonLoader />}
       </Grid>
       <Grid item xs={6}>
         <DetailPaper

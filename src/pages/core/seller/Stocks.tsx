@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
 import {
-  Fab,
   List,
   ListItem,
   ListItemAvatar,
@@ -18,10 +17,10 @@ import MyAvatar from '../../../components/MyAvatar';
 import CorePage from '../../../components/CorePage';
 import { useHistory } from 'react-router-dom';
 import PATHS from '../../../utils/routes';
-import AddOutlined from '@material-ui/icons/AddOutlined';
+import BottomFab from '../../../components/BottomFab';
 
 const getStoreArticles = (id?: string) =>
-  jsonClient.get<void, Payload<Article[]>>(`/stores/${id}/articles`).then((res) => res);
+  jsonClient.get<void, Payload<Article[]>>(`/stores/${id}/articles?sort=+name`).then((res) => res);
 
 const ArticleItem: React.FC<Article> = (article) => {
   const { brand, name, articleDetails } = article;
@@ -34,6 +33,7 @@ const ArticleItem: React.FC<Article> = (article) => {
   const goToDetailsPage = () =>
     article._id &&
     history.push(PATHS.ARTICLE_DETAILS_PAGE.replace(':id', article._id), { article });
+
   return (
     <ListItem onClick={goToDetailsPage}>
       <ListItemAvatar>
@@ -67,28 +67,22 @@ const StocksPage: React.FC = () => {
 
   const articles = data?.data?.articles;
 
-  const StocksSection = () => (
-    <MyPaper>
-      <List dense>
-        {articles && articles.length > 0 && articles.map((o) => <ArticleItem key={o._id} {...o} />)}
-      </List>
-    </MyPaper>
-  );
+  const StocksSection = () =>
+    articles && articles.length > 0 ? (
+      <MyPaper style={{ maxHeight: '48vh', overflowY: 'auto' }}>
+        <List dense>
+          {articles.map((o) => (
+            <ArticleItem key={o._id} {...o} />
+          ))}
+        </List>
+      </MyPaper>
+    ) : (
+      <span></span>
+    );
 
   const StockButton = () => {
     const history = useHistory();
-    return (
-      <div style={{ textAlign: 'right' }}>
-        <Fab
-          color="primary"
-          aria-label="add"
-          size="medium"
-          onClick={() => history.push(PATHS.ARTICLE_FORM)}
-        >
-          <AddOutlined />
-        </Fab>
-      </div>
-    );
+    return <BottomFab handleClick={() => history.push(PATHS.ARTICLE_FORM)} />;
   };
 
   const sections = [{ node: <StocksSection /> }, { node: <StockButton /> }];

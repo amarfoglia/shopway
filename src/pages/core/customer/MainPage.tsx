@@ -7,7 +7,7 @@ import TabsPage from '../common/TabPage';
 import TabPanel from '../../../components/TabPanel';
 
 const Home = lazy(() => import('./Home'));
-const Orders = lazy(() => import('./Orders'));
+const Orders = lazy(() => import('../common/Orders'));
 const Following = lazy(() => import('./Follow'));
 const Settings = lazy(() => import('../common/Settings'));
 
@@ -24,7 +24,7 @@ const TabPanels: React.FC<TabProps> = ({ currentTab }) => (
       <Following />
     </TabPanel>
     <TabPanel value={currentTab} index={2}>
-      <Orders />
+      <Orders role="Customer" />
     </TabPanel>
     <TabPanel value={currentTab} index={3}>
       <Settings />

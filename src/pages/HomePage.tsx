@@ -14,9 +14,12 @@ const Home = (): React.ReactElement => {
   const history = useHistory();
   const { user } = useContext(AuthContext);
 
-  const handlePath = !user ? SIGN_IN : user.role === Role.CUSTOMER ? CUSTOMER_MAIN : SELLER_MAIN;
-
-  console.log(user, handlePath);
+  const handlePath =
+    user?.role === Role.CUSTOMER
+      ? CUSTOMER_MAIN
+      : user?.role === Role.CUSTOMER
+      ? SELLER_MAIN
+      : SIGN_IN;
 
   return (
     <IllustrationPage

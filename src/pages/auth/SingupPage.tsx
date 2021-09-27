@@ -1,5 +1,5 @@
 import React, { lazy, useContext, useState } from 'react';
-import { Fab, Grid, LinearProgress, Typography } from '@material-ui/core';
+import { Fab, Grid, LinearProgress, makeStyles, Typography } from '@material-ui/core';
 import { FormikHelpers, FormikValues } from 'formik';
 import { Link } from 'react-router-dom';
 import ArrowBackIosOutlined from '@material-ui/icons/ArrowBackIosOutlined';
@@ -73,8 +73,18 @@ interface SignupProps {
   photo?: File;
 }
 
+const useStyles = makeStyles({
+  backButton: {
+    boxShadow:
+      '0px 3px 5px -1px rgba(0,0,0,0.2),' +
+      '0px 6px 10px 0px rgba(0,0,0,0.14),' +
+      '0px 1px 18px 0px rgba(0,0,0,0.12)',
+  },
+});
+
 const SignupPage: React.FC = () => {
   const { register } = useContext(AuthContext);
+  const classes = useStyles();
   const {
     error,
     isLoading,
@@ -104,7 +114,7 @@ const SignupPage: React.FC = () => {
 
   const BackButton = (
     <Grid item className={baseClasses.backFabGrid}>
-      <Fab color="primary" aria-label="back" onClick={handleBack}>
+      <Fab color="primary" aria-label="back" onClick={handleBack} className={classes.backButton}>
         <ArrowBackIosOutlined />
       </Fab>
     </Grid>

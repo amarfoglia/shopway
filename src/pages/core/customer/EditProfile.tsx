@@ -126,6 +126,7 @@ const CustomerEditProfile = (): React.ReactElement => {
     <React.Fragment>
       <ProfilePage
         topTitle="Edit profile"
+        subject="user"
         rightChild={
           <div>
             <label htmlFor={id}>

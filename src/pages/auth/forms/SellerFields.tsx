@@ -30,12 +30,12 @@ const SellerForm: React.FC<Props & TextFieldProps> = ({
     onImageUpload: (image: File) => setFieldValue(logo.name, image),
   };
   const Uploader = useMemo(
-    () => <ImageUploader input={inputParams} image={store.logo as File} />,
+    () => <ImageUploader input={inputParams} image={store.logo as File} subject="store" />,
     [store.logo],
   );
   return (
     <Grid container spacing={2}>
-      <Grid item xs={12}>
+      <Grid item xs={12} style={{ textAlign: 'center' }}>
         {Uploader}
       </Grid>
       <Grid item xs={12}>

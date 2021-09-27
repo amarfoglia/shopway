@@ -40,13 +40,18 @@ const ImageInput: React.FC<InputProps> = ({ inputName, onImageUpload, id }) => {
 const useStyles = makeStyles<Theme, { subject: Subject }>({
   photoPreview: {
     width: 100,
-    height: (props) => (props.subject === 'user' ? 100 : 130),
+    height: (props) => (props.subject === 'articledetail' ? 130 : 100),
     backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat',
-    // backgroundSize: (props) => (props.subject === 'user' ? 'cover' : 'contain'),
     backgroundSize: 'cover',
-    borderRadius: (props) => (props.subject === 'user' ? '50%' : 12),
+    borderRadius: (props) => (props.subject === 'articledetail' ? 0 : '50%'),
     boxShadow: '0 10px 30px rgba(0,37,132,.06)',
+    display: 'flex',
+  },
+  formContainer: {
+    display: 'block',
+    textAlign: 'center',
+    height: (props) => (props.subject === 'articledetail' ? '100%' : 'inherit'),
   },
 });
 
@@ -64,11 +69,13 @@ const ImageUploader: React.FC<Props> = ({
     </IconButton>
   );
 
+  const isValidPath = image && typeof image === 'string' && image !== '';
+
   const PhotoPaper = () => (
     <label htmlFor={id}>
-      {typeof image === 'string' ? (
+      {isValidPath ? (
         <MyAvatar
-          imagePath={image}
+          imagePath={image as string}
           subject={subject}
           size="fullWidth"
           shape="square"
@@ -76,7 +83,6 @@ const ImageUploader: React.FC<Props> = ({
         />
       ) : (
         <Box
-          display="flex"
           justifyContent="center"
           alignItems="center"
           className={classes.photoPreview}
@@ -91,7 +97,7 @@ const ImageUploader: React.FC<Props> = ({
   );
 
   return (
-    <FormControl style={{ display: 'contents' }}>
+    <FormControl className={classes.formContainer}>
       <ImageInput
         onImageUpload={(img) => {
           setFile(img);

@@ -6,6 +6,8 @@ import CorePage from '../../../components/CorePage';
 import TopBar from '../../../components/TopBar';
 import ProfileSection from './ProfileSections';
 
+type Subject = 'store' | 'user';
+
 interface Props {
   name?: string;
   subinfo1?: string;
@@ -13,6 +15,7 @@ interface Props {
   topTitle?: string;
   rightChild?: React.ReactNode;
   imagePath?: string;
+  subject: Subject;
   sections: {
     node: JSX.Element;
     title?: string;
@@ -35,6 +38,7 @@ const ProfilePage: React.FC<Props> = ({
   topTitle,
   imagePath,
   sections,
+  subject,
 }): React.ReactElement => {
   const history = useHistory();
   const classes = useStyles();
@@ -46,6 +50,7 @@ const ProfilePage: React.FC<Props> = ({
       title={name}
       subtitle1={subinfo1}
       subtitle2={subinfo2}
+      subject={subject}
     />
   );
 

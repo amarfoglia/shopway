@@ -1,5 +1,5 @@
 import React from 'react';
-import { Avatar, makeStyles, Theme, Typography } from '@material-ui/core';
+import { Avatar, makeStyles, Theme, Typography, useTheme } from '@material-ui/core';
 import clsx from 'clsx';
 import Image from 'material-ui-image';
 import { Skeleton } from '@material-ui/lab';
@@ -47,8 +47,8 @@ const useStyles = makeStyles<Theme, { shape: Shape }>((theme) => ({
     fontSize: theme.spacing(3),
   },
   xlAvatar: {
-    width: theme.spacing(9),
-    height: theme.spacing(9),
+    width: theme.spacing(10),
+    height: theme.spacing(10),
     '& > p': {
       fontSize: theme.spacing(5),
     },
@@ -71,6 +71,7 @@ const MyAvatar: React.FC<AvatarProps> = ({
   handleClick,
 }) => {
   const classes = useStyles({ shape });
+  const theme = useTheme();
   const sizeClass =
     size === 'small'
       ? classes.smallAvatar
@@ -92,7 +93,7 @@ const MyAvatar: React.FC<AvatarProps> = ({
         {path ? (
           <Image
             className={classes.imageAvatarContainer}
-            imageStyle={{ borderRadius: classes.imageAvatar }}
+            style={{ borderRadius: shape === 'circle' ? '50%' : theme.spacing(1) }}
             src={`${BACKEND_URL}/img/${subject}s/${path}`}
             alt={alt}
             cover
