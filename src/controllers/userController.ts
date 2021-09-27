@@ -19,18 +19,10 @@ class UserController {
       return;
     }
 
-    const { email, fullName } = req.body;
     const userId = req.user?.id;
-    let photo;
-
-    if (req.file) {
-      const fileName = 'photo'.concat('-', req.user?.id);
-      photo = await setPhoto(fileName, 'public/img/users', req.file);
-    }
-
-    const updatedUser = await UserModel.findByIdAndUpdate(userId, {
-      fullName, email, photo
-    }, {
+    const photo = req.file && await setPhoto('photo'.concat('-', req.user?.id), 'public/img/users', req.file);
+    const user = photo ? { ...req.body, photo } : req.body;
+    const updatedUser = await UserModel.findByIdAndUpdate(userId, user, {
       new: true,
       runValidators: true
     });

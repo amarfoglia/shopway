@@ -48,16 +48,6 @@ class ArticleDetailsController {
   });
 
   checkArticleSize = (stockArticles: ArticleStock[]): boolean => {
-    /* inserisce in un set tutti i size degli articleStock, se la lunghezza dell'array unique
-       è diversa dalla lunghezza dello stock article allora
-       c'è una ripetizione di size es: [{size: M, qnt: 10}, {size: M, qnt: 2}, {size: S, qnt:3}]
-       unique.lenght = 2 (cioè size M e S).
-    */
-    /*
-    if (!stockArticles) {
-      return false;
-    }
-    */
     const unique = [...new Set(stockArticles.map((elem) => elem.size))];
     return unique.length === stockArticles.length;
   }

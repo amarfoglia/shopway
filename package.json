@@ -4,7 +4,7 @@
   "description": "Shopway is a web application whose goal is to help local shop owners make there products more visible.",
   "main": "app.js",
   "scripts": {
-    "start": "docker-compose up && ts-node-dev ./src/server.ts",
+    "start": "ts-node-dev ./src/server.ts",
     "start:prod": "ts-node ./src/server.ts",
     "debug": "ndb server.js",
     "build": "tsc -p .",
