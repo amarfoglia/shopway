@@ -109,7 +109,6 @@ class AuthController {
     const { authorization, cookie } = req.headers;
     const token = new Cookies(cookie).get('jwt')
       ?? (authorization?.startsWith('Bearer') && authorization.split(' ')[1]);
-    console.log(`Received token: ${token}`);
     if (!token) {
       next(new AppError('You are not logged in! Please log in to get access.', 401));
       return;

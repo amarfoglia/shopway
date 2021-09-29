@@ -116,7 +116,7 @@ class StoreController {
   });
 
   getNumberOfStoreArticles = async (storeId: string) => {
-    const numberOfArticles = await ArticleModel.find({ store: storeId }).count();
+    const numberOfArticles = await ArticleModel.find({ store: storeId }).countDocuments();
     return numberOfArticles;
   };
 

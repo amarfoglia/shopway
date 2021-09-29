@@ -19,7 +19,7 @@ import articleDetailsRouter from './routes/articleDetailsRoutes';
 import orderRouter from './routes/orderRoutes';
 import storeRouter from './routes/storeRoutes';
 import globalErrorHandler from './controllers/helpers/errorController';
-import { ONE_HOUR_IN_MS } from './utils/time';
+import { ONE_DAY_IN_MS, ONE_HOUR_IN_MS } from './utils/time';
 
 const app: Application = express();
 dotenv.config({ path: `${__dirname}/../config.env` });
@@ -38,7 +38,7 @@ if (process.env.NODE_ENV === 'development') {
 
 // Prevent DoS and brute-force attack.
 const limiter = rateLimit({
-  max: 100,
+  max: 500,
   windowMs: ONE_HOUR_IN_MS,
   message: 'Too many requests from this IP, please try again in an hour!'
 });
@@ -56,9 +56,9 @@ app.use(xss());
 // Prevent parameter pollution (e.g double sort param)
 app.use(hpp({ whitelist: [] }));
 
-console.log(`${__dirname}/../public`);
-
-app.use(express.static('public'));
+app.use(express.static('public', {
+  maxAge: ONE_DAY_IN_MS,
+}));
 
 app.use((req: Request, res: Response, next: NextFunction) => {
   (req as any).requestTime = new Date().toISOString();

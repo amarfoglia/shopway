@@ -47,7 +47,7 @@ class CustomerController {
       next(new AppError('customer id is not valid', 400));
       return;
     }
-    const query = await OrderModel.count({ customer: customerId });
+    const query = await OrderModel.countDocuments({ customer: customerId });
     res.status(200).json({
       status: 'success',
       data: {
