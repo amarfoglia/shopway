@@ -12,7 +12,12 @@ router.use(authController.checkUserToken);
 router.use(authController.restrictTo(Role.CUSTOMER));
 router.get('/stats', customerController.getUserNumberOfOrders);
 router.get('/orders', orderController.getCustomerOrders);
-router.get('/followers', customerController.getFollowers);
-router.patch('/followers', customerController.addFollowers);
+
+router.route('/followers')
+  .get(customerController.getFollowers)
+  .post(customerController.addFollower);
+
+router.route('/followers/:id')
+  .delete(customerController.removeFollower);
 
 export default router;

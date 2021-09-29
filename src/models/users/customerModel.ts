@@ -4,6 +4,7 @@ import UserModel, { options } from './userModel';
 import Customer from './customer';
 
 interface CustomerDoc extends Document, Customer {}
+interface ICustomerModel extends mongoose.Model<CustomerDoc> {}
 
 const customerSchema = new mongoose.Schema({
   followerList: {
@@ -13,11 +14,11 @@ const customerSchema = new mongoose.Schema({
   }
 }, options);
 
-customerSchema.pre(/^find/, function _(next) {
+customerSchema.pre('findOne', function _(next) {
   this.populate({ path: 'followerList' });
   next();
 });
 
 export { CustomerDoc };
 
-export default UserModel.discriminator<CustomerDoc>('Customer', customerSchema);
+export default <ICustomerModel>UserModel.discriminator<CustomerDoc>('Customer', customerSchema);

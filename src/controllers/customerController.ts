@@ -1,31 +1,35 @@
 import { NextFunction, Request, Response } from 'express';
 import AppError from '../utils/appError';
 import catchAsync from '../utils/catchAsync';
-import HandlerFactory from './helpers/handlerFactory';
-import CustomerModel, { CustomerDoc } from '../models/users/customerModel';
+import CustomerModel from '../models/users/customerModel';
 import OrderModel from '../models/orderModel';
 import Customer from '../models/users/customer';
 
-const factory = new HandlerFactory<CustomerDoc>('customer');
+const updateFollowers = async (req: Request, res: Response, next: NextFunction,
+  storeId: string, update: Object) => {
+  const { user } = req;
+  if (!user.id) {
+    next(new AppError('Invalid customer ID', 400));
+    return;
+  }
+
+  const customer = await CustomerModel.findByIdAndUpdate(user.id, update, { new: true });
+
+  res.status(201).json({
+    status: 'success',
+    data: { user: customer }
+  });
+};
 
 class CustomerController {
-  addFollowers = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const { followerList } = req.body;
-    const customer = req.user as Customer;
+  addFollower = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const { storeId } = req.body;
+    await updateFollowers(req, res, next, storeId, { $addToSet: { followerList: storeId } });
+  });
 
-    if (!customer) {
-      next(new AppError('Invalid customer ID', 400));
-      return;
-    }
-
-    await CustomerModel.updateOne(
-      { _id: customer.id },
-      { $addToSet: { followerList } }
-    );
-    res.status(201).json({
-      status: 'success',
-      data: null
-    });
+  removeFollower = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const storeId = req.params.id;
+    await updateFollowers(req, res, next, storeId, { $pull: { followerList: storeId } });
   });
 
   getFollowers = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
@@ -57,14 +61,6 @@ class CustomerController {
       }
     });
   });
-
-  getCustomer = factory.getOne(CustomerModel);
-
-  getAllCustomer = factory.getAll(CustomerModel, {});
-
-  updateCustomer = factory.updateOne(CustomerModel);
-
-  deleteCustomer = factory.deleteOne(CustomerModel);
 }
 
 export default CustomerController;
