@@ -1,8 +1,7 @@
-import Store from './store';
 import User from './user';
 
 interface Customer extends User {
-  followerList: Store[];
+  followerList: string[];
 }
 
 export default Customer;

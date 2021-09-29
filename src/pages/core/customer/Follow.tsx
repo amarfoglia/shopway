@@ -21,18 +21,21 @@ import MyPaper from '../../../components/MyPaper';
 import { SkeletonLoader } from '../../../components/Loader';
 import { useState } from 'react';
 import ErrorDisplay from '../../../components/ErrorDisplay';
+import { useContext } from 'react';
+import AuthContext from '../../../hooks/useAuth';
+import User from '../../../model/users/user';
+import Customer from '../../../model/users/customer';
 
 const getFollowedStores = () =>
   jsonClient.get<void, Payload<Store[]>>(`/customers/followers`).then((res) => res);
 
-const patchFollow = (follows: string[]) =>
-  jsonClient.patch<string[], Payload<Store[]>>(`/customers/followers`, follows).then((res) => res);
-
-const toStoresId = (stores?: Store[]) => stores?.flatMap((s) => s._id) ?? [];
-
 const CustomerFollow = (): React.ReactElement => {
+  const { removeFollow } = useContext(AuthContext);
   const history = useHistory();
   const [followedStores, setFollowedStores] = useState<Store[]>();
+
+  const handleStoreDeletion = (user: Customer) =>
+    setFollowedStores(followedStores?.filter((s) => user.followerList.includes(s._id)));
 
   const { isLoading } = useQuery<Payload<Store[]>, AppError>(
     'getFollowedStores',
@@ -44,18 +47,13 @@ const CustomerFollow = (): React.ReactElement => {
     },
   );
 
-  const { error, mutate: _patchFollow } = useMutation<Payload<Store[]>, AppError, string[]>(
-    'patchFollow',
-    patchFollow,
-    { onSuccess: (data) => setFollowedStores(data.data?.followerList) },
+  const { error, mutate: _removeFollow } = useMutation<Payload<User>, AppError, string>(
+    'removeFollow',
+    removeFollow,
+    {
+      onSuccess: (data) => handleStoreDeletion(data.data?.user as Customer),
+    },
   );
-
-  const handleFollowRemove = (storeIdToRemove: string) => {
-    const storesId = toStoresId(followedStores);
-    !!storesId &&
-      storesId.length > 0 &&
-      _patchFollow(toStoresId(followedStores?.filter((s) => s._id !== storeIdToRemove)));
-  };
 
   const _goToStorePage = (storeId: string) =>
     history.push(Routes.STORE_PAGE.replace(':id', storeId));
@@ -73,7 +71,7 @@ const CustomerFollow = (): React.ReactElement => {
           />
         </ListItemAvatar>
         <ListItemText primary={s.name} secondary={s.address} />
-        <ListItemSecondaryAction onClick={() => handleFollowRemove(s._id)}>
+        <ListItemSecondaryAction onClick={() => _removeFollow(s._id)}>
           <FavoriteOutlined color="primary" />
         </ListItemSecondaryAction>
       </ListItem>

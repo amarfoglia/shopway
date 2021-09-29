@@ -27,6 +27,8 @@ interface ChangePasswordProps {
   passwordConfirm: string;
 }
 
+type Follow = { storeId: string };
+
 interface UserContext {
   user?: User;
   isLoading?: boolean;
@@ -36,6 +38,8 @@ interface UserContext {
   login: (props: LoginProps) => Promise<Payload<User>>;
   forgotPassword: (email: string) => Promise<Payload<User>>;
   changePassword: (props: ChangePasswordProps) => Promise<Payload<User>>;
+  removeFollow: (storeId: string) => Promise<Payload<User>>;
+  addFollow: (storeId: string) => Promise<Payload<User>>;
 }
 
 const AuthContext = createContext<UserContext>({
@@ -44,6 +48,8 @@ const AuthContext = createContext<UserContext>({
   login: (_) => new Promise(() => _),
   forgotPassword: (_) => new Promise(() => _),
   changePassword: (_) => new Promise(() => _),
+  removeFollow: (_) => new Promise(() => _),
+  addFollow: (_) => new Promise(() => _),
 });
 
 export type { UserContext };
@@ -92,6 +98,12 @@ export const AuthProvider = (props: Props): React.ReactElement => {
   const changePassword = (props: ChangePasswordProps): Promise<Payload<User>> =>
     jsonClient.patch<string, Payload<User>>(`/users/updateMyPassword`, props).then(_onUser);
 
+  const removeFollow = (storeId: string): Promise<Payload<User>> =>
+    jsonClient.delete<void, Payload<User>>(`/customers/followers/${storeId}`).then(_onUser);
+
+  const addFollow = (storeId: string): Promise<Payload<User>> =>
+    jsonClient.post<Follow, Payload<User>>(`/customers/followers`, { storeId }).then(_onUser);
+
   // const logout = () => console.log('logout')
 
   return (
@@ -103,6 +115,8 @@ export const AuthProvider = (props: Props): React.ReactElement => {
         changePassword,
         register,
         login,
+        addFollow,
+        removeFollow,
         error,
         isLoading,
       }}
