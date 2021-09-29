@@ -3,12 +3,14 @@ import { Route } from 'react-router';
 import { Redirect, RouteProps } from 'react-router-dom';
 import AuthContext from '../hooks/useAuth';
 import User from '../model/users/user';
-import PATHS from '../utils/routes';
+import Routes from '../utils/routes';
 import Loader from './Loader';
 
-const NotAuthorized = () => <Redirect to={{ pathname: PATHS.NOT_AUTHORIZED }} />;
-const Login = () => <Redirect to={{ pathname: PATHS.SIGN_IN }} />;
-const Home = () => <Redirect to={{ pathname: PATHS.HOME }} />;
+const NotAuthorized = () => <Redirect to={{ pathname: Routes.NOT_AUTHORIZED }} />;
+const Login = () => <Redirect to={{ pathname: Routes.SIGN_IN }} />;
+const Home = () => <Redirect to={{ pathname: Routes.HOME }} />;
+const Seller = () => <Redirect to={{ pathname: Routes.SELLER_MAIN }} />;
+const Customer = () => <Redirect to={{ pathname: Routes.CUSTOMER_MAIN }} />;
 
 type role = 'Customer' | 'Seller';
 
@@ -18,13 +20,16 @@ interface Props {
   mustBe?: role;
 }
 
-type AuthRouteProps = RouteProps & Props;
+type MyRouteProps = RouteProps & Props;
 
 const _isRoleNotValid = (user?: User, role?: string) => role && (!user || user?.role !== role);
 
 const _isNotLoggedIn = (user?: User, mustBeLoggedIn?: boolean) => mustBeLoggedIn && !user;
 
-const AuthRoute: React.FC<AuthRouteProps> = ({
+const handleLoggedUserRedirect = (role?: string) =>
+  role === 'Customer' ? Customer : role === 'Seller' ? Seller : Home;
+
+const MyRoute: React.FC<MyRouteProps> = ({
   mustBe,
   mustBeLoggedIn,
   mustBeNotLoggedIn,
@@ -37,7 +42,7 @@ const AuthRoute: React.FC<AuthRouteProps> = ({
       : _isRoleNotValid(user, mustBe)
       ? NotAuthorized
       : user && mustBeNotLoggedIn
-      ? Home
+      ? handleLoggedUserRedirect()
       : undefined;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -51,4 +56,4 @@ const AuthRoute: React.FC<AuthRouteProps> = ({
   return isLoading || (!user && !error) ? <Loader /> : renderPage();
 };
 
-export default AuthRoute;
+export default MyRoute;

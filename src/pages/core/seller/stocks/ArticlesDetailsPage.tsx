@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import CorePage from '../../../../components/CorePage';
 import { Container, Grid, IconButton, makeStyles } from '@material-ui/core';
 import { RouteComponentProps, useHistory } from 'react-router-dom';
@@ -7,6 +7,7 @@ import TopBar from '../../../../components/TopBar';
 import Article from '../../../../model/article';
 import VariantsSection from './details/VariantsSection';
 import ArticleSection from './details/ArticleSection';
+import Routes from '../../../../utils/routes';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -27,7 +28,10 @@ const ArticleDetailsPage: React.FC<Props> = ({ location: { state } }): React.Rea
   const history = useHistory();
   const classes = useStyles();
   const article = state && (state as State).article;
-  !article && history.goBack();
+
+  useEffect(() => {
+    !article && history.push(Routes.ERROR, { error: "Missing article's details" });
+  });
 
   const sections = article
     ? [

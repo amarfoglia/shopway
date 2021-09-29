@@ -7,7 +7,7 @@ import ProductsSection from '../common/ProductsGrid';
 import { categories } from '../../../model/category';
 import SearchBar from '../../../components/SearchBar';
 import { useHistory } from 'react-router-dom';
-import PATHS from '../../../utils/routes';
+import Routes from '../../../utils/routes';
 import { jsonClient, Payload } from '../../../utils/axiosClient';
 import Article from '../../../model/article';
 import { useQuery } from 'react-query';
@@ -67,7 +67,7 @@ const CustomerHome = (): React.ReactElement => {
 
   const sections = [
     {
-      node: <SearchBar handleFocus={() => history.push(PATHS.SEARCH_ARTICLE)} />,
+      node: <SearchBar handleFocus={() => history.push(Routes.SEARCH_ARTICLE)} />,
     },
     {
       node: <CategoriesSection />,

@@ -5,7 +5,7 @@ import EditOutlined from '@material-ui/icons/EditOutlined';
 import DeleteOutlined from '@material-ui/icons/DeleteOutlined';
 import clsx from 'clsx';
 import MyPaper from '../../../../../components/MyPaper';
-import PATHS from '../../../../../utils/routes';
+import Routes from '../../../../../utils/routes';
 import Article from '../../../../../model/article';
 import MyAvatar from '../../../../../components/MyAvatar';
 import ErrorDisplay from '../../../../../components/ErrorDisplay';
@@ -46,7 +46,7 @@ const ArticleSection: React.FC<Props> = ({ article }) => {
   const previewPhoto = article.articleDetails?.find((d) => d.image != null)?.image;
 
   const _redirectToStocksPage = () =>
-    history.push({ pathname: PATHS.SELLER_MAIN, search: 'tab=1' });
+    history.push({ pathname: Routes.SELLER_MAIN, search: 'tab=1' });
 
   const {
     error,
@@ -100,7 +100,7 @@ const ArticleSection: React.FC<Props> = ({ article }) => {
                   disabled={isLoading}
                   startIcon={<EditOutlined />}
                   className={clsx(classes.optionButton, classes.warningColor)}
-                  onClick={() => history.push(PATHS.ARTICLE_FORM, { article })}
+                  onClick={() => history.push(Routes.ARTICLE_FORM, { article })}
                 >
                   Edit
                 </Button>

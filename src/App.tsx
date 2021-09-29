@@ -1,87 +1,46 @@
 import React, { lazy, ReactElement } from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Container, makeStyles } from '@material-ui/core';
-import AuthRoute from './components/AuthRoute';
-import PATHS from './utils/routes';
 import Loader from './components/Loader';
+import MyRoute from './components/MyRoute';
+import { ArticleRouter, AuthRouter, CustomerRouter, SellerRouter } from './routes';
 
-const SignupPage = lazy(() => import('./pages/auth/SingupPage'));
 const Home = lazy(() => import('./pages/HomePage'));
-const LoginPage = lazy(() => import('./pages/auth/LoginPage'));
-const CustomerPage = lazy(() => import('./pages/core/customer/MainPage'));
-const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
-const NotAuthorized = lazy(() => import('./pages/NotAuthorized'));
-const ForgotPasswordPage = lazy(() => import('./pages/auth/ForgotPasswordPage'));
-const StorePage = lazy(() => import('./pages/core/common/StorePage'));
-const UserProfile = lazy(() => import('./pages/core/customer/UserProfile'));
-const ChangePasswordPage = lazy(() => import('./pages/core/common/ChangePassword'));
-const SearchPage = lazy(() => import('./pages/core/search.article/SearchPage'));
-const CustomerEditProfile = lazy(() => import('./pages/core/customer/EditProfile'));
 const ErrorPage = lazy(() => import('./pages/ErrorPage'));
-const SellerPage = lazy(() => import('./pages/core/seller/MainPage'));
-const ArticleDetailsPage = lazy(() => import('./pages/core/seller/stocks/ArticlesDetailsPage'));
-const ArticlePage = lazy(() => import('./pages/core/common/ArticlePage'));
-const ArticleFormPage = lazy(() => import('./pages/core/seller/stocks/ArticleFormPage'));
-const DetailsFormPage = lazy(() => import('./pages/core/seller/stocks/DetailsFormPage'));
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
+const StorePage = lazy(() => import('./pages/core/common/StorePage'));
+
+const renderContent = () => {
+  return (
+    <React.Suspense fallback={<Loader />}>
+      <Container maxWidth="lg" disableGutters style={{ height: '100%' }}>
+        <Router>
+          <Switch>
+            <Route exact path={'/'} render={() => <Home />} />
+            <Route path={'/error'} render={(props) => <ErrorPage {...props} />} />
+            <MyRoute path="/auth" render={() => <AuthRouter />} />
+            <MyRoute path="/customer" mustBe="Customer" render={() => <CustomerRouter />} />
+            <MyRoute path="/seller" mustBe="Seller" render={() => <SellerRouter />} />
+            <MyRoute path="/article" mustBeLoggedIn render={() => <ArticleRouter />} />
+            <MyRoute path={'/stores/:id'} mustBeLoggedIn render={() => <StorePage />} />
+            <Route path={'*'} render={() => <NotFoundPage />} />
+          </Switch>
+        </Router>
+      </Container>
+    </React.Suspense>
+  );
+};
 
 const useStyles = makeStyles((theme) => ({
-  root: {
+  App: {
     height: '100vh',
     backgroundColor: theme.palette.background.default,
   },
 }));
 
-const renderContent = () => {
-  const classes = useStyles();
-  return (
-    <Router>
-      <Container className={classes.root} disableGutters maxWidth="lg">
-        <React.Suspense fallback={<Loader />}>
-          <Switch>
-            <Route exact path={PATHS.HOME} render={() => <Home />} />
-            <AuthRoute mustBeNotLoggedIn path={PATHS.SIGN_IN} render={() => <LoginPage />} />
-            <AuthRoute mustBeNotLoggedIn path={PATHS.SIGN_UP} render={() => <SignupPage />} />
-            <AuthRoute
-              mustBeNotLoggedIn
-              path={PATHS.FORGOT_PASSWORD}
-              render={() => <ForgotPasswordPage />}
-            />
-            <AuthRoute exact path={PATHS.CUSTOMER_MAIN} render={() => <CustomerPage />} />
-            <AuthRoute path={PATHS.CUSTOMER_EDIT} render={() => <CustomerEditProfile />} />
-            <AuthRoute exact path={PATHS.SELLER_MAIN} render={() => <SellerPage />} />
-            <AuthRoute path={PATHS.CHANGE_PASSWORD} render={() => <ChangePasswordPage />} />
-            <AuthRoute path={PATHS.USER_PROFILE} render={() => <UserProfile />} />
-            <AuthRoute
-              path={PATHS.ARTICLE_FORM}
-              render={(props) => <ArticleFormPage {...props} />}
-            />
-            <AuthRoute path={PATHS.SEARCH_ARTICLE} render={() => <SearchPage />} />
-            <AuthRoute path={PATHS.ARTICLE_PAGE} render={(props) => <ArticlePage {...props} />} />
-            <AuthRoute
-              exact
-              path={PATHS.ARTICLE_DETAILS_PAGE}
-              render={(props) => <ArticleDetailsPage {...props} />}
-            />
-            <AuthRoute
-              path={PATHS.ARTICLE_DETAILS_FORM}
-              render={(props) => <DetailsFormPage {...props} />}
-            />
-            <AuthRoute path={PATHS.STORE_PAGE} render={() => <StorePage />} />
-            <Route path={PATHS.NOT_AUTHORIZED} render={() => <NotAuthorized />} />
-            <Route
-              path={PATHS.ERROR}
-              render={({ location }) => <ErrorPage error={location.state as string} />}
-            />
-            <Route path={PATHS.NOT_FOUND} render={() => <NotFoundPage />} />
-          </Switch>
-        </React.Suspense>
-      </Container>
-    </Router>
-  );
-};
-
 const App = (): ReactElement => {
-  return <div className="App">{renderContent()}</div>;
+  const classes = useStyles();
+  return <div className={classes.App}>{renderContent()}</div>;
 };
 
 export default App;

@@ -19,7 +19,7 @@ import { jsonClient, Payload } from '../../../../utils/axiosClient';
 import { articleValidation } from '../../../../model/validation/validationSchema';
 import { getStoreId } from '../../../../model/users/user';
 import { AppError } from '../../../../model/http';
-import PATHS from '../../../../utils/routes';
+import Routes from '../../../../utils/routes';
 
 interface FieldsProps {
   onChange: (e: React.ChangeEvent<string>) => void;
@@ -128,7 +128,7 @@ const FormSection: React.FC<FormProps> = ({ initValues, articleId }) => {
   const _redirectToArticlePage = (data: Payload<Article>) => {
     const article = data?.data?.article;
     article?._id &&
-      history.replace(PATHS.ARTICLE_DETAILS_PAGE.replace(':id', article._id), {
+      history.replace(Routes.ARTICLE_DETAILS_PAGE.replace(':id', article._id), {
         article,
       });
   };
@@ -198,6 +198,7 @@ const ArticleFormPage: React.FC<Props> = ({ location: { state } }): React.ReactE
   const sections = [
     { node: <FormSection initValues={article ?? initValues} articleId={article?._id} /> },
   ];
+
   return (
     <Container maxWidth="md" className={classes.container}>
       <Grid container spacing={2}>

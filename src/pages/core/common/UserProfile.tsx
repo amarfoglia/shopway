@@ -2,7 +2,7 @@ import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import ConfirmationNumber from '@material-ui/icons/ConfirmationNumber';
 import Event from '@material-ui/icons/Event';
-import ProfilePage from '../common/ProfilePage';
+import ProfilePage from './ProfilePage';
 import { useParams } from 'react-router-dom';
 import User from '../../../model/users/user';
 import { jsonClient, Payload } from '../../../utils/axiosClient';

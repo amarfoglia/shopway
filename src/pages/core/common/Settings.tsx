@@ -16,9 +16,9 @@ import MyAvatar from '../../../components/MyAvatar';
 import AuthContext from '../../../hooks/useAuth';
 import ArrowForwardIos from '@material-ui/icons/ArrowForwardIos';
 import MyPaper from '../../../components/MyPaper';
-import PATHS from '../../../utils/routes';
+import Routes from '../../../utils/routes';
 
-const CustomerSettings = (): React.ReactElement => {
+const Settings = (): React.ReactElement => {
   const { user } = useContext(AuthContext);
   const history = useHistory();
 
@@ -44,8 +44,9 @@ const CustomerSettings = (): React.ReactElement => {
       setNotifiesOn(event.target.checked);
     };
 
-    const goToChangePassword = () => history.push(PATHS.CHANGE_PASSWORD);
-    const goToEditProfile = () => history.push(PATHS.CUSTOMER_EDIT);
+    const goToChangePassword = () => history.push(Routes.CHANGE_PASSWORD);
+    const goToEditProfile = () =>
+      history.push(user?.role === 'Customer' ? Routes.CUSTOMER_EDIT : Routes.SELLER_EDIT);
 
     return (
       <Grid container spacing={4} direction="column">
@@ -107,4 +108,4 @@ const CustomerSettings = (): React.ReactElement => {
   return <CorePage title="Settings" sections={sections} />;
 };
 
-export default CustomerSettings;
+export default Settings;

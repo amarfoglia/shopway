@@ -5,7 +5,7 @@ import LockOutlined from '@material-ui/icons/LockOutlined';
 import { Field } from 'formik';
 import { Link } from 'react-router-dom';
 import { LoginFormModel } from '../../../model/validation';
-import PATHS from '../../../utils/routes';
+import Routes from '../../../utils/routes';
 import baseStyles from '../../../style/styles';
 import DebouncedInput from '../../../components/formFields/DebouncedInput';
 
@@ -49,7 +49,7 @@ const LoginFields: React.FC<Props> = ({ formField: { email, password }, onChange
       </Grid>
       <Grid item xs={12}>
         <Typography variant="body2" align="right">
-          <Link to={PATHS.FORGOT_PASSWORD} className={classes.link}>
+          <Link to={Routes.FORGOT_PASSWORD} className={classes.link}>
             Forgot password?
           </Link>
         </Typography>

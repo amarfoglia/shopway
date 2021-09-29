@@ -6,7 +6,7 @@ import MyPaper from './MyPaper';
 import Article from '../model/article';
 import { BACKEND_URL } from '../utils/axiosClient';
 import { useHistory } from 'react-router-dom';
-import PATHS from '../utils/routes';
+import Routes from '../utils/routes';
 import Store from '../model/users/store';
 import { SkeletonLoader } from './Loader';
 
@@ -36,10 +36,12 @@ const ArticlePaper: React.FC<ProductProps> = ({ article, hideHeader = false }) =
   const { store, articleDetails, name, _id: articleId } = article;
   const details = articleDetails?.[0];
   const _store = store as Store;
-  const goToStorePage = () => history.push(PATHS.STORE_PAGE.replace(':id', _store?._id));
+
+  const goToStorePage = () => history.push(Routes.STORE_PAGE.replace(':id', _store?._id));
 
   const goToArticleDetails = () =>
-    articleId && history.push(PATHS.ARTICLE_PAGE.replace(':id', articleId), { article, store });
+    articleId && history.push(Routes.ARTICLE_PAGE.replace(':id', articleId), { article, store });
+
   const renderPrice = (price = 0, discountPrice?: string) =>
     discountPrice ? (
       <Grid container>

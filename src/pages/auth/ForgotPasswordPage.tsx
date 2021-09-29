@@ -9,7 +9,7 @@ import { LoginFormModel } from '../../model/validation';
 import { forgotPasswordValidation } from '../../model/validation/validationSchema';
 import AuthContext from '../../hooks/useAuth';
 import baseStyles from '../../style/styles';
-import PATHS from '../../utils/routes';
+import Routes from '../../utils/routes';
 import MyForm from '../../components/MyForm';
 import { AppError } from '../../model/http';
 import AuthPage from '../../components/AuthPage';
@@ -62,7 +62,7 @@ const ForgotPasswordPage: React.FC = () => {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      data?.message && history.push(PATHS.HOME);
+      data?.message && history.push(Routes.HOME);
     }, TIME_OUT);
     return () => clearTimeout(timer);
   }, [data?.message]);
@@ -75,7 +75,7 @@ const ForgotPasswordPage: React.FC = () => {
   const FormFooter = (
     <Typography variant="body2">
       Don&apos;t have an account?&nbsp;
-      <Link to={PATHS.SIGN_UP} className={baseClasses.link}>
+      <Link to={Routes.SIGN_UP} className={baseClasses.link}>
         Sign up
       </Link>
     </Typography>

@@ -5,9 +5,11 @@ import RadioSizes from '../../../../components/RadioSizes';
 import StoreAvatar from '../../../../components/MyAvatar';
 import Article, { ArticleStock } from '../../../../model/article';
 import ErrorDisplay from '../../../../components/ErrorDisplay';
-import PATHS from '../../../../utils/routes';
+import Routes from '../../../../utils/routes';
 import { useHistory } from 'react-router-dom';
 import Store from '../../../../model/users/store';
+
+type Subject = 'Customer' | 'Seller';
 
 interface Props {
   storeName: string;
@@ -16,6 +18,7 @@ interface Props {
   selectedColor?: string;
   selectedSize?: string;
   error?: string;
+  subject?: Subject;
   handleColorChange: (color: string) => void;
   handleSizeChange: (size: string) => void;
 }
@@ -34,6 +37,7 @@ const DetailsSection: React.FC<Props> = ({
   selectedSize,
   handleColorChange,
   handleSizeChange,
+  subject = 'Customer',
 }) => {
   const colors: string[] = article.articleDetails?.map((r) => r.color) ?? [];
   const sizes =
@@ -44,10 +48,15 @@ const DetailsSection: React.FC<Props> = ({
   const history = useHistory();
 
   const goToStorePage = () =>
-    history.push(PATHS.STORE_PAGE.replace(':id', (article.store as Store)?._id));
+    history.push(Routes.STORE_PAGE.replace(':id', (article.store as Store)?._id));
+
+  const containerStyle = {
+    overflow: 'auto',
+    height: `calc(100% - ${subject === 'Customer' ? 100 : 0}px)`,
+  };
 
   return (
-    <Grid container spacing={2} style={{ overflow: 'auto', height: 'calc(100% - 100px)' }}>
+    <Grid container spacing={2} style={containerStyle}>
       <Grid item xs={12}>
         <Grid container spacing={2}>
           <Grid item xs={12}>

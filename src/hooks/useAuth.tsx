@@ -1,6 +1,5 @@
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
 import { useMutation } from 'react-query';
-import { serialize } from 'object-to-formdata';
 import { formDataClient, jsonClient, Payload } from '../utils/axiosClient';
 import User from '../model/users/user';
 import Store from '../model/users/store';
@@ -72,7 +71,9 @@ export const AuthProvider = (props: Props): React.ReactElement => {
   };
 
   const updateMe = (user: Partial<User>): Promise<Payload<User>> =>
-    formDataClient.patch<FormData, Payload<User>>('/users/updateMe', serialize(user)).then(_onUser);
+    formDataClient
+      .patch<FormData, Payload<User>>('/users/updateMe', objectToFormData(user))
+      .then(_onUser);
 
   const register: (props: SignupProps) => Promise<Payload<User>> = ({ user, store, photo }) =>
     formDataClient

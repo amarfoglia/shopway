@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import Grid from '@material-ui/core/Grid';
-import ProfilePage from '../common/ProfilePage';
+import ProfilePage from './ProfilePage';
 import AuthContext from '../../../hooks/useAuth';
 import MyForm from '../../../components/MyForm';
 import { FormikHelpers, Field, useFormikContext } from 'formik';

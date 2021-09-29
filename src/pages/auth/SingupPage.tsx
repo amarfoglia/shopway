@@ -7,7 +7,7 @@ import { useMutation } from 'react-query';
 import { CustomerFormModel, SellerFormModel, SignupFormModel } from '../../model/validation';
 import { signupValidation } from '../../model/validation/validationSchema';
 import initialValues from '../../model/validation/initialFormValues';
-import PATHS from '../../utils/routes';
+import Routes from '../../utils/routes';
 import baseStyles from '../../style/styles';
 import AuthContext from '../../hooks/useAuth';
 import AuthPage from '../../components/AuthPage';
@@ -104,7 +104,7 @@ const SignupPage: React.FC = () => {
   const FormFooter = (
     <Typography variant="body2">
       Already have an account?&nbsp;
-      <Link to={PATHS.SIGN_IN} className={baseClasses.link}>
+      <Link to={Routes.SIGN_IN} className={baseClasses.link}>
         Sign in
       </Link>
     </Typography>

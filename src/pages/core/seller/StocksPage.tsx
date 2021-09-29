@@ -16,7 +16,7 @@ import MyPaper from '../../../components/MyPaper';
 import MyAvatar from '../../../components/MyAvatar';
 import CorePage from '../../../components/CorePage';
 import { useHistory } from 'react-router-dom';
-import PATHS from '../../../utils/routes';
+import Routes from '../../../utils/routes';
 import BottomFab from '../../../components/BottomFab';
 
 const getStoreArticles = (id?: string) =>
@@ -32,7 +32,7 @@ const ArticleItem: React.FC<Article> = (article) => {
 
   const goToDetailsPage = () =>
     article._id &&
-    history.push(PATHS.ARTICLE_DETAILS_PAGE.replace(':id', article._id), { article });
+    history.push(Routes.ARTICLE_DETAILS_PAGE.replace(':id', article._id), { article });
 
   return (
     <ListItem onClick={goToDetailsPage}>
@@ -82,7 +82,7 @@ const StocksPage: React.FC = () => {
 
   const StockButton = () => {
     const history = useHistory();
-    return <BottomFab handleClick={() => history.push(PATHS.ARTICLE_FORM)} />;
+    return <BottomFab handleClick={() => history.push(Routes.ARTICLE_FORM)} />;
   };
 
   const sections = [{ node: <StocksSection /> }, { node: <StockButton /> }];

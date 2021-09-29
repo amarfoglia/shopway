@@ -1,7 +1,8 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import ArrowBackIosOutlined from '@material-ui/icons/ArrowBackIosOutlined';
+import DeleteOutlined from '@material-ui/icons/DeleteOutlined';
 import { RouteComponentProps, useHistory } from 'react-router-dom';
 import TopBar from '../../../../components/TopBar';
 import CorePage from '../../../../components/CorePage';
@@ -14,8 +15,7 @@ import { getStoreId } from '../../../../model/users/user';
 import { useMutation } from 'react-query';
 import { formDataClient, Payload } from '../../../../utils/axiosClient';
 import { AppError } from '../../../../model/http';
-import PATHS from '../../../../utils/routes';
-import DeleteOutlined from '@material-ui/icons/DeleteOutlined';
+import Routes from '../../../../utils/routes';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -52,12 +52,15 @@ const DetailsFormPage: React.FC<Props> = ({ location: { state } }): React.ReactE
   const classes = useStyles();
   const { user } = useContext(AuthContext);
   const { category, details, articleId }: State = state && (state as State);
-  const storeId = getStoreId(user);
 
-  !category && history.goBack();
+  useEffect(() => {
+    !articleId && history.push(Routes.ERROR, { error: 'Missing article ID' });
+  });
 
   const _redirectToStocksPage = () =>
-    history.push({ pathname: PATHS.SELLER_MAIN, search: 'tab=1' });
+    history.push({ pathname: Routes.SELLER_MAIN, search: 'tab=1' });
+
+  const storeId = getStoreId(user);
 
   const {
     error: deleteError,
@@ -108,7 +111,7 @@ const DetailsFormPage: React.FC<Props> = ({ location: { state } }): React.ReactE
     />
   );
 
-  const sections = [{ node: storeId ? renderContent(storeId) : <span></span> }];
+  const sections = articleId ? [{ node: storeId ? renderContent(storeId) : <span></span> }] : [];
 
   return (
     <Container maxWidth="md" className={classes.container}>

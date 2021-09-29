@@ -31,3 +31,7 @@
     transform: scale(1);
   }
 }
+
+#root {
+  height: 100%;
+}

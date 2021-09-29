@@ -10,7 +10,7 @@ import { loginValidation } from '../../model/validation/validationSchema';
 import { useContext } from 'react';
 import AuthContext from '../../hooks/useAuth';
 import baseStyles from '../../style/styles';
-import PATHS from '../../utils/routes';
+import Routes from '../../utils/routes';
 import MyForm from '../../components/MyForm';
 import AuthPage from '../../components/AuthPage';
 import { AppError } from '../../model/http';
@@ -49,7 +49,7 @@ const LoginPage: React.FC = () => {
   const FormFooter = (
     <Typography variant="body2">
       Don&apos;t have an account?&nbsp;
-      <Link to={PATHS.SIGN_UP} className={classes.link}>
+      <Link to={Routes.SIGN_UP} className={classes.link}>
         Sign up
       </Link>
     </Typography>

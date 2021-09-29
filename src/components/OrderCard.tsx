@@ -11,7 +11,7 @@ import MyPaper from './MyPaper';
 import Order from '../model/order';
 import Moment from 'react-moment';
 import { useHistory } from 'react-router-dom';
-import PATHS from '../utils/routes';
+import Routes from '../utils/routes';
 import { ArticleDetails } from '../model/article';
 import { getTimeLeft } from '../utils/time';
 import DeleteOutlined from '@material-ui/icons/DeleteOutlined';
@@ -127,16 +127,15 @@ const OrderCard: React.FC<CardProps> = ({
   const details = articleDetails as ArticleDetails;
   const customer = order.customer;
   const goToArticlePage = () =>
-    history.push(PATHS.ARTICLE_PAGE.replace(':id', details.articleId), {
+    history.push(Routes.ARTICLE_PAGE.replace(':id', details.articleId), {
       store,
     });
 
   const isCustomer = subject === 'Customer';
-  const goToStorePage = () => {
-    history.push(PATHS.STORE_PAGE.replace(':id', store?._id));
-  };
+  const goToStorePage = () =>
+    store?._id && history.push(Routes.STORE_PAGE.replace(':id', store._id));
   const goToCustomerPage = () =>
-    history.push(PATHS.USER_PROFILE.replace(':id', customer?._id ?? '-'));
+    customer?._id && history.push(Routes.CUSTOMER_PROFILE.replace(':id', customer._id));
 
   type CardHeaderInfo = {
     name?: string;

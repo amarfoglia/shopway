@@ -18,7 +18,7 @@ import AuthContext from '../../../hooks/useAuth';
 import Store from '../../../model/users/store';
 import Customer from '../../../model/users/customer';
 import User from '../../../model/users/user';
-import PATHS from '../../../utils/routes';
+import Routes from '../../../utils/routes';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { Carousel } from 'react-responsive-carousel';
 
@@ -67,7 +67,11 @@ const ArticlePage: React.FC<Props> = ({ location: { state } }): React.ReactEleme
   const { user } = useContext(AuthContext);
   const { id } = useParams<{ id: string }>();
   const [order, setOrder] = useState<Partial<Order>>({});
-  const store = (state as State).store;
+  const store = state && (state as State).store;
+
+  useEffect(() => {
+    !store && history.push(Routes.ERROR, { error: "Missing store's informations" });
+  });
 
   const {
     data: articleRes,
@@ -87,7 +91,7 @@ const ArticlePage: React.FC<Props> = ({ location: { state } }): React.ReactEleme
     isLoading: isOrderLoading,
     mutate: _createOrder,
   } = useMutation<Payload<Order>, AppError, Partial<Order>>(createOrder, {
-    onSuccess: () => history.push({ pathname: PATHS.CUSTOMER_MAIN, search: 'tab=2' }),
+    onSuccess: () => history.push({ pathname: Routes.CUSTOMER_MAIN, search: 'tab=2' }),
   });
 
   const article = articleRes?.data?.article;
@@ -107,6 +111,7 @@ const ArticlePage: React.FC<Props> = ({ location: { state } }): React.ReactEleme
       selectedSize={order?.size}
       selectedColor={order?.color}
       error={orderError?.message}
+      subject={user?.role === 'Customer' ? 'Customer' : 'Seller'}
     />
   );
 
@@ -160,7 +165,7 @@ const ArticlePage: React.FC<Props> = ({ location: { state } }): React.ReactEleme
       ) : articleError?.message ? (
         <ErrorDisplay text={articleError?.message} absolute />
       ) : (
-        renderContent(article)
+        article && renderContent(article)
       )}
     </React.Fragment>
   );

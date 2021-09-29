@@ -15,7 +15,7 @@ import { useMutation, useQuery } from 'react-query';
 import { AppError } from '../../../model/http';
 import Store from '../../../model/users/store';
 import MyAvatar from '../../../components/MyAvatar';
-import PATHS from '../../../utils/routes';
+import Routes from '../../../utils/routes';
 import { useHistory } from 'react-router-dom';
 import MyPaper from '../../../components/MyPaper';
 import { SkeletonLoader } from '../../../components/Loader';
@@ -58,7 +58,7 @@ const CustomerFollow = (): React.ReactElement => {
   };
 
   const _goToStorePage = (storeId: string) =>
-    history.push(PATHS.STORE_PAGE.replace(':id', storeId));
+    history.push(Routes.STORE_PAGE.replace(':id', storeId));
 
   const _renderItems = () =>
     followedStores?.map((s) => (

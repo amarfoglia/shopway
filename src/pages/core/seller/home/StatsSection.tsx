@@ -8,7 +8,7 @@ import MyPaper from '../../../../components/MyPaper';
 import moment from 'moment';
 import Stats from '../../../../model/statistics';
 import { useHistory } from 'react-router-dom';
-import PATHS from '../../../../utils/routes';
+import Routes from '../../../../utils/routes';
 import { SkeletonLoader } from '../../../../components/Loader';
 import Chart from 'react-apexcharts';
 
@@ -45,7 +45,7 @@ const StatsSections: React.FC<Props> = ({ stats, isLoading }) => {
           color="primary"
           aria-label="add"
           size="medium"
-          onClick={() => history.push(PATHS.ARTICLE_FORM)}
+          onClick={() => history.push(Routes.ARTICLE_FORM)}
         >
           <AddOutlined />
         </Fab>

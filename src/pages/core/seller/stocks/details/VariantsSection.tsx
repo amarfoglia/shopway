@@ -17,7 +17,7 @@ import Article, { ArticleDetails, ArticleStock } from '../../../../../model/arti
 import MyPaper from '../../../../../components/MyPaper';
 import MyAvatar from '../../../../../components/MyAvatar';
 import { useHistory } from 'react-router-dom';
-import PATHS from '../../../../../utils/routes';
+import Routes from '../../../../../utils/routes';
 import { SkeletonLoader } from '../../../../../components/Loader';
 import BottomFab from '../../../../../components/BottomFab';
 
@@ -97,7 +97,7 @@ const VariantsSection: React.FC<Props> = ({ article }) => {
 
   const _goTodetailsForm = (detailsItem?: ArticleDetails) =>
     article._id &&
-    history.push(PATHS.ARTICLE_DETAILS_FORM.replace(':id', article._id), {
+    history.push(Routes.ARTICLE_DETAILS_FORM.replace(':id', article._id), {
       details: detailsItem,
       category,
       articleId: article._id,
@@ -113,6 +113,7 @@ const VariantsSection: React.FC<Props> = ({ article }) => {
       ))}
     </List>
   );
+
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>

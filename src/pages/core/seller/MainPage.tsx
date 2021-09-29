@@ -5,7 +5,7 @@ import ConfirmationNumberOutlined from '@material-ui/icons/ConfirmationNumberOut
 import StoreMallDirectoryOutlined from '@material-ui/icons/StoreMallDirectoryOutlined';
 import TabsPage from '../common/TabPage';
 import TabPanel from '../../../components/TabPanel';
-import StocksPage from './Stocks';
+import StocksPage from './StocksPage';
 
 const Home = lazy(() => import('./home/Home'));
 const Orders = lazy(() => import('../common/Orders'));
