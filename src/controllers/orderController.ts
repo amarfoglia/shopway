@@ -102,6 +102,7 @@ class OrderController {
     const result: any = await ArticleDetailsModel.updateOne(filter, update, options);
     if (result.nModified === 0) {
       next(new AppError('impossible increment stockArticles quantity', 500));
+      return
     }
     res.status(204).json({
       status: 'success',
