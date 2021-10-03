@@ -43,6 +43,11 @@ const articleSchema = new mongoose.Schema({
   }
 });
 
+articleSchema.index({
+  name: 'text',
+  brand: 'text',
+});
+
 articleSchema.pre(/^find/, function _(next) {
   this.populate({ path: 'articleDetails' });
   this.populate({ path: 'store' });
