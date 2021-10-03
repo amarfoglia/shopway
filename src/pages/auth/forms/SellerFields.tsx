@@ -35,7 +35,7 @@ const SellerForm: React.FC<Props & TextFieldProps> = ({
   );
   return (
     <Grid container spacing={2}>
-      <Grid item xs={12} style={{ textAlign: 'center' }}>
+      <Grid item xs={12} style={{ textAlign: 'center', margin: '0 auto' }}>
         {Uploader}
       </Grid>
       <Grid item xs={12}>

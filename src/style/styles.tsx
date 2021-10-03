@@ -4,12 +4,6 @@ import { makeStyles } from '@material-ui/core';
 const shadow = '0 10px 30px rgba(0,37,132,.06)';
 
 const baseStyles = makeStyles((theme) => ({
-  container: {
-    display: 'flex',
-    minHeight: '100%',
-    textAlign: 'center',
-    flexDirection: 'column',
-  },
   horizontalScroll: {
     overflowX: 'auto',
     overflowY: 'hidden',
@@ -44,30 +38,6 @@ const baseStyles = makeStyles((theme) => ({
   },
 }));
 
-const roleStyles = makeStyles((theme) => ({
-  imageRoleContainer: {
-    borderRadius: 15,
-    padding: theme.spacing(1),
-    boxShadow: shadow,
-    width: '25vw',
-  },
-  roleTitle: {
-    textTransform: 'capitalize',
-  },
-  selectedRolePaper: {
-    opacity: 1,
-  },
-  unselectedRolePaper: {
-    opacity: 0.5,
-  },
-  radio: {
-    display: 'none',
-  },
-  label: {
-    margin: 0,
-  },
-}));
-
-export { roleStyles, shadow };
+export { shadow };
 
 export default baseStyles;

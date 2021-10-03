@@ -4,6 +4,7 @@ import {
   FormControlLabel,
   FormHelperText,
   Grid,
+  makeStyles,
   Paper,
   Radio,
   RadioGroup,
@@ -12,11 +13,11 @@ import {
 import { Field, FieldProps, getIn, useFormikContext } from 'formik';
 import { useState } from 'react';
 import { SignupFormModel } from '../../../model/validation';
-import { roleStyles } from '../../../style/styles';
 import Image from 'material-ui-image';
 import clsx from 'clsx';
 import Role from '../../../model/users/role';
 import User from '../../../model/users/user';
+import { shadow } from '../../../style/styles';
 
 type SignupFields = typeof SignupFormModel.formField;
 
@@ -36,8 +37,32 @@ interface PaperRoleProps {
   role: string;
 }
 
+const useStyles = makeStyles((theme) => ({
+  imageRoleContainer: {
+    borderRadius: 15,
+    padding: theme.spacing(1),
+    boxShadow: shadow,
+    width: '25vw',
+  },
+  roleTitle: {
+    textTransform: 'capitalize',
+  },
+  selectedRolePaper: {
+    opacity: 1,
+  },
+  unselectedRolePaper: {
+    opacity: 0.5,
+  },
+  radio: {
+    display: 'none',
+  },
+  label: {
+    margin: 0,
+  },
+}));
+
 const RoleGroup: React.FC<FieldProps & RadioProps> = ({ form, field, options, ...rest }) => {
-  const classes = roleStyles();
+  const classes = useStyles();
   const errorText = getIn(form.touched, field.name) && getIn(form.errors, field.name);
   const [selectedRole, setSelectedRole] = useState(field.value ?? CUSTOMER);
 

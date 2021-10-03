@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
   container: {
     padding: `${theme.spacing(2)}px ${theme.spacing(3)}px`,
     backgroundColor: theme.palette.background.default,
-    height: '100%',
+    height: '100vh',
   },
 }));
 

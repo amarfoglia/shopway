@@ -1,9 +1,9 @@
 import React from 'react';
-import { Grid } from '@material-ui/core';
+import { Grid, makeStyles } from '@material-ui/core';
 import { Form, Formik, FormikHelpers, FormikValues } from 'formik';
 import { ReactNode } from 'react';
 import LoadButton from './formFields/LoadButton';
-import { Alert, AlertTitle } from '@material-ui/lab';
+import ErrorDisplay from './ErrorDisplay';
 
 type ChangeHandler = (e: React.ChangeEvent<string>) => void;
 
@@ -21,13 +21,6 @@ interface Props {
   form: (handleChange: ChangeHandler) => ReactNode;
 }
 
-const renderErrors = (errors: string) => (
-  <Alert severity="error" style={{ textAlign: 'left', borderRadius: 16 }}>
-    <AlertTitle>Error</AlertTitle>
-    {errors}
-  </Alert>
-);
-
 const renderForm = (
   formId: string,
   FormFields: React.ReactNode,
@@ -40,7 +33,7 @@ const renderForm = (
     <Grid container spacing={3}>
       {errors && (
         <Grid item xs={12}>
-          {errors && renderErrors(errors)}
+          <ErrorDisplay text={errors} />
         </Grid>
       )}
       <Grid item xs={12}>
@@ -64,6 +57,15 @@ const renderForm = (
   </Form>
 );
 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    [theme.breakpoints.up('sm')]: {
+      maxWidth: 400,
+      margin: '0 auto',
+    },
+  },
+}));
+
 const MyForm: React.FC<Props & ReactNode> = ({
   errors,
   footer,
@@ -76,18 +78,22 @@ const MyForm: React.FC<Props & ReactNode> = ({
   validateOnBlur = true,
   handleSubmit,
 }) => {
+  const classes = useStyles();
+
   return (
-    <Formik
-      initialValues={initialValues}
-      validationSchema={validationSchema}
-      validateOnChange={false}
-      validateOnBlur={validateOnBlur}
-      onSubmit={handleSubmit}
-    >
-      {({ handleChange }) => {
-        return renderForm(formId, form(handleChange), submitText, isSubmitting, footer, errors);
-      }}
-    </Formik>
+    <div className={classes.root}>
+      <Formik
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        validateOnChange={false}
+        validateOnBlur={validateOnBlur}
+        onSubmit={handleSubmit}
+      >
+        {({ handleChange }) => {
+          return renderForm(formId, form(handleChange), submitText, isSubmitting, footer, errors);
+        }}
+      </Formik>
+    </div>
   );
 };
 

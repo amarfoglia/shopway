@@ -21,9 +21,16 @@ interface Props {
   handleInc: () => void;
   value: number;
   hideLabel?: boolean;
+  disabled?: boolean;
 }
 
-const NumericField: React.FC<Props> = ({ handleInc, handleDec, value, hideLabel = false }) => {
+const NumericField: React.FC<Props> = ({
+  handleInc,
+  handleDec,
+  value,
+  hideLabel = false,
+  disabled = false,
+}) => {
   const classes = useStyles();
   return (
     <Grid container spacing={1} alignItems="center">
@@ -33,7 +40,7 @@ const NumericField: React.FC<Props> = ({ handleInc, handleDec, value, hideLabel 
         </Grid>
       )}
       <Grid item>
-        <IconButton className={classes.numericInput} onClick={handleDec}>
+        <IconButton disabled={disabled} className={classes.numericInput} onClick={handleDec}>
           <RemoveOutlined />
         </IconButton>
       </Grid>
@@ -43,7 +50,7 @@ const NumericField: React.FC<Props> = ({ handleInc, handleDec, value, hideLabel 
         </Typography>
       </Grid>
       <Grid item>
-        <IconButton className={classes.numericInput} onClick={handleInc}>
+        <IconButton disabled={disabled} className={classes.numericInput} onClick={handleInc}>
           <AddOutlined />
         </IconButton>
       </Grid>

@@ -8,16 +8,25 @@ import NumericField from '../../../../components/formFields/NumericField';
 const quantityStyles = makeStyles((theme) => ({
   root: {
     background: theme.palette.background.default,
-    position: 'fixed',
-    bottom: 0,
-    padding: 0,
+    [theme.breakpoints.down('xs')]: {
+      position: 'fixed',
+      bottom: 0,
+      padding: 0,
+    },
+    [theme.breakpoints.up('sm')]: {
+      position: 'relative',
+      maxWidth: 400,
+      margin: '0 auto',
+    },
+
     width: '100%',
   },
-  noBorderBottom: {
-    borderBottomRightRadius: 0,
-    borderBottomLeftRadius: 0,
-    borderTopLeftRadius: theme.spacing(1.5),
-    borderTopRightRadius: theme.spacing(1.5),
+  box: {
+    borderRadius: theme.spacing(1.5),
+    [theme.breakpoints.down('xs')]: {
+      borderBottomRightRadius: 0,
+      borderBottomLeftRadius: 0,
+    },
   },
   container: {
     padding: `${theme.spacing(3)}px ${theme.spacing(3)}px`,
@@ -67,7 +76,12 @@ const QuantitySection: React.FC<Props> = ({
       <Grid item xs={12}>
         <Grid container justifyContent="space-between">
           <Grid item xs={7}>
-            <NumericField handleDec={decQuantity} handleInc={incQuantity} value={quantity ?? 0} />
+            <NumericField
+              handleDec={decQuantity}
+              handleInc={incQuantity}
+              value={quantity ?? 0}
+              disabled
+            />
           </Grid>
           <Grid item xs={5}>
             <Typography variant="body1" align="right">
@@ -92,7 +106,7 @@ const QuantitySection: React.FC<Props> = ({
 
   return (
     <div className={classes.root}>
-      <MyPaper p={0} className={classes.noBorderBottom}>
+      <MyPaper p={0} className={classes.box}>
         <Grid container justifyContent="space-around" className={classes.container}>
           {quantity ? renderContent() : <WarningDisplay text="Not available" />}
         </Grid>

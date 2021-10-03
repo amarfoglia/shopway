@@ -32,8 +32,6 @@ const spanStyles = makeStyles<Theme, StyleProps>((theme) => ({
     border: (props) => `1px solid ${props.checked ? theme.palette.primary.main : 'grey'}`,
   },
   span: {
-    // display: 'inline-block',
-    // verticalAlign: 'sub',
     width: '100%',
     textAlign: 'center',
     color: (props) => (props.checked ? theme.palette.primary.main : 'black'),

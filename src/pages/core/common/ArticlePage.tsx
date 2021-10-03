@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Grid, makeStyles, IconButton, Theme } from '@material-ui/core';
+import {
+  Grid,
+  makeStyles,
+  IconButton,
+  Theme,
+  Container,
+  useTheme,
+  useMediaQuery,
+} from '@material-ui/core';
 import ArrowBackIosOutlined from '@material-ui/icons/ArrowBackIosOutlined';
 import { RouteComponentProps, useHistory, useParams } from 'react-router-dom';
 import TopBar from '../../../components/TopBar';
@@ -30,12 +38,32 @@ type State = {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Props = RouteComponentProps<any, any, State | any>;
 
-const useStyles = makeStyles<Theme>((theme) => ({
-  root: {
-    height: 'calc(100% - 281px)',
-  },
+const useStyles = makeStyles<Theme, { role: string }>((theme) => ({
   container: {
-    padding: `${theme.spacing(2)}px ${theme.spacing(3)}px`,
+    backgroundColor: theme.palette.background.default,
+    minHeight: '100vh',
+    [theme.breakpoints.down('xs')]: {
+      padding: 0,
+    },
+  },
+  detailsContainer: {
+    [theme.breakpoints.down('xs')]: {
+      paddingBottom: ({ role }) => (role === 'Customer' ? 'calc(100% - 300px)' : 'inherit'),
+    },
+  },
+  backButton: {
+    [theme.breakpoints.up('sm')]: {
+      marginLeft: '5%',
+    },
+    [theme.breakpoints.up('md')]: {
+      marginLeft: '12%',
+    },
+    [theme.breakpoints.up('lg')]: {
+      marginLeft: '27%',
+    },
+  },
+  details: {
+    padding: theme.spacing(3),
   },
 }));
 
@@ -63,8 +91,10 @@ const createInitialOrder = (article: Article, user: User, store: Store): Partial
 
 const ArticlePage: React.FC<Props> = ({ location: { state } }): React.ReactElement => {
   const history = useHistory();
-  const classes = useStyles();
   const { user } = useContext(AuthContext);
+  const classes = useStyles({ role: user?.role ?? 'Customer' });
+  const theme = useTheme();
+  const isGreaterThanXs = useMediaQuery(theme.breakpoints.up('sm'));
   const { id } = useParams<{ id: string }>();
   const [order, setOrder] = useState<Partial<Order>>({});
   const store = state && (state as State).store;
@@ -111,7 +141,7 @@ const ArticlePage: React.FC<Props> = ({ location: { state } }): React.ReactEleme
       selectedSize={order?.size}
       selectedColor={order?.color}
       error={orderError?.message}
-      subject={user?.role === 'Customer' ? 'Customer' : 'Seller'}
+      // subject={user?.role === 'Customer' ? 'Customer' : 'Seller'}
     />
   );
 
@@ -128,36 +158,43 @@ const ArticlePage: React.FC<Props> = ({ location: { state } }): React.ReactEleme
 
   const renderContent = (article?: Article) => (
     <React.Fragment>
-      <Carousel showThumbs={false} autoPlay>
-        {article?.articleDetails?.map((a) => (
-          <div key={a._id}>
-            <Image
-              src={`${BACKEND_URL}/img/articledetails/${a?.image}`}
-              alt={`product image of ${article?.name}`}
-              aspectRatio={4 / 3}
-              style={{ objectFit: 'contain' }}
-            />
-          </div>
-        ))}
-      </Carousel>
-      <div></div>
-      <Grid container className={classes.root}>
-        <Grid item xs={12} className={classes.container}>
-          {DetailsNode}
+      <Grid container>
+        <Grid item xs={12}>
+          <Carousel showStatus={false} showThumbs={false} autoPlay dynamicHeight={false}>
+            {article?.articleDetails?.map((a) => (
+              <div key={a._id}>
+                <Image
+                  src={`${BACKEND_URL}/img/articledetails/${a?.image}`}
+                  alt={`product image of ${article?.name}`}
+                  aspectRatio={isGreaterThanXs ? 21 / 9 : 4 / 3}
+                  style={{ objectFit: 'contain' }}
+                />
+              </div>
+            ))}
+          </Carousel>
+        </Grid>
+
+        <Grid item xs={12} className={classes.detailsContainer}>
+          <div className={classes.details}>{DetailsNode}</div>
+        </Grid>
+        <Grid item xs={12}>
+          {user?.role === 'Customer' && QuantityNode}
         </Grid>
       </Grid>
-      {user?.role === 'Customer' && QuantityNode}
     </React.Fragment>
   );
 
   return (
-    <React.Fragment>
+    <Container maxWidth="md" className={classes.container}>
       <TopBar
         variant="simple"
+        position="absolute"
         leftChild={
-          <IconButton onClick={history.goBack} style={{ padding: 0 }} aria-label="go back">
-            <ArrowBackIosOutlined titleAccess="go back" fontSize="small" />
-          </IconButton>
+          <div className={classes.backButton}>
+            <IconButton onClick={history.goBack} style={{ padding: 0 }} aria-label="go back">
+              <ArrowBackIosOutlined titleAccess="go back" fontSize="small" />
+            </IconButton>
+          </div>
         }
       />
       {isArticleLoading ? (
@@ -167,7 +204,7 @@ const ArticlePage: React.FC<Props> = ({ location: { state } }): React.ReactEleme
       ) : (
         article && renderContent(article)
       )}
-    </React.Fragment>
+    </Container>
   );
 };
 

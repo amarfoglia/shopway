@@ -1,15 +1,12 @@
 import React, { useContext, useState } from 'react';
-import { Container, makeStyles, Paper, Tabs, Tab, AppBar, Grid } from '@material-ui/core';
+import { Container, makeStyles, Paper, Tabs, Tab, AppBar, Grid, Hidden } from '@material-ui/core';
 import TopBar from '../../../components/TopBar';
 import AuthContext from '../../../hooks/useAuth';
 import { useHistory } from 'react-router-dom';
 import Loader from '../../../components/Loader';
+import { UserAppBar } from '../../../components/TopAppBar';
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    backgroundColor: '#f9f9f9',
-    flexGrow: 1,
-  },
   container: {
     padding: `${theme.spacing(3)}px ${theme.spacing(3)}px`,
     height: `calc(100vh - 72px)`,
@@ -53,7 +50,10 @@ const TabsPage: React.FC<Props> = ({ tabs, TabPanels, role = 'customer' }): Reac
   const { user } = useContext(AuthContext);
 
   // eslint-disable-next-line @typescript-eslint/ban-types
-  const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
+  const handleTabsChange = (event: React.ChangeEvent<{}>, newValue: number) =>
+    handleTabChange(newValue);
+
+  const handleTabChange = (newValue: number) => {
     setCurrentTab(newValue);
     history.replace({ pathname: history.location.pathname, search: `tab=${newValue}` });
   };
@@ -62,7 +62,7 @@ const TabsPage: React.FC<Props> = ({ tabs, TabPanels, role = 'customer' }): Reac
     <Paper square>
       <Tabs
         value={currentTab}
-        onChange={handleChange}
+        onChange={handleTabsChange}
         variant="fullWidth"
         TabIndicatorProps={{ style: { display: 'none' } }}
         textColor="primary"
@@ -78,21 +78,26 @@ const TabsPage: React.FC<Props> = ({ tabs, TabPanels, role = 'customer' }): Reac
 
   const isTopBarVisible = currentTab !== tabs[tabs.length - 1].value;
   return (
-    <div className={classes.root}>
+    <div>
+      <Hidden xsDown>
+        <UserAppBar tabs={tabs} handleChange={handleTabChange} />
+      </Hidden>
       <Container maxWidth="md" className={classes.container}>
         <Grid container spacing={2}>
-          {isTopBarVisible && (
-            <Grid item xs={12}>
-              <TopBar
-                variant={role === 'customer' ? 'user' : 'simple'}
-                userName={user?.fullName}
-                position="relative"
-                p={0}
-                subject={role}
-                userImagePath={user?.photo as string}
-              />
-            </Grid>
-          )}
+          <Hidden smUp>
+            {isTopBarVisible && (
+              <Grid item xs={12}>
+                <TopBar
+                  variant={role === 'customer' ? 'user' : 'simple'}
+                  userName={user?.fullName}
+                  position="relative"
+                  p={0}
+                  subject={role}
+                  userImagePath={user?.photo as string}
+                />
+              </Grid>
+            )}
+          </Hidden>
           <Grid item xs={12}>
             <React.Suspense fallback={<Loader />}>
               <TabPanels currentTab={currentTab} />
@@ -100,9 +105,11 @@ const TabsPage: React.FC<Props> = ({ tabs, TabPanels, role = 'customer' }): Reac
           </Grid>
         </Grid>
       </Container>
-      <AppBar position="fixed" className={classes.appBar}>
-        <BottomTabs />
-      </AppBar>
+      <Hidden smUp>
+        <AppBar position="fixed" className={classes.appBar}>
+          <BottomTabs />
+        </AppBar>
+      </Hidden>
     </div>
   );
 };

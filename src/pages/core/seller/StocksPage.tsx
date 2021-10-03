@@ -1,5 +1,7 @@
 import React, { useContext } from 'react';
 import {
+  Fab,
+  Hidden,
   List,
   ListItem,
   ListItemAvatar,
@@ -18,6 +20,7 @@ import CorePage from '../../../components/CorePage';
 import { useHistory } from 'react-router-dom';
 import Routes from '../../../utils/routes';
 import BottomFab from '../../../components/BottomFab';
+import AddOutlined from '@material-ui/icons/AddOutlined';
 
 const getStoreArticles = (id?: string) =>
   jsonClient.get<void, Payload<Article[]>>(`/stores/${id}/articles?sort=+name`).then((res) => res);
@@ -80,12 +83,34 @@ const StocksPage: React.FC = () => {
       <span></span>
     );
 
-  const StockButton = () => {
-    const history = useHistory();
-    return <BottomFab handleClick={() => history.push(Routes.ARTICLE_FORM)} />;
-  };
+  const history = useHistory();
+  const goToArticleForm = () => history.push(Routes.ARTICLE_FORM);
 
-  const sections = [{ node: <StocksSection /> }, { node: <StockButton /> }];
+  const XsStockButton = () => <BottomFab handleClick={goToArticleForm} />;
+
+  const LgStockButton = () => (
+    <div style={{ textAlign: 'right' }}>
+      <Fab color="primary" aria-label="add" size="medium" onClick={goToArticleForm}>
+        <AddOutlined />
+      </Fab>
+    </div>
+  );
+
+  const sections = [
+    { node: <StocksSection /> },
+    {
+      node: (
+        <React.Fragment>
+          <Hidden xsDown>
+            <LgStockButton />
+          </Hidden>
+          <Hidden smUp>
+            <XsStockButton />
+          </Hidden>
+        </React.Fragment>
+      ),
+    },
+  ];
 
   return <CorePage title="Stocks" sections={sections} />;
 };

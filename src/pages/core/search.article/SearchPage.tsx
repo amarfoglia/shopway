@@ -2,13 +2,20 @@ import React, { useState } from 'react';
 import { Container, Grid, IconButton, makeStyles } from '@material-ui/core';
 import ArrowBackIosOutlined from '@material-ui/icons/ArrowBackIosOutlined';
 import SearchOutlined from '@material-ui/icons/SearchOutlined';
-import { useHistory } from 'react-router-dom';
+import { RouteComponentProps, useHistory } from 'react-router-dom';
 import TopBar from '../../../components/TopBar';
 import ProductsSection from '../common/ProductsGrid';
 import SearchBar from '../../../components/SearchBar';
 import AgeFilterBar from './AgeTabs';
 import FilterBar from './FiltersBar';
 import clsx from 'clsx';
+import { jsonClient, Payload } from '../../../utils/axiosClient';
+import Article from '../../../model/article';
+import Pagination from '../../../components/Pagination';
+import { useMutation } from 'react-query';
+import { AppError } from '../../../model/http';
+import ErrorDisplay from '../../../components/ErrorDisplay';
+import { useEffect } from 'react';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -24,32 +31,85 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface SearchParams {
-  text?: string;
-  sex?: string;
-  filters: {
-    category: string;
-    orderBy: string;
-  };
+  category?: string;
+  subCategory: string;
+  orderBy: string;
 }
 
-const initParams = {
-  filters: {
-    category: '',
-    orderBy: '',
-  },
-  sex: 'Man',
+interface QueryParams {
+  searchParams: SearchParams;
+  page: number;
+  text: string;
+}
+
+const limit = 8;
+
+const getArticles = (queryParams: QueryParams) => {
+  const { searchParams, text, page } = queryParams;
+  const { category, subCategory, orderBy } = searchParams;
+  return jsonClient
+    .get<void, Payload<Article[]>>(
+      `/articles?` +
+        (text ? `name=${text}` : '') +
+        (subCategory ? `&categoryType=${subCategory}` : '') +
+        (category ? `&categoryArticle=${category}` : '') +
+        (orderBy ? `&sort=${orderBy}` : '') +
+        `&page=${page}&limit=${limit}`,
+    )
+    .then((res) => res);
 };
 
-const SearchPage = (): React.ReactElement => {
+type State = {
+  category?: string;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type Props = RouteComponentProps<any, any, State | any>;
+
+const SearchPage: React.FC<Props> = ({ location: { state } }): React.ReactElement => {
   const history = useHistory();
   const classes = useStyles();
+  const [page, setPage] = useState(1);
+
+  const {
+    data,
+    error,
+    isLoading,
+    mutate: _getArticles,
+  } = useMutation<Payload<Article[]>, AppError, QueryParams>(getArticles);
+
+  const { category }: State = state && (state as State);
+  const initParams = {
+    category: category ?? '',
+    subCategory: 'Man',
+    orderBy: '',
+  };
+
   const [searchParams, setSearchParams] = useState<SearchParams>(initParams);
+  const [text, setText] = useState('');
   const [openSearchBar, setOpenSearchBar] = useState(true);
+
+  useEffect(() => {
+    category && _getArticles({ searchParams, text, page });
+  }, []);
 
   const handleSearch = (text: string) => {
     setOpenSearchBar(false);
-    console.log(text, searchParams);
+    _getArticles({ searchParams, text, page });
+    setText(text);
   };
+
+  const handleChangeParams = (params: SearchParams) => {
+    _getArticles({ searchParams: params, text, page });
+    setSearchParams(params);
+  };
+
+  const handlePageChange = (offset: number) => {
+    setPage(page + offset);
+    _getArticles({ searchParams, text, page: page + offset });
+  };
+
+  const articles = data?.data?.article;
 
   const renderSearchIcon = () =>
     !openSearchBar && (
@@ -75,7 +135,7 @@ const SearchPage = (): React.ReactElement => {
           />
         </Grid>
         <Grid item xs={12}>
-          <AgeFilterBar onChange={(sex) => setSearchParams({ ...searchParams, sex })} />
+          <AgeFilterBar onChange={(v) => handleChangeParams({ ...searchParams, subCategory: v })} />
         </Grid>
         <Grid item xs={12} className={classes.container}>
           <Grid container spacing={3}>
@@ -85,13 +145,34 @@ const SearchPage = (): React.ReactElement => {
               </Grid>
               <Grid item xs={12}>
                 <FilterBar
-                  filters={searchParams.filters}
-                  onChange={(v) => setSearchParams({ ...searchParams, filters: v })}
+                  initCategory={category}
+                  filters={{ category: searchParams.category, orderBy: searchParams.orderBy }}
+                  onChange={(v) =>
+                    handleChangeParams({
+                      ...searchParams,
+                      category: v.category,
+                      orderBy: v.orderBy,
+                    })
+                  }
                 />
               </Grid>
             </Grid>
+            {error && (
+              <Grid item xs={12}>
+                <ErrorDisplay text={error.message} />
+              </Grid>
+            )}
             <Grid item xs={12}>
-              <ProductsSection articles={[]} isLoading={false} />
+              <ProductsSection articles={articles} isLoading={isLoading} />
+            </Grid>
+            <Grid item xs={12}>
+              <Pagination
+                onNext={() => handlePageChange(1)}
+                onPrev={() => handlePageChange(-1)}
+                currentPage={page}
+                limit={limit}
+                numberOfItems={articles?.length ?? 0}
+              />
             </Grid>
           </Grid>
         </Grid>

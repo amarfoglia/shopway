@@ -43,6 +43,7 @@ const CustomerHome = (): React.ReactElement => {
           iconPath={`${categoriesPath}/${c}.png`}
           variant="fixed"
           width="75px"
+          onClick={() => history.push(Routes.SEARCH_ARTICLE, { category: c })}
         />
       ))}
     </Box>

@@ -11,7 +11,7 @@ const CustomerRouter = (): React.ReactElement => (
   <>
     <Route exact path={`${url}/`} render={() => <CustomerPage />} />
     <Route path={`${url}/edit`} render={() => <EditProfilePage />} />
-    <Route path={`${url}/search`} render={() => <SearchPage />} />
+    <Route path={`${url}/search`} render={(props) => <SearchPage {...props} />} />
   </>
 );
 

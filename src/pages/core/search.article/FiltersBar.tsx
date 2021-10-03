@@ -6,21 +6,27 @@ import CategoryOutlined from '@material-ui/icons/CategoryOutlined';
 import Popover from '../../../components/PopOver';
 import { categories } from '../../../model/category';
 
-const orderByItems = ['Popolari', 'Novità', 'Prezzo: Alto-Basso', 'Prezzo: Basso-Alto'];
+const orderByItems = [
+  { label: 'Name', value: '-name' },
+  { label: 'Brand', value: '-brand' },
+  { label: 'Most recent', value: '-createdAt' },
+  { label: 'Less recent', value: '+createdAt' },
+];
 
 type FilterParams = {
-  category: string;
+  category?: string;
   orderBy: string;
 };
 
 interface Props {
   filters: FilterParams;
   onChange: (v: FilterParams) => void;
+  initCategory?: string;
 }
 
-const FilterBar: React.FC<Props> = ({ filters, onChange }): React.ReactElement => {
+const FilterBar: React.FC<Props> = ({ filters, onChange, initCategory }): React.ReactElement => {
   const [orderBy, setOrderBy] = useState(-1);
-  const [category, setCategory] = useState(-1);
+  const [category, setCategory] = useState(initCategory ? categories.indexOf(initCategory) : -1);
   const resetFilters = () => {
     setOrderBy(-1);
     setCategory(-1);
@@ -58,7 +64,10 @@ const FilterBar: React.FC<Props> = ({ filters, onChange }): React.ReactElement =
             Icon={CategoryOutlined}
             label={'filter by category'}
             id={'category-filter-button'}
-            items={categories}
+            items={categories.flatMap((c) => ({
+              label: c,
+              value: c,
+            }))}
             onChange={handleCategoryChange}
           />
         </MyPaper>

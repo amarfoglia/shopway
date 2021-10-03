@@ -1,6 +1,6 @@
 import React, { lazy, ReactElement } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { Container, makeStyles } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core';
 import Loader from './components/Loader';
 import MyRoute from './components/MyRoute';
 import { ArticleRouter, AuthRouter, CustomerRouter, SellerRouter } from './routes';
@@ -13,20 +13,18 @@ const StorePage = lazy(() => import('./pages/core/common/StorePage'));
 const renderContent = () => {
   return (
     <React.Suspense fallback={<Loader />}>
-      <Container maxWidth="lg" disableGutters style={{ height: '100%' }}>
-        <Router>
-          <Switch>
-            <Route exact path={'/'} render={() => <Home />} />
-            <Route path={'/error'} render={(props) => <ErrorPage {...props} />} />
-            <MyRoute path="/auth" render={() => <AuthRouter />} />
-            <MyRoute path="/customer" mustBe="Customer" render={() => <CustomerRouter />} />
-            <MyRoute path="/seller" mustBe="Seller" render={() => <SellerRouter />} />
-            <MyRoute path="/article" mustBeLoggedIn render={() => <ArticleRouter />} />
-            <MyRoute path={'/stores/:id'} mustBeLoggedIn render={() => <StorePage />} />
-            <Route path={'*'} render={() => <NotFoundPage />} />
-          </Switch>
-        </Router>
-      </Container>
+      <Router>
+        <Switch>
+          <Route exact path={'/'} render={() => <Home />} />
+          <Route path={'/error'} render={(props) => <ErrorPage {...props} />} />
+          <MyRoute path="/auth" render={() => <AuthRouter />} />
+          <MyRoute path="/customer" mustBe="Customer" render={() => <CustomerRouter />} />
+          <MyRoute path="/seller" render={() => <SellerRouter />} />
+          <MyRoute path="/article" mustBeLoggedIn render={() => <ArticleRouter />} />
+          <MyRoute path={'/stores/:id'} mustBeLoggedIn render={() => <StorePage />} />
+          <Route path={'*'} render={() => <NotFoundPage />} />
+        </Switch>
+      </Router>
     </React.Suspense>
   );
 };

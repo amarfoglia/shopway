@@ -1,5 +1,5 @@
 import React from 'react';
-import { Fab, Grid, Typography, useTheme } from '@material-ui/core';
+import { Fab, Grid, Hidden, Typography, useTheme } from '@material-ui/core';
 import AddOutlined from '@material-ui/icons/AddOutlined';
 import DetailPaper from '../../../../components/DetailPaper';
 import ArrowUpwardOutlined from '@material-ui/icons/ArrowUpwardOutlined';
@@ -25,11 +25,11 @@ const _sum = (x: number, y: number) => x + y;
 const StatsSections: React.FC<Props> = ({ stats, isLoading }) => {
   const dates = stats?.salesStore?.flatMap((s) => moment(s._id).format('DD MMM'));
   const profits = stats?.salesStore?.flatMap((s) => s.profit);
+  const orders = stats?.salesStore.flatMap((s) => s.numberOfOrders);
   const weeklyProfit = profits?.reduce(_sum, 0);
   const weeklyVisits = stats?.viewsStore?.flatMap((v) => v.numberOfViews).reduce(_sum, 0);
   const weeklyOrders = stats?.salesStore?.flatMap((s) => s.numberOfOrders).reduce(_sum, 0);
   const history = useHistory();
-
   const TopStats = () => (
     <Grid container justifyContent="space-between">
       <Grid item>
@@ -73,21 +73,37 @@ const StatsSections: React.FC<Props> = ({ stats, isLoading }) => {
       enabled: false,
     },
   };
-  const series = [
+
+  const series1 = [
     {
       name: 'profits',
       data: profits,
     },
   ];
 
+  const series2 = [
+    {
+      name: 'number of orders',
+      data: orders,
+    },
+  ];
+
   const MainStats = () => (
     <Grid container spacing={2}>
-      <Grid item xs={12}>
+      <Grid item xs={12} sm={6}>
         <MyPaper p={0}>
-          {profits && dates && <Chart type="area" options={options} series={series} />}
+          {profits && dates && <Chart type="area" options={options} series={series1} />}
         </MyPaper>
         {isLoading && !profits && <SkeletonLoader />}
       </Grid>
+      <Hidden xsDown>
+        <Grid item xs={12} sm={6}>
+          <MyPaper p={0}>
+            {orders && dates && <Chart type="bar" options={options} series={series2} />}
+          </MyPaper>
+          {isLoading && !profits && <SkeletonLoader />}
+        </Grid>
+      </Hidden>
       <Grid item xs={6}>
         <DetailPaper
           title={'Profits per day'}

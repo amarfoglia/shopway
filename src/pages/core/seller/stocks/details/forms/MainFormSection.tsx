@@ -13,7 +13,19 @@ import ImageUploader from '../../../../../../components/ImageUploader';
 import { detailsValidation } from '../../../../../../model/validation/validationSchema';
 import objectToFormData from '../../../../../../utils/formdata';
 
-const colors = ['red', 'blue', 'green', 'yellow'];
+const colors = [
+  'red',
+  'blue',
+  'green',
+  'yellow',
+  'white',
+  'grey',
+  'black',
+  'brown',
+  'pink',
+  'violet',
+  'orange',
+];
 
 interface FieldsProps {
   onChange: (e: React.ChangeEvent<string>) => void;

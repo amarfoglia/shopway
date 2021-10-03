@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Grid, List, ListItem } from '@material-ui/core';
+import { Grid, Hidden, List, ListItem } from '@material-ui/core';
 import CorePage from '../../../components/CorePage';
 import OrderCard from '../../../components/OrderCard';
 import { useMutation, useQuery } from 'react-query';
@@ -10,6 +10,8 @@ import Loader from '../../../components/Loader';
 import ErrorDisplay from '../../../components/ErrorDisplay';
 import Pagination from '../../../components/Pagination';
 import { SRole } from '../../../model/users/role';
+import TimeLine from '../../../components/Timeline';
+import { useEffect } from 'react';
 
 const limit = 5;
 
@@ -27,11 +29,17 @@ interface Props {
 
 const Orders: React.FC<Props> = ({ role }) => {
   const [page, setPage] = useState(1);
+  const [orders, setOrders] = useState<Order[]>([]);
   const {
     data,
     error: errorOnGet,
     isLoading,
   } = useQuery<Payload<Order[]>, AppError>(['getAllOrder', page], () => getAllOrdes(page));
+
+  const _updateOrders = (data: Payload<Order[]> | undefined) => {
+    const newOrders = data?.data?.order;
+    newOrders && setOrders(newOrders);
+  };
 
   const { error: errorOnDelete, mutate: _deleteOrder } = useMutation<
     Payload<void>,
@@ -40,7 +48,7 @@ const Orders: React.FC<Props> = ({ role }) => {
   >(deleteOrder);
 
   const error = ''.concat(errorOnGet?.message ?? '').concat(errorOnDelete?.message ?? '');
-  const orders = data?.data?.order;
+  useEffect(() => _updateOrders(data), [data]);
 
   const OrdersSection = () => (
     <Grid container spacing={1}>
@@ -49,21 +57,44 @@ const Orders: React.FC<Props> = ({ role }) => {
           <ErrorDisplay text={error} />
         </Grid>
       )}
-      <Grid item xs={12}>
+      {orders && (
+        <Hidden xsDown>
+          <Grid item xs={12} sm={5}>
+            <TimeLine
+              values={orders.flatMap((o) => ({
+                label: o.customer?.fullName ?? o.brandArticle,
+                startDate: o.bookDate,
+                endDate: o.orderExpireAt,
+              }))}
+            />
+          </Grid>
+        </Hidden>
+      )}
+      <Grid item xs={12} sm={7}>
         {isLoading ? (
           <Loader />
         ) : (
           <List disablePadding>
             {orders?.map((o) => (
               <ListItem key={o._id} disableGutters>
-                <OrderCard order={o} handleOrderDelete={_deleteOrder} subject={role} />
+                <OrderCard
+                  order={o}
+                  handleOrderDelete={(id) => {
+                    _deleteOrder(id);
+                    setOrders(orders.filter((o) => o._id !== id));
+                  }}
+                  subject={role}
+                />
               </ListItem>
             ))}
           </List>
         )}
       </Grid>
+      <Hidden xsDown>
+        <Grid item sm={5}></Grid>
+      </Hidden>
       {orders && orders?.length > 0 && (
-        <Grid item xs={12}>
+        <Grid item xs={12} sm={7}>
           <Pagination
             onNext={() => setPage(page + 1)}
             onPrev={() => setPage(page - 1)}

@@ -7,7 +7,10 @@ interface Props {
   Icon: OverridableComponent<SvgIconTypeMap<{}, 'svg'>>;
   id: string;
   label: string;
-  items: string[];
+  items: {
+    label: string;
+    value: string;
+  }[];
   selectedItem: number;
   onChange?: (v: string, index: number) => void;
 }
@@ -20,7 +23,7 @@ const Popover: React.FC<Props> = ({ Icon, id, label, items, onChange, selectedIt
   };
 
   const handleMenuItemClick = (event: React.MouseEvent<HTMLElement>, index: number) => {
-    onChange?.(items[index], index);
+    onChange?.(items[index].value, index);
     setAnchorEl(null);
   };
 
@@ -43,11 +46,11 @@ const Popover: React.FC<Props> = ({ Icon, id, label, items, onChange, selectedIt
       >
         {items.map((v, index) => (
           <MenuItem
-            key={v}
+            key={v.label}
             selected={index === selectedItem}
             onClick={(event) => handleMenuItemClick(event, index)}
           >
-            {v}
+            {v.label}
           </MenuItem>
         ))}
       </Menu>

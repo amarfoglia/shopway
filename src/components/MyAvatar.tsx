@@ -93,7 +93,10 @@ const MyAvatar: React.FC<AvatarProps> = ({
         {path ? (
           <Image
             className={classes.imageAvatarContainer}
-            style={{ borderRadius: shape === 'circle' ? '50%' : theme.spacing(1) }}
+            style={{
+              borderRadius: shape === 'circle' ? '50%' : theme.spacing(1),
+              backgroundColor: 'transparent',
+            }}
             src={`${BACKEND_URL}/img/${subject}s/${path}`}
             alt={alt}
             cover

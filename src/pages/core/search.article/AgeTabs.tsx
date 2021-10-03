@@ -9,14 +9,14 @@ const useStyles = makeStyles({
   },
 });
 
-type Age = 'man' | 'woman' | 'kid';
+type Age = 'Man' | 'Woman' | 'Kid';
 
 interface Props {
   onChange?: (value: string) => void;
 }
 
 const AgeFilterBar: React.FC<Props> = ({ onChange }) => {
-  const [currentTab, setCurrentTab] = useState<Age>('man');
+  const [currentTab, setCurrentTab] = useState<Age>('Man');
   const classes = useStyles();
   // eslint-disable-next-line @typescript-eslint/ban-types
   const handleChange = async (event: React.ChangeEvent<{}>, newValue: Age) => {
@@ -35,9 +35,9 @@ const AgeFilterBar: React.FC<Props> = ({ onChange }) => {
         aria-label="age-filter-tabs"
         className={classes.tabs}
       >
-        <Tab label="Man" value={'man'} />
-        <Tab label="Woman" value={'woman'} />
-        <Tab label="Kid" value={'kid'} />
+        <Tab label="Man" value={'Man'} />
+        <Tab label="Woman" value={'Woman'} />
+        <Tab label="Kid" value={'Kid'} />
       </Tabs>
       <Divider />
     </AppBar>
