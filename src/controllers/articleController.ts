@@ -10,6 +10,7 @@ import Seller from '../models/users/seller';
 
 const factory = new HandlerFactory<ArticleDoc>('article');
 
+// @ts-ignore
 class ArticleController {
   addArticle = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const article = req.body as Article;
@@ -91,7 +92,31 @@ class ArticleController {
 
   getArticle = factory.getOne(ArticleModel);
 
-  getAllArticles = factory.getAll(ArticleModel, {});
+  getAllArticles = catchAsync(async (req: Request, res: Response) => {
+    const { name, categoryType, categoryArticle } = req.query;
+    const nameFilter = name ? { name: new RegExp(name as string, 'i') } : {};
+    const categoryFilter = categoryArticle ? { 'category.categoryArticle': categoryArticle as string } : {};
+    const subCategoryFilter = categoryType ? { 'category.categoryType': categoryType as string } : {};
+    const features = new APIFeatures(
+      ArticleModel.find({
+        ...categoryFilter,
+        ...subCategoryFilter,
+        ...nameFilter,
+      }), req.query
+    )
+      .sort()
+      .limitFields()
+      .paginate();
+
+    const doc = await features.query;
+
+    res.status(200)
+      .json({
+        status: 'success',
+        results: doc.length,
+        data: { article: doc }
+      });
+  });
 
   deleteArticle = factory.deleteOne(ArticleModel);
 }
