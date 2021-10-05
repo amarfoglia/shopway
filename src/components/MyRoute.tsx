@@ -26,7 +26,7 @@ const _isRoleNotValid = (user?: User, role?: string) => role && (!user || user?.
 
 const _isNotLoggedIn = (user?: User, mustBeLoggedIn?: boolean) => mustBeLoggedIn && !user;
 
-const handleLoggedUserRedirect = (role?: string) =>
+const handleLoggedUserRedirect = (role: string) =>
   role === 'Customer' ? Customer : role === 'Seller' ? Seller : Home;
 
 const MyRoute: React.FC<MyRouteProps> = ({
@@ -42,7 +42,7 @@ const MyRoute: React.FC<MyRouteProps> = ({
       : _isRoleNotValid(user, mustBe)
       ? NotAuthorized
       : user && mustBeNotLoggedIn
-      ? handleLoggedUserRedirect()
+      ? handleLoggedUserRedirect(user.role)
       : undefined;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
