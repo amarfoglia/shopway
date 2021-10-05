@@ -1,14 +1,10 @@
-import React, { createContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useState, useEffect } from 'react';
 import { useMutation } from 'react-query';
 import { formDataClient, jsonClient, Payload } from '../utils/axiosClient';
 import User from '../model/users/user';
 import Store from '../model/users/store';
 import { AppError } from '../model/http';
 import objectToFormData from '../utils/formdata';
-
-interface Props {
-  children: ReactNode;
-}
 
 interface LoginProps {
   email: string;
@@ -54,7 +50,7 @@ const AuthContext = createContext<UserContext>({
 
 export type { UserContext };
 
-export const AuthProvider = (props: Props): React.ReactElement => {
+export const AuthProvider: React.FC = (props) => {
   const [user, setUser] = useState<User>();
 
   const checkUserLoggedIn = (): Promise<Payload<User>> =>

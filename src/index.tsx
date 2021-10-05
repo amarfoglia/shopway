@@ -6,6 +6,7 @@ import './index.css';
 import App from './App';
 import theme from './style/theme';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { NotifiesProvider } from './hooks/useNotifies';
 // import reportWebVitals from './reportWebVitals';
 
 const queryClient = new QueryClient();
@@ -15,7 +16,9 @@ ReactDOM.render(
     <ThemeProvider theme={theme}>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
-          <App />
+          <NotifiesProvider>
+            <App />
+          </NotifiesProvider>
         </AuthProvider>
       </QueryClientProvider>
     </ThemeProvider>
