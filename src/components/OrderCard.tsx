@@ -16,6 +16,7 @@ import { ArticleDetails } from '../model/article';
 import { getTimeLeft } from '../utils/time';
 import DeleteOutlined from '@material-ui/icons/DeleteOutlined';
 import { SRole } from '../model/users/role';
+import TicketVisualizer from './Ticket';
 
 type Props = {
   label: string;
@@ -157,11 +158,19 @@ const OrderCard: React.FC<CardProps> = ({
         />
       }
       action={
-        handleOrderDelete && (
-          <IconButton onClick={() => order._id && handleOrderDelete(order._id)}>
-            <DeleteOutlined titleAccess="delete stock" fontSize="medium" color="error" />
-          </IconButton>
-        )
+        <div>
+          {handleOrderDelete && (
+            <IconButton onClick={() => order._id && handleOrderDelete(order._id)}>
+              <DeleteOutlined titleAccess="delete stock" fontSize="medium" color="error" />
+            </IconButton>
+          )}
+          <TicketVisualizer
+            code={order.code}
+            subInfo={`${order.totalPrice}$`}
+            validFrom={order.bookDate}
+            validTo={order.orderExpireAt}
+          />
+        </div>
       }
       title={name}
       subheader={<Moment date={bookDate} format={'MMMM D, YYYY'} />}
