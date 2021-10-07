@@ -1,5 +1,6 @@
 import { ObjectId } from 'mongodb';
 import mongoose from 'mongoose';
+
 interface PairUserDate {
   readAt?: Date;
   user: any;
@@ -15,12 +16,12 @@ interface Notification {
 
 function notificationNewProduct(receivers: string[], sender: string, readBy: PairUserDate[]) {
   const notify: Notification = {
-    heading: 'new Product',
-    content: 'One of your followed store adds a new article!',
-    receivers: receivers,
-    sender: sender,
-    readBy: readBy
-  }
+    heading: 'New product',
+    content: 'One of your followed store added a new article!',
+    receivers,
+    sender,
+    readBy
+  };
   return notify;
 }
 
@@ -54,6 +55,8 @@ const notificationSchema = new mongoose.Schema({
   }
 });
 
-export { NotificationDoc, Notification, PairUserDate, notificationNewProduct };
+export {
+  NotificationDoc, Notification, PairUserDate, notificationNewProduct
+};
 
 export default mongoose.model<NotificationDoc>('Notifications', notificationSchema);

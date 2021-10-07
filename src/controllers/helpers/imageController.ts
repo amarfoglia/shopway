@@ -3,9 +3,11 @@ import {
 } from 'express';
 import multer, { FileFilterCallback } from 'multer';
 import sharp from 'sharp';
-import { access, mkdir } from 'fs/promises';
+import { promises } from 'fs';
 import catchAsync from '../../utils/catchAsync';
 import AppError from '../../utils/appError';
+
+const { access, mkdir } = promises;
 
 const storage = multer.memoryStorage();
 

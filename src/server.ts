@@ -1,7 +1,8 @@
 import mongoose from 'mongoose';
 import http from 'http';
 import app from './app';
-import NotificationProvider from './notificationProvider';
+import notifier from './notificationProvider';
+
 // Catch synchronous exception produced outside the express scope
 process.on('uncaughtException', (err:Error) => {
   console.log('UNCAUGHT EXCEPTION! 💥 Shutting down...');
@@ -22,11 +23,13 @@ mongoose
 
 const port = process.env.PORT || 3000;
 const server = http.createServer(app);
-server.listen(port, () => console.log(`App running on port ${port}...`));
-const notificationProvider = new NotificationProvider(server, port.toString());
+server.listen(port, () => {
+  notifier(server, port.toString());
+  console.log(`App running on port ${port}...`);
+});
+
 process.on('unhandledRejection', (err:Error) => {
   console.log('UNHANDLED REJECTION! 💥 Shutting down...');
   console.log(err.name, err.message);
   server.close(process.exit(1)); // gracefully shutdown
 });
-export {notificationProvider}

@@ -9,10 +9,10 @@ import { isCategoryArticle, isCategoryType } from '../models/category';
 import Seller from '../models/users/seller';
 import CustomerModel from '../models/users/customerModel';
 import NotificationModel, { notificationNewProduct } from '../models/notificationModel';
-import {notificationProvider} from '../server';
+import notifier from '../notificationProvider';
+
 const factory = new HandlerFactory<ArticleDoc>('article');
 
-// @ts-ignore
 class ArticleController {
   addArticle = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const article = req.body as Article;
@@ -39,13 +39,15 @@ class ArticleController {
     if (!newArticle) {
       next(new AppError('Cannot create article', 500));
       return;
-
     }
+
     const customers = await CustomerModel.find({ followerList: newArticle.store });
     const receivers = customers.flatMap((c) => c.id);
-    const notify = notificationNewProduct(receivers, newArticle.store, [])
-    await NotificationModel.create(notify);
-    notificationProvider.getSocket().to(article.store.toString()).emit('newArticle', { newArticle, notify });
+    const notifyToCreate = notificationNewProduct(receivers, newArticle.store, []);
+    const notify = await NotificationModel.create(notifyToCreate);
+
+    notifier().emit('newArticle', { newArticle, notify }, article.store.toString());
+
     res.status(201).json({
       status: 'success',
       data: { article: newArticle }
