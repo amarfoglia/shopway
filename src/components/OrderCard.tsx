@@ -158,19 +158,23 @@ const OrderCard: React.FC<CardProps> = ({
         />
       }
       action={
-        <div style={{ display: 'block ruby' }}>
-          <TicketVisualizer
-            code={order.code}
-            subInfo={`${order.totalPrice}$`}
-            validFrom={order.bookDate}
-            validTo={order.orderExpireAt}
-          />
-          {handleOrderDelete && (
-            <IconButton onClick={() => order._id && handleOrderDelete(order._id)}>
-              <DeleteOutlined titleAccess="delete stock" fontSize="medium" color="error" />
-            </IconButton>
-          )}
-        </div>
+        <Grid container alignItems="center">
+          <Grid item>
+            <TicketVisualizer
+              code={order.code}
+              subInfo={`${order.totalPrice}$`}
+              validFrom={order.bookDate}
+              validTo={order.orderExpireAt}
+            />
+          </Grid>
+          <Grid item>
+            {handleOrderDelete && (
+              <IconButton onClick={() => order._id && handleOrderDelete(order._id)}>
+                <DeleteOutlined titleAccess="delete stock" fontSize="medium" color="error" />
+              </IconButton>
+            )}
+          </Grid>
+        </Grid>
       }
       title={name}
       subheader={<Moment date={bookDate} format={'MMMM D, YYYY'} />}

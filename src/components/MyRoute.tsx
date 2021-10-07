@@ -22,7 +22,8 @@ interface Props {
 
 type MyRouteProps = RouteProps & Props;
 
-const _isRoleNotValid = (user?: User, role?: string) => role && (!user || user?.role !== role);
+const _isRoleNotValid = (user?: User, role?: string): boolean =>
+  role !== undefined && (!user || user?.role !== role);
 
 const _isNotLoggedIn = (user?: User, mustBeLoggedIn?: boolean) => mustBeLoggedIn && !user;
 
@@ -36,14 +37,13 @@ const MyRoute: React.FC<MyRouteProps> = ({
   ...props
 }) => {
   const { user, isLoading, error } = useContext(AuthContext);
-  const renderComponent = () =>
-    _isNotLoggedIn(user, mustBeLoggedIn)
-      ? Login
-      : _isRoleNotValid(user, mustBe)
-      ? NotAuthorized
-      : user && mustBeNotLoggedIn
-      ? handleLoggedUserRedirect(user.role)
-      : undefined;
+
+  const renderComponent = () => {
+    if (_isNotLoggedIn(user, mustBeLoggedIn)) return Login;
+    if (_isRoleNotValid(user, mustBe)) return NotAuthorized;
+    if (user && mustBeNotLoggedIn) return handleLoggedUserRedirect(user.role);
+    return undefined;
+  };
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { render, ...routerProps } = props;

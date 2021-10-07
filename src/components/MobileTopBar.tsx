@@ -8,6 +8,8 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuPopOver from './MenuPopOver';
 import AuthContext from '../hooks/useAuth';
 import NotificationsPopOver from './NotificationsPopOver';
+import Routes from '../utils/routes';
+import { useHistory } from 'react-router-dom';
 
 type Variants = 'simple' | 'user';
 type Subject = 'seller' | 'customer';
@@ -59,6 +61,8 @@ const TopBar: React.FC<Props> = ({
 }) => {
   const classes = useStyles({ p });
   const { logout } = useContext(AuthContext);
+  const history = useHistory();
+  const onLogout = () => logout().then(() => history.push(Routes.LOGOUT));
 
   const _renderUserAvatar = () => {
     const avatar = (
@@ -75,7 +79,7 @@ const TopBar: React.FC<Props> = ({
         id="user-menu"
         label="user menu"
         CustomNode={avatar}
-        onChange={logout}
+        onChange={onLogout}
         items={[{ value: 'log-out', label: 'Log out' }]}
       />
     );

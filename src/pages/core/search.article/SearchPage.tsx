@@ -78,9 +78,9 @@ const SearchPage: React.FC<Props> = ({ location: { state } }): React.ReactElemen
     mutate: _getArticles,
   } = useMutation<Payload<Article[]>, AppError, QueryParams>(getArticles);
 
-  const { category }: State = state && (state as State);
+  const category = state ? (state as State).category : '';
   const initParams = {
-    category: category ?? '',
+    category: category,
     subCategory: 'Man',
     orderBy: '',
   };

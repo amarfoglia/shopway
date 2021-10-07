@@ -6,6 +6,7 @@ import MyRoute from './components/MyRoute';
 import { ArticleRouter, AuthRouter, CustomerRouter, SellerRouter } from './routes';
 
 const Home = lazy(() => import('./pages/HomePage'));
+const Logout = lazy(() => import('./pages/LogoutPage'));
 const ErrorPage = lazy(() => import('./pages/ErrorPage'));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 const StorePage = lazy(() => import('./pages/core/common/StorePage'));
@@ -16,6 +17,7 @@ const renderContent = () => {
       <Router>
         <Switch>
           <Route exact path={'/'} render={() => <Home />} />
+          <Route exact path={'/logout'} render={() => <Logout />} />
           <Route path={'/error'} render={(props) => <ErrorPage {...props} />} />
           <MyRoute path="/auth" render={() => <AuthRouter />} />
           <MyRoute path="/customer" mustBe="Customer" render={() => <CustomerRouter />} />

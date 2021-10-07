@@ -2,6 +2,7 @@
 
 enum Routes {
   HOME = '/',
+  LOGOUT = '/logout',
   ERROR = '/error',
   NOT_FOUND = '*',
 

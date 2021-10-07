@@ -29,6 +29,8 @@ interface UserContext {
   user?: User;
   isLoading?: boolean;
   error?: AppError | null;
+  isLogged?: boolean;
+  reset: () => void;
   updateMe: (user: Partial<User>) => Promise<Payload<User>>;
   register: (props: SignupProps) => Promise<Payload<User>>;
   login: (props: LoginProps) => Promise<Payload<User>>;
@@ -40,6 +42,7 @@ interface UserContext {
 }
 
 const AuthContext = createContext<UserContext>({
+  reset: () => console.log('reset'),
   updateMe: (_) => new Promise(() => _),
   register: (_) => new Promise(() => _),
   login: (_) => new Promise(() => _),
@@ -103,15 +106,15 @@ export const AuthProvider: React.FC = (props) => {
     jsonClient.post<Follow, Payload<User>>(`/customers/followers`, { storeId }).then(_onUser);
 
   const logout = (): Promise<void> =>
-    jsonClient.post(`/users/logout`).then(() => {
-      localStorage.clear();
-      setUser(undefined);
-    });
+    jsonClient.post(`/users/logout`).then(() => localStorage.clear());
+
+  const reset = () => setUser(undefined);
 
   return (
     <AuthContext.Provider
       value={{
         user,
+        reset,
         updateMe,
         forgotPassword,
         changePassword,

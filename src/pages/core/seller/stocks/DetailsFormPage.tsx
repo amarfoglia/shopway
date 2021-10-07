@@ -31,6 +31,12 @@ type State = {
   articleId: string;
 };
 
+const emptyState = {
+  details: undefined,
+  category: undefined,
+  articleId: undefined,
+};
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Props = RouteComponentProps<any, any, State | any>;
 
@@ -51,11 +57,13 @@ const DetailsFormPage: React.FC<Props> = ({ location: { state } }): React.ReactE
   const history = useHistory();
   const classes = useStyles();
   const { user } = useContext(AuthContext);
-  const { category, details, articleId }: State = state && (state as State);
+  const _state = state ? (state as State) : emptyState;
 
   useEffect(() => {
-    !articleId && history.push(Routes.ERROR, { error: 'Missing article ID' });
+    !_state.articleId && history.push(Routes.ERROR, { error: 'Missing article ID' });
   });
+
+  const { details, category, articleId } = _state;
 
   const _redirectToStocksPage = () =>
     history.push({ pathname: Routes.SELLER_MAIN, search: 'tab=1' });
@@ -99,19 +107,20 @@ const DetailsFormPage: React.FC<Props> = ({ location: { state } }): React.ReactE
       ? _updateStock({ details: formData, id: details._id })
       : _createStock(formData);
 
-  const renderContent = (storeId: string) => (
+  const renderContent = (storeId: string, sizes: string[]) => (
     <MainFormSection
       details={details}
-      sizes={getSizes(category)}
+      sizes={sizes}
       onSubmit={handleSubmit}
-      articleId={articleId}
+      articleId={articleId ?? ''}
       storeId={storeId}
       errorMessage={errorMessage}
       isLoading={isLoading}
     />
   );
 
-  const sections = articleId ? [{ node: storeId ? renderContent(storeId) : <span></span> }] : [];
+  const sections =
+    storeId && category ? [{ node: renderContent(storeId, getSizes(category)) }] : [];
 
   return (
     <Container maxWidth="md" className={classes.container}>

@@ -23,7 +23,7 @@ const MenuPopOver: React.FC<Props> = ({
   label,
   items,
   onChange,
-  selectedItem,
+  selectedItem = -1,
 }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
@@ -43,7 +43,7 @@ const MenuPopOver: React.FC<Props> = ({
   return (
     <div>
       <IconButton aria-controls={id} aria-haspopup="true" onClick={handleClick} aria-label={label}>
-        {Icon && <Icon color={selectedItem && selectedItem >= 0 ? 'primary' : 'inherit'} />}
+        {Icon && <Icon color={selectedItem > 0 ? 'primary' : 'inherit'} />}
         {CustomNode}
       </IconButton>
       <Menu

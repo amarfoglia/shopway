@@ -65,6 +65,7 @@ const LoginPage: React.FC = () => {
         footer={FormFooter}
         formId={formId}
         isSubmitting={isLoading}
+        validateOnBlur={false}
         form={(h) => <LoginFields formField={formField} onChange={h} />}
       />
     </AuthPage>

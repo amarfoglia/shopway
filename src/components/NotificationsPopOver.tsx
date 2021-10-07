@@ -106,7 +106,7 @@ const NotificationsPopOver: React.FC = () => {
             ))
           ) : (
             <ListItem>
-              <Typography variant="body1">There&apos;s not notifcations</Typography>
+              <Typography variant="body1">There&apos;s no notifcations</Typography>
             </ListItem>
           )}
         </List>

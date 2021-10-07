@@ -81,7 +81,9 @@ interface Props {
 
 const UserAppBar: React.FC<Props> = ({ tabs, handleChange }) => {
   const { user, logout } = useContext(AuthContext);
+  const history = useHistory();
   const isCustomer = user?.role === 'Customer';
+  const onLogout = () => logout().then(() => history.push(Routes.LOGOUT));
 
   const _renderUserAvatar = () => {
     const avatar = (
@@ -98,7 +100,7 @@ const UserAppBar: React.FC<Props> = ({ tabs, handleChange }) => {
         id="user-menu"
         label="user menu"
         CustomNode={avatar}
-        onChange={logout}
+        onChange={onLogout}
         items={[{ value: 'log-out', label: 'Log out' }]}
       />
     );

@@ -5,7 +5,7 @@ import Role from '../model/users/role';
 import Notification from '../model/notification';
 import AuthContext from './useAuth';
 import Article from '../model/article';
-import { jsonClient, Payload } from '../utils/axiosClient';
+import { BACKEND_URL, jsonClient, Payload } from '../utils/axiosClient';
 import { AppError } from '../model/http';
 import { useMutation } from 'react-query';
 
@@ -44,11 +44,20 @@ export const NotifierProvider: React.FC = (props) => {
   );
 
   useEffect(() => {
-    _getNotifications();
-  }, []);
+    if (user?.role) {
+      _setUpSocket(io(BACKEND_URL, { query: { role: user.role } }));
+      _getNotifications();
+    }
+    return _disconnect;
+  }, [user?.role]);
 
-  const _handleCustomerConnection = (socket: Socket, customer: Customer) =>
+  const _handleCustomerConnection = (socket: Socket, customer: Customer) => {
+    socket.on('newArticle', (data: NewArticleData) => {
+      setNotifications((state) => [...state, data.notify]);
+    });
+
     socket.emit('joinFollowedStores', { storeIds: customer.followerList });
+  };
 
   const _setUpSocket = (socket: Socket) => {
     socket.on('connect', () => {
@@ -58,10 +67,6 @@ export const NotifierProvider: React.FC = (props) => {
 
     socket.on('connect_error', () => {
       console.log('Connection Failed');
-    });
-
-    socket.on('newArticle', (data: NewArticleData) => {
-      setNotifications((state) => [...state, data.notify]);
     });
 
     setSocket(socket);
@@ -79,11 +84,6 @@ export const NotifierProvider: React.FC = (props) => {
   const _disconnect = () => {
     socket?.disconnect();
   };
-
-  useEffect(() => {
-    user?.role && _setUpSocket(io('http://localhost:5000', { query: { role: user.role } }));
-    return _disconnect;
-  }, [user?.role]);
 
   return (
     <NotifierContext.Provider value={{ notifications, markNotification }}>
