@@ -24,10 +24,12 @@ import { ONE_DAY_IN_MS, ONE_HOUR_IN_MS } from './utils/time';
 const app: Application = express();
 dotenv.config({ path: `${__dirname}/../config.env` });
 
-app.use(cors({
-  credentials: true,
-  origin: 'http://localhost:3000'
-}));
+app.use(
+  cors({
+    credentials: true,
+    origin: process.env.ORIGIN,
+  })
+);
 
 // Set security HTTP headers
 app.use(helmet());
@@ -40,7 +42,7 @@ if (process.env.NODE_ENV === 'development') {
 const limiter = rateLimit({
   max: 500,
   windowMs: ONE_HOUR_IN_MS,
-  message: 'Too many requests from this IP, please try again in an hour!'
+  message: 'Too many requests from this IP, please try again in an hour!',
 });
 app.use('/api', limiter);
 
@@ -56,9 +58,11 @@ app.use(xss());
 // Prevent parameter pollution (e.g double sort param)
 app.use(hpp({ whitelist: [] }));
 
-app.use(express.static('public', {
-  maxAge: ONE_DAY_IN_MS,
-}));
+app.use(
+  express.static('public', {
+    maxAge: ONE_DAY_IN_MS,
+  })
+);
 
 app.use((req: Request, res: Response, next: NextFunction) => {
   (req as any).requestTime = new Date().toISOString();

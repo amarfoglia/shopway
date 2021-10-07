@@ -1,6 +1,6 @@
 import { Server, Socket } from 'socket.io';
-import Role from './models/role';
 import { HttpServer } from '@tsed/common';
+import Role from './models/role';
 
 interface StoreIds {
   storeIds: string[];
@@ -8,7 +8,9 @@ interface StoreIds {
 
 const addCustomerListeners = (socket: Socket) => {
   console.log('customer connected!');
-  socket.on('joinFollowedStores', (data: StoreIds) => data.storeIds.forEach((id) => socket.join(id)));
+  socket.on('joinFollowedStores', (data: StoreIds) => {
+    data.storeIds.forEach((id) => socket.join(id));
+  });
 };
 
 const addSellerListeners = (socket: Socket) => {
@@ -27,13 +29,20 @@ class NotificationProvider {
   public constructor(server: HttpServer, port: string) {
     this.server = server;
     this.port = port;
-    this.socketIo = new Server(this.server, { cors: { origin: 'http://localhost:3000', credentials: true } });
-    this.socketIo.on('connection', (socket: Socket) => (socket.handshake.query.role === Role.SELLER
-      ? addSellerListeners(socket) : addCustomerListeners(socket)));
+    this.socketIo = new Server(this.server, {
+      cors: { origin: process.env.ORIGIN, credentials: true },
+    });
+    this.socketIo.on('connection', (socket: Socket) => {
+      if (socket.handshake.query.role === Role.SELLER) {
+        addSellerListeners(socket);
+      } else addCustomerListeners(socket);
+    });
   }
 
-  emit = (code: Code, data?: Object, room?: string | string[]) => (room
-    ? this.socketIo.to(room).emit(code, data) : this.socketIo.emit(code, data));
+  emit = (code: Code, data?: Object, room?: string | string[]) => {
+    if (room) this.socketIo.to(room).emit(code, data);
+    else this.socketIo.emit(code, data);
+  };
 
   // getSocket() { return this.socketIo; }
 }
@@ -41,8 +50,14 @@ class NotificationProvider {
 let instance: NotificationProvider;
 
 const notifier = (server?: HttpServer, port?: string): NotificationProvider => {
-  if (!instance && (!server || !port)) throw new Error("Server and port can't be null during notifier construction");
-  if (!instance && server && port) instance = new NotificationProvider(server, port);
+  if (!instance && (!server || !port)) {
+    throw new Error(
+      "Server and port can't be null during notifier construction"
+    );
+  }
+  if (!instance && server && port) {
+    instance = new NotificationProvider(server, port);
+  }
   return instance;
 };
 
