@@ -3,7 +3,7 @@ import { Container, Grid, IconButton, makeStyles } from '@material-ui/core';
 import ArrowBackIosOutlined from '@material-ui/icons/ArrowBackIosOutlined';
 import SearchOutlined from '@material-ui/icons/SearchOutlined';
 import { RouteComponentProps, useHistory } from 'react-router-dom';
-import TopBar from '../../../components/TopBar';
+import TopBar from '../../../components/MobileTopBar';
 import ProductsSection from '../common/ProductsGrid';
 import SearchBar from '../../../components/SearchBar';
 import AgeFilterBar from './AgeTabs';

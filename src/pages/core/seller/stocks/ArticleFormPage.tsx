@@ -7,7 +7,7 @@ import ArrowBackIosOutlined from '@material-ui/icons/ArrowBackIosOutlined';
 import { RouteComponentProps, useHistory } from 'react-router-dom';
 import AuthContext from '../../../../hooks/useAuth';
 import MyForm from '../../../../components/MyForm';
-import TopBar from '../../../../components/TopBar';
+import TopBar from '../../../../components/MobileTopBar';
 import CorePage from '../../../../components/CorePage';
 import DebouncedInput from '../../../../components/formFields/DebouncedInput';
 import Typography from '@material-ui/core/Typography';

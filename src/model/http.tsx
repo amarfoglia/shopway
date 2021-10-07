@@ -8,6 +8,8 @@ type payload =
   | 'store'
   | 'stats'
   | 'orders'
+  | 'notification'
+  | 'notifications'
   | 'articleDetails'
   | 'followerList';
 

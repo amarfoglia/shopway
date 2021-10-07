@@ -30,6 +30,7 @@ const StatsSections: React.FC<Props> = ({ stats, isLoading }) => {
   const weeklyVisits = stats?.viewsStore?.flatMap((v) => v.numberOfViews).reduce(_sum, 0);
   const weeklyOrders = stats?.salesStore?.flatMap((s) => s.numberOfOrders).reduce(_sum, 0);
   const history = useHistory();
+
   const TopStats = () => (
     <Grid container justifyContent="space-between">
       <Grid item>
@@ -54,7 +55,7 @@ const StatsSections: React.FC<Props> = ({ stats, isLoading }) => {
   );
 
   const theme = useTheme();
-  const options = {
+  const options = (dates: string[]) => ({
     chart: {
       id: 'profits-chart',
       fontFamily: 'DM Sans, sans-serif',
@@ -72,7 +73,7 @@ const StatsSections: React.FC<Props> = ({ stats, isLoading }) => {
     dataLabels: {
       enabled: false,
     },
-  };
+  });
 
   const series1 = [
     {
@@ -92,14 +93,18 @@ const StatsSections: React.FC<Props> = ({ stats, isLoading }) => {
     <Grid container spacing={2}>
       <Grid item xs={12} sm={6}>
         <MyPaper p={0}>
-          {profits && dates && <Chart type="area" options={options} series={series1} />}
+          {profits && dates && (
+            <Chart type="area" options={options(dates)} series={series1} height={300} />
+          )}
         </MyPaper>
         {isLoading && !profits && <SkeletonLoader />}
       </Grid>
       <Hidden xsDown>
         <Grid item xs={12} sm={6}>
           <MyPaper p={0}>
-            {orders && dates && <Chart type="bar" options={options} series={series2} />}
+            {orders && dates && (
+              <Chart type="bar" options={options(dates)} series={series2} height={300} />
+            )}
           </MyPaper>
           {isLoading && !profits && <SkeletonLoader />}
         </Grid>

@@ -16,7 +16,11 @@ const CustomerFields: React.FC<Props> = ({ formField: { photo } }) => {
     inputName: photo.name,
     onImageUpload: (image: File) => setFieldValue(photo.name, image),
   };
-  return <ImageUploader input={inputParams} image={values.user.photo as File} />;
+  return (
+    <div style={{ display: 'block ruby' }}>
+      <ImageUploader input={inputParams} image={values.user.photo as File} />
+    </div>
+  );
 };
 
 export default CustomerFields;

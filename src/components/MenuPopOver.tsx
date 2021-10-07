@@ -4,18 +4,27 @@ import { OverridableComponent } from '@material-ui/core/OverridableComponent';
 
 interface Props {
   // eslint-disable-next-line @typescript-eslint/ban-types
-  Icon: OverridableComponent<SvgIconTypeMap<{}, 'svg'>>;
+  Icon?: OverridableComponent<SvgIconTypeMap<{}, 'svg'>>;
+  CustomNode?: React.ReactNode;
   id: string;
   label: string;
   items: {
     label: string;
     value: string;
   }[];
-  selectedItem: number;
+  selectedItem?: number;
   onChange?: (v: string, index: number) => void;
 }
 
-const Popover: React.FC<Props> = ({ Icon, id, label, items, onChange, selectedItem }) => {
+const MenuPopOver: React.FC<Props> = ({
+  Icon,
+  CustomNode,
+  id,
+  label,
+  items,
+  onChange,
+  selectedItem,
+}) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -34,7 +43,8 @@ const Popover: React.FC<Props> = ({ Icon, id, label, items, onChange, selectedIt
   return (
     <div>
       <IconButton aria-controls={id} aria-haspopup="true" onClick={handleClick} aria-label={label}>
-        {<Icon color={selectedItem >= 0 ? 'primary' : 'inherit'} />}
+        {Icon && <Icon color={selectedItem && selectedItem >= 0 ? 'primary' : 'inherit'} />}
+        {CustomNode}
       </IconButton>
       <Menu
         id={`${label}-menu`}
@@ -58,4 +68,4 @@ const Popover: React.FC<Props> = ({ Icon, id, label, items, onChange, selectedIt
   );
 };
 
-export default Popover;
+export default MenuPopOver;

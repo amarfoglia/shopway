@@ -4,7 +4,7 @@ import IconButton from '@material-ui/core/IconButton';
 import ArrowBackIosOutlined from '@material-ui/icons/ArrowBackIosOutlined';
 import DeleteOutlined from '@material-ui/icons/DeleteOutlined';
 import { RouteComponentProps, useHistory } from 'react-router-dom';
-import TopBar from '../../../../components/TopBar';
+import TopBar from '../../../../components/MobileTopBar';
 import CorePage from '../../../../components/CorePage';
 import { Container, makeStyles } from '@material-ui/core';
 import { ArticleDetails } from '../../../../model/article';

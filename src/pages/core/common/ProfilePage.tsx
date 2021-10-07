@@ -3,7 +3,7 @@ import { Container, Grid, IconButton, makeStyles } from '@material-ui/core';
 import ArrowBackIosOutlined from '@material-ui/icons/ArrowBackIosOutlined';
 import { useHistory } from 'react-router-dom';
 import CorePage from '../../../components/CorePage';
-import TopBar from '../../../components/TopBar';
+import TopBar from '../../../components/MobileTopBar';
 import ProfileSection from './ProfileSections';
 
 type Subject = 'store' | 'user';

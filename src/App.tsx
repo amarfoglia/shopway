@@ -19,7 +19,7 @@ const renderContent = () => {
           <Route path={'/error'} render={(props) => <ErrorPage {...props} />} />
           <MyRoute path="/auth" render={() => <AuthRouter />} />
           <MyRoute path="/customer" mustBe="Customer" render={() => <CustomerRouter />} />
-          <MyRoute path="/seller" render={() => <SellerRouter />} />
+          <MyRoute path="/seller" mustBe="Seller" render={() => <SellerRouter />} />
           <MyRoute path="/article" mustBeLoggedIn render={() => <ArticleRouter />} />
           <MyRoute path={'/stores/:id'} mustBeLoggedIn render={() => <StorePage />} />
           <Route path={'*'} render={() => <NotFoundPage />} />

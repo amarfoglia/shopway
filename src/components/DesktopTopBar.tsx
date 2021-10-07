@@ -7,10 +7,12 @@ import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import { useHistory } from 'react-router-dom';
 import Routes from '../utils/routes';
-import { Badge, Grid } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import AuthContext from '../hooks/useAuth';
-import NotificationsOutlined from '@material-ui/icons/NotificationsOutlined';
 import MyAvatar from './MyAvatar';
+import NotificationsPopOver from './NotificationsPopOver';
+import Seller from '../model/users/seller';
+import MenuPopOver from './MenuPopOver';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -78,7 +80,30 @@ interface Props {
 }
 
 const UserAppBar: React.FC<Props> = ({ tabs, handleChange }) => {
-  const { user } = useContext(AuthContext);
+  const { user, logout } = useContext(AuthContext);
+  const isCustomer = user?.role === 'Customer';
+
+  const _renderUserAvatar = () => {
+    const avatar = (
+      <MyAvatar
+        text={user?.fullName}
+        imagePath={isCustomer ? (user?.photo as string) : (user as Seller).stores?.[0]}
+        subject={isCustomer ? 'user' : 'store'}
+        size={'medium'}
+        alt={`${user?.fullName}'s avatar`}
+      />
+    );
+    return (
+      <MenuPopOver
+        id="user-menu"
+        label="user menu"
+        CustomNode={avatar}
+        onChange={logout}
+        items={[{ value: 'log-out', label: 'Log out' }]}
+      />
+    );
+  };
+
   return (
     <TopAppBar
       left={
@@ -93,17 +118,10 @@ const UserAppBar: React.FC<Props> = ({ tabs, handleChange }) => {
       right={
         <Grid container spacing={3}>
           <Grid item xs={6}>
-            <Badge badgeContent={1} color="error" overlap="circular">
-              <NotificationsOutlined fontSize="large" />
-            </Badge>
+            <NotificationsPopOver />
           </Grid>
           <Grid item xs={6}>
-            <MyAvatar
-              text={user?.fullName}
-              imagePath={user?.photo as string}
-              size={'medium'}
-              alt={`${user?.fullName}'s avatar`}
-            />
+            {_renderUserAvatar()}
           </Grid>
         </Grid>
       }

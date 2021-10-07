@@ -1,10 +1,10 @@
 import React, { useContext, useState } from 'react';
 import { Container, makeStyles, Paper, Tabs, Tab, AppBar, Grid, Hidden } from '@material-ui/core';
-import TopBar from '../../../components/TopBar';
+import TopBar from '../../../components/MobileTopBar';
 import AuthContext from '../../../hooks/useAuth';
 import { useHistory } from 'react-router-dom';
 import Loader from '../../../components/Loader';
-import { UserAppBar } from '../../../components/TopAppBar';
+import { UserAppBar } from '../../../components/DesktopTopBar';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -93,7 +93,7 @@ const TabsPage: React.FC<Props> = ({ tabs, TabPanels, role = 'customer' }): Reac
                   position="relative"
                   p={0}
                   subject={role}
-                  userImagePath={user?.photo as string}
+                  avatarPath={user?.photo as string}
                 />
               </Grid>
             )}

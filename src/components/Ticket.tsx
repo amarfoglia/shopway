@@ -87,9 +87,9 @@ const TicketVisualizer: React.FC<TicketProps> = ({ code, subInfo, validFrom, val
     <div style={modalStyle} className={classes.modal}>
       <div className={classes.ticket}>
         <div className={classes.main}>
-          <div style={{ display: 'flex' }}>
-            <Typography variant="h5">{subInfo}</Typography>
-          </div>
+          <Typography variant="h5" style={{ margin: 'auto' }}>
+            {subInfo}
+          </Typography>
           <Typography id="order-ticket-code" variant="h4" style={{ color: 'white' }}>
             {code.split('-')[1]}
           </Typography>

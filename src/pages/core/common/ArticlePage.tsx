@@ -10,7 +10,7 @@ import {
 } from '@material-ui/core';
 import ArrowBackIosOutlined from '@material-ui/icons/ArrowBackIosOutlined';
 import { RouteComponentProps, useHistory, useParams } from 'react-router-dom';
-import TopBar from '../../../components/TopBar';
+import TopBar from '../../../components/MobileTopBar';
 import Image from 'material-ui-image';
 import DetailsSection from './product/DetailSection';
 import QuantitySection from './product/QuantitySection';

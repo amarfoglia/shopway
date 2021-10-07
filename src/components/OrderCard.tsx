@@ -158,18 +158,18 @@ const OrderCard: React.FC<CardProps> = ({
         />
       }
       action={
-        <div>
-          {handleOrderDelete && (
-            <IconButton onClick={() => order._id && handleOrderDelete(order._id)}>
-              <DeleteOutlined titleAccess="delete stock" fontSize="medium" color="error" />
-            </IconButton>
-          )}
+        <div style={{ display: 'block ruby' }}>
           <TicketVisualizer
             code={order.code}
             subInfo={`${order.totalPrice}$`}
             validFrom={order.bookDate}
             validTo={order.orderExpireAt}
           />
+          {handleOrderDelete && (
+            <IconButton onClick={() => order._id && handleOrderDelete(order._id)}>
+              <DeleteOutlined titleAccess="delete stock" fontSize="medium" color="error" />
+            </IconButton>
+          )}
         </div>
       }
       title={name}

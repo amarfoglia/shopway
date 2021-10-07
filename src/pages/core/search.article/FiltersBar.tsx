@@ -3,7 +3,7 @@ import { Button, Grid } from '@material-ui/core';
 import MyPaper from '../../../components/MyPaper';
 import TuneOutlined from '@material-ui/icons/TuneOutlined';
 import CategoryOutlined from '@material-ui/icons/CategoryOutlined';
-import Popover from '../../../components/PopOver';
+import MenuPopOver from '../../../components/MenuPopOver';
 import { categories } from '../../../model/category';
 
 const orderByItems = [
@@ -47,7 +47,7 @@ const FilterBar: React.FC<Props> = ({ filters, onChange, initCategory }): React.
     <Grid container justifyContent="flex-start" spacing={1} alignItems="center">
       <Grid item>
         <MyPaper p={0}>
-          <Popover
+          <MenuPopOver
             selectedItem={orderBy}
             Icon={TuneOutlined}
             label={'order by'}
@@ -59,7 +59,7 @@ const FilterBar: React.FC<Props> = ({ filters, onChange, initCategory }): React.
       </Grid>
       <Grid item>
         <MyPaper p={0}>
-          <Popover
+          <MenuPopOver
             selectedItem={category}
             Icon={CategoryOutlined}
             label={'filter by category'}

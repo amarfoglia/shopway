@@ -2,7 +2,7 @@ import React from 'react';
 import Image from 'material-ui-image';
 import { Grid, Typography, Box, Container, makeStyles, Hidden } from '@material-ui/core';
 import baseStyles from '../style/styles';
-import IllustrationAppBar from './TopAppBar';
+import IllustrationAppBar from './DesktopTopBar';
 
 enum Position {
   TOP = 'top',

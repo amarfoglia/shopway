@@ -3,7 +3,7 @@ import CorePage from '../../../../components/CorePage';
 import { Container, Grid, IconButton, makeStyles } from '@material-ui/core';
 import { RouteComponentProps, useHistory } from 'react-router-dom';
 import ArrowBackIosOutlined from '@material-ui/icons/ArrowBackIosOutlined';
-import TopBar from '../../../../components/TopBar';
+import TopBar from '../../../../components/MobileTopBar';
 import Article from '../../../../model/article';
 import VariantsSection from './details/VariantsSection';
 import ArticleSection from './details/ArticleSection';

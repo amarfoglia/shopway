@@ -1,12 +1,13 @@
-import React from 'react';
-import NotificationsOutlined from '@material-ui/icons/NotificationsOutlined';
+import React, { useContext } from 'react';
 import UserAvatar from './MyAvatar';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
-import Badge from '@material-ui/core/Badge';
+import MenuPopOver from './MenuPopOver';
+import AuthContext from '../hooks/useAuth';
+import NotificationsPopOver from './NotificationsPopOver';
 
 type Variants = 'simple' | 'user';
 type Subject = 'seller' | 'customer';
@@ -18,7 +19,7 @@ interface Props {
   variant: Variants;
   centerTitle?: string;
   userName?: string;
-  userImagePath?: string;
+  avatarPath?: string;
   position?: Position;
   subject?: Subject;
   p?: number;
@@ -51,32 +52,39 @@ const TopBar: React.FC<Props> = ({
   centerTitle,
   variant = 'simple',
   userName,
-  userImagePath,
+  avatarPath,
   subject = 'customer',
   position = 'fixed',
   p,
 }) => {
   const classes = useStyles({ p });
-  const LeftNode =
-    variant === 'user' ? (
+  const { logout } = useContext(AuthContext);
+
+  const _renderUserAvatar = () => {
+    const avatar = (
       <UserAvatar
         text={userName}
-        imagePath={userImagePath}
+        imagePath={avatarPath}
         size={'large'}
         subject={subject === 'customer' ? 'user' : 'store'}
         alt={`${userName}'s avatar`}
       />
-    ) : (
-      leftChild
     );
-  const RightNode =
-    variant === 'user' ? (
-      <Badge badgeContent={1} color="primary" overlap="circular">
-        <NotificationsOutlined fontSize="large" />
-      </Badge>
-    ) : (
-      rightChild
+    return (
+      <MenuPopOver
+        id="user-menu"
+        label="user menu"
+        CustomNode={avatar}
+        onChange={logout}
+        items={[{ value: 'log-out', label: 'Log out' }]}
+      />
     );
+  };
+
+  const LeftNode = variant === 'user' ? _renderUserAvatar() : leftChild;
+
+  const RightNode = variant === 'user' ? <NotificationsPopOver /> : rightChild;
+
   return (
     <div>
       <AppBar position={position} elevation={0} color="transparent" className={classes.root}>

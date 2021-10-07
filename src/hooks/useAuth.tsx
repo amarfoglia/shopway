@@ -32,6 +32,7 @@ interface UserContext {
   updateMe: (user: Partial<User>) => Promise<Payload<User>>;
   register: (props: SignupProps) => Promise<Payload<User>>;
   login: (props: LoginProps) => Promise<Payload<User>>;
+  logout: () => Promise<void>;
   forgotPassword: (email: string) => Promise<Payload<User>>;
   changePassword: (props: ChangePasswordProps) => Promise<Payload<User>>;
   removeFollow: (storeId: string) => Promise<Payload<User>>;
@@ -42,6 +43,7 @@ const AuthContext = createContext<UserContext>({
   updateMe: (_) => new Promise(() => _),
   register: (_) => new Promise(() => _),
   login: (_) => new Promise(() => _),
+  logout: () => new Promise(() => null),
   forgotPassword: (_) => new Promise(() => _),
   changePassword: (_) => new Promise(() => _),
   removeFollow: (_) => new Promise(() => _),
@@ -100,7 +102,11 @@ export const AuthProvider: React.FC = (props) => {
   const addFollow = (storeId: string): Promise<Payload<User>> =>
     jsonClient.post<Follow, Payload<User>>(`/customers/followers`, { storeId }).then(_onUser);
 
-  // const logout = () => console.log('logout')
+  const logout = (): Promise<void> =>
+    jsonClient.post(`/users/logout`).then(() => {
+      localStorage.clear();
+      setUser(undefined);
+    });
 
   return (
     <AuthContext.Provider
@@ -111,6 +117,7 @@ export const AuthProvider: React.FC = (props) => {
         changePassword,
         register,
         login,
+        logout,
         addFollow,
         removeFollow,
         error,
