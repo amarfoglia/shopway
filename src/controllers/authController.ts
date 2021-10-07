@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import { v4 as uuidv4 } from 'uuid';
 import Cookies from 'universal-cookie';
+import Role from '../models/role';
 import Promisify from '../utils/promisify';
 import catchAsync from '../utils/catchAsync';
 import UserModel from '../models/users/userModel';
@@ -27,7 +28,7 @@ const generateToken = (id: string): string => jwt.sign(
   { expiresIn: process.env.JWT_EXPIRES_IN }
 );
 
-const sendFreshToken = (user: User | Customer, statusCode: number, res: Response) => {
+const sendFreshToken = (user: User | Customer | Seller, statusCode: number, res: Response) => {
   const token = generateToken(user.id ?? 'invalid-id');
   const cookieOptions = {
     expires: new Date(Date.now() + Number(process.env.JWT_COOKIE_EXPIRES_IN) * ONE_DAY_IN_MS),
@@ -36,17 +37,18 @@ const sendFreshToken = (user: User | Customer, statusCode: number, res: Response
   };
 
   res.cookie('jwt', token, cookieOptions);
+  /*
   const {
     fullName, email, photo, role
   } = user; // exclude password
-
+*/
   res.status(statusCode).json({
     status: 'success',
     token,
     data: {
-      user: {
+      user/* {
         fullName, email, photo, role
-      }
+      } */
     }
   });
 };
@@ -101,8 +103,25 @@ class AuthController {
       next(new AppError('Incorrect email or password', 401));
       return;
     }
+    /*
+    const doc = user.role === Role.SELLER
+      ? await SellerModel.findById(user.id).select('+password')
+      : await CustomerModel.findById(user.id).select('+password'); */
 
-    sendFreshToken(user, 200, res);
+    if (user) {
+      sendFreshToken(user, 200, res);
+    }
+  });
+
+  logout = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    res.cookie('jwt', 'none', {
+      expires: new Date(Date.now() + (5*1000)),
+      httpOnly: true,
+    });
+    res.status(200).json({
+      status: 'success',
+      data: null
+    });
   });
 
   checkUserToken = catchAsync(async (req: Request, res: Response, next: NextFunction) => {

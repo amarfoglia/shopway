@@ -10,6 +10,7 @@ const categoryArticle = {
   SHIRT: 'Shirt',
   SWEAT_SHIRT: 'Sweat Shirt',
   T_SHIRT: 'T-Shirt',
+  SWIMSUIT: 'Swimsuit',
   PANTS: 'Pants',
   TRUNK: 'Trunk',
   SHOES: 'Shoes',
