@@ -44,7 +44,7 @@ class OrderController {
       return;
     }
     const seller = req.user as Seller;
-    if (!seller?.stores.includes(order?.storeId ?? 'invalid-id')) {
+    if (!seller?.stores.includes(order?.store ?? 'invalid-id')) {
       next(new AppError('You are not authorised to modify an order that does not belong to your store.', 400));
       return;
     }

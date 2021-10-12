@@ -2,7 +2,7 @@ interface Order {
   id?: string;
   customerId: string;
   articleDetailsId: string;
-  storeId: string;
+  store: string;
   size: string;
   bookDate: Date;
   orderExpireAt: Date;

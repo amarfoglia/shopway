@@ -10,9 +10,9 @@ import ArticleDetailsModel from './articles/articleDetailsModel';
 import generateCode from '../utils/generateCode';
 
 interface OrderDoc extends Document, Order {
-  articleDetails?: PopulatedDoc<ArticleDetails & Document>
-  customer?: PopulatedDoc<Customer & Document>
-  seller?: PopulatedDoc<Seller & Document>
+  articleDetails?: PopulatedDoc<ArticleDetails & Document>;
+  customer?: PopulatedDoc<Customer & Document>;
+  seller?: PopulatedDoc<Seller & Document>;
 }
 const getCurrentDate = () => addHours(utcToZonedTime(Date.now(), 'Europe/Rome'), 2);
 
@@ -74,7 +74,7 @@ const orderSchema = new mongoose.Schema({
   toObject: { virtuals: true }
 });
 
-orderSchema.pre(/^find/, function _(next) {
+orderSchema.pre('find', function _(next) {
   this.populate({ path: 'articleDetails', select: 'articleId color price image discount' })
     .populate({ path: 'store', select: '_id name' })
     .populate({ path: 'customer', select: 'fullName _id' });
