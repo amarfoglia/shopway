@@ -77,7 +77,7 @@ const Settings = (): React.ReactElement => {
           <MyPaper>
             <List disablePadding>
               <ListItem>
-                <ListItemText primary={'Notifies'} />
+                <ListItemText primary={'Notifications'} />
                 <ListItemSecondaryAction>
                   <Switch
                     checked={isNotifiesOn}

@@ -42,7 +42,13 @@ const MenuPopOver: React.FC<Props> = ({
 
   return (
     <div>
-      <IconButton aria-controls={id} aria-haspopup="true" onClick={handleClick} aria-label={label}>
+      <IconButton
+        style={{ paddingLeft: 0 }}
+        aria-controls={id}
+        aria-haspopup="true"
+        onClick={handleClick}
+        aria-label={label}
+      >
         {Icon && <Icon color={selectedItem > 0 ? 'primary' : 'inherit'} />}
         {CustomNode}
       </IconButton>

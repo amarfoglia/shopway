@@ -15,15 +15,27 @@ import { jsonClient, Payload } from '../utils/axiosClient';
 import { useMutation } from 'react-query';
 import { AppError } from '../model/http';
 import Notification from '../model/notification';
-import { useTheme } from '@material-ui/core';
+import { makeStyles, useTheme } from '@material-ui/core';
 
 const readNotification = (id: string) =>
   jsonClient.patch<void, Payload<Notification>>(`/users/notifications/${id}`).then((res) => res);
+
+const useStyles = makeStyles((theme) => ({
+  bell: {
+    [theme.breakpoints.up('sm')]: {
+      color: 'white',
+    },
+    [theme.breakpoints.only('xs')]: {
+      color: 'grey',
+    },
+  },
+}));
 
 const NotificationsPopOver: React.FC = () => {
   const { notifications, markNotification } = useContext(NotifierContext);
   const { user } = useContext(AuthContext);
   const theme = useTheme();
+  const classes = useStyles();
 
   const { mutate: _readNotification } = useMutation<Payload<Notification>, AppError, string>(
     'readNotification',
@@ -51,7 +63,7 @@ const NotificationsPopOver: React.FC = () => {
     <div>
       <IconButton aria-describedby={id} onClick={handleClick}>
         <Badge color="error" overlap="circular" aria-describedby={id} badgeContent={toBeRead}>
-          <NotificationsOutlined fontSize="large" />
+          <NotificationsOutlined fontSize="large" className={classes.bell} />
         </Badge>
       </IconButton>
       <Popover

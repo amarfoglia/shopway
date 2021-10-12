@@ -6,6 +6,7 @@ import clsx from 'clsx';
 import ConfirmationNumber from '@material-ui/icons/ConfirmationNumber';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
+import { Button } from '@material-ui/core';
 
 function getModalStyle() {
   const top = 50;
@@ -20,11 +21,16 @@ function getModalStyle() {
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    confirmButton: {
+      textAlign: 'center',
+      width: '100%',
+      marginTop: theme.spacing(1.5),
+    },
     modal: {
       position: 'absolute',
       backgroundColor: theme.palette.background.default,
       boxShadow: theme.shadows[5],
-      padding: theme.spacing(2, 4, 3),
+      padding: theme.spacing(2, 2, 2),
     },
     ticket: {
       textAlign: 'center',
@@ -68,9 +74,16 @@ interface TicketProps {
   subInfo: string;
   validFrom: Date;
   validTo: Date;
+  handleClick?: () => void;
 }
 
-const TicketVisualizer: React.FC<TicketProps> = ({ code, subInfo, validFrom, validTo }) => {
+const TicketVisualizer: React.FC<TicketProps> = ({
+  code,
+  subInfo,
+  validFrom,
+  validTo,
+  handleClick,
+}) => {
   const classes = useStyles();
   const [modalStyle] = React.useState(getModalStyle);
   const [open, setOpen] = React.useState(false);
@@ -109,6 +122,13 @@ const TicketVisualizer: React.FC<TicketProps> = ({ code, subInfo, validFrom, val
           {moment(validFrom).format('D MMM')} - {moment(validTo).format('D MMM')}
         </Typography>
       </div>
+      {handleClick && (
+        <div className={classes.confirmButton}>
+          <Button variant="outlined" color="primary" onClick={handleClick}>
+            Conferma
+          </Button>
+        </div>
+      )}
     </div>
   );
 

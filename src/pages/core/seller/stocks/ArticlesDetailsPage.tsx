@@ -50,7 +50,7 @@ const ArticleDetailsPage: React.FC<Props> = ({ location: { state } }): React.Rea
             p={0}
             centerTitle={'Article details'}
             leftChild={
-              <IconButton onClick={history.goBack} style={{ padding: 0 }}>
+              <IconButton onClick={() => history.push(Routes.SELLER_MAIN)} style={{ padding: 0 }}>
                 <ArrowBackIosOutlined titleAccess="go back" fontSize="small" />
               </IconButton>
             }

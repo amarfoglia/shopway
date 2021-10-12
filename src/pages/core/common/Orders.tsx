@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Grid, Hidden, List, ListItem } from '@material-ui/core';
 import CorePage from '../../../components/CorePage';
 import OrderCard from '../../../components/OrderCard';
-import { useMutation, useQuery } from 'react-query';
+import { useMutation } from 'react-query';
 import { AppError } from '../../../model/http';
 import { jsonClient, Payload } from '../../../utils/axiosClient';
 import Order from '../../../model/order';
@@ -23,6 +23,9 @@ const getAllOrdes = (page: number) =>
 const deleteOrder = (id: string) =>
   jsonClient.delete<void, Payload<void>>(`/orders/${id}`).then((res) => res);
 
+const confirmOrder = (id: string) =>
+  jsonClient.patch<void, Payload<void>>(`/orders/${id}`).then((res) => res);
+
 interface Props {
   role: SRole;
 }
@@ -31,15 +34,12 @@ const Orders: React.FC<Props> = ({ role }) => {
   const [page, setPage] = useState(1);
   const [orders, setOrders] = useState<Order[]>([]);
   const {
-    data,
     error: errorOnGet,
     isLoading,
-  } = useQuery<Payload<Order[]>, AppError>(['getAllOrder', page], () => getAllOrdes(page));
-
-  const _updateOrders = (data: Payload<Order[]> | undefined) => {
-    const newOrders = data?.data?.order;
-    newOrders && setOrders(newOrders);
-  };
+    mutate: _fetchOrders,
+  } = useMutation<Payload<Order[]>, AppError>(['getAllOrder', page], () => getAllOrdes(page), {
+    onSuccess: ({ data }) => data?.order && setOrders(data.order),
+  });
 
   const { error: errorOnDelete, mutate: _deleteOrder } = useMutation<
     Payload<void>,
@@ -47,8 +47,17 @@ const Orders: React.FC<Props> = ({ role }) => {
     string
   >(deleteOrder);
 
-  const error = ''.concat(errorOnGet?.message ?? '').concat(errorOnDelete?.message ?? '');
-  useEffect(() => _updateOrders(data), [data]);
+  const { error: errorOnConfirm, mutate: _confirmOrder } = useMutation<
+    Payload<void>,
+    AppError,
+    string
+  >(confirmOrder, { onSuccess: () => _fetchOrders() });
+
+  const error = (errorOnGet?.message ?? '')
+    .concat(errorOnDelete?.message ?? '')
+    .concat(errorOnConfirm?.message ?? '');
+
+  useEffect(() => _fetchOrders(), []);
 
   const OrdersSection = () => (
     <Grid container spacing={1}>
@@ -83,6 +92,9 @@ const Orders: React.FC<Props> = ({ role }) => {
                     _deleteOrder(id);
                     setOrders(orders.filter((o) => o._id !== id));
                   }}
+                  handleOrderConfirm={
+                    role === 'Seller' && !o.sold ? () => _confirmOrder(o._id) : undefined
+                  }
                   subject={role}
                 />
               </ListItem>

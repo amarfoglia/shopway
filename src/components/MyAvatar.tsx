@@ -19,7 +19,11 @@ interface AvatarProps {
   handleClick?: () => void;
 }
 
-const useStyles = makeStyles<Theme, { shape: Shape }>((theme) => ({
+interface CSSprops {
+  shape: Shape;
+}
+
+const useStyles = makeStyles<Theme, CSSprops>((theme) => ({
   textAvatar: {
     textTransform: 'uppercase',
     backgroundColor: theme.palette.primary.light,

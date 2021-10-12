@@ -115,12 +115,14 @@ interface CardProps {
   order: Order;
   subject?: SRole;
   handleOrderDelete?: (orderId: string) => void;
+  handleOrderConfirm?: () => void;
 }
 
 const OrderCard: React.FC<CardProps> = ({
   order: { store, articleDetails, ...order },
   subject = 'Customer',
   handleOrderDelete,
+  handleOrderConfirm,
 }) => {
   const timeLeft = getTimeLeft(order.orderExpireAt).asHours();
   const classes = useStyles({ timeLeft, sold: order.sold });
@@ -143,9 +145,16 @@ const OrderCard: React.FC<CardProps> = ({
     goToPage: () => void;
     bookDate: Date;
     imagePath: string;
+    handleClick?: () => void;
   };
 
-  const renderCardHeader: React.FC<CardHeaderInfo> = ({ name, goToPage, bookDate, imagePath }) => (
+  const renderCardHeader: React.FC<CardHeaderInfo> = ({
+    name,
+    goToPage,
+    bookDate,
+    imagePath,
+    handleClick,
+  }) => (
     <CardHeader
       avatar={
         <MyAvatar
@@ -165,6 +174,7 @@ const OrderCard: React.FC<CardProps> = ({
               subInfo={`${order.totalPrice}$`}
               validFrom={order.bookDate}
               validTo={order.orderExpireAt}
+              handleClick={handleClick}
             />
           </Grid>
           <Grid item>
@@ -188,6 +198,7 @@ const OrderCard: React.FC<CardProps> = ({
         imagePath: isCustomer ? (store.logo as string) : (customer?.photo as string),
         goToPage: isCustomer ? goToStorePage : goToCustomerPage,
         bookDate: order.bookDate,
+        handleClick: handleOrderConfirm,
       })}
       <Divider />
       <CardContent onClick={goToArticlePage}>
@@ -214,7 +225,7 @@ const OrderCard: React.FC<CardProps> = ({
                 <Details
                   brand={order.brandArticle}
                   color={details?.color}
-                  quantity={order.quantity}
+                  quantity={1}
                   size={order.size}
                 />
               </Grid>
