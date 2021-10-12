@@ -25,6 +25,16 @@ function notificationNewProduct(receivers: string[], sender: string, readBy: Pai
   return notify;
 }
 
+function notificationNewOrder(receivers: string[], readBy: PairUserDate[]) {
+  const notify: Notification = {
+    heading: 'New order',
+    content: 'A client has required a reservation!',
+    receivers,
+    readBy
+  };
+  return notify;
+}
+
 interface NotificationDoc extends Document, Notification {}
 
 const notificationSchema = new mongoose.Schema({
@@ -56,7 +66,7 @@ const notificationSchema = new mongoose.Schema({
 });
 
 export {
-  NotificationDoc, Notification, PairUserDate, notificationNewProduct
+  NotificationDoc, Notification, PairUserDate, notificationNewProduct, notificationNewOrder
 };
 
 export default mongoose.model<NotificationDoc>('Notifications', notificationSchema);

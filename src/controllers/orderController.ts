@@ -2,10 +2,15 @@ import { NextFunction, Request, Response } from 'express';
 import Seller from '../models/users/seller';
 import catchAsync from '../utils/catchAsync';
 import OrderModel, { OrderDoc } from '../models/orderModel';
+import SellerModel from '../models/users/sellerModel';
 import HandlerFactory from './helpers/handlerFactory';
 import AppError from '../utils/appError';
 import ArticleDetailsModel from '../models/articles/articleDetailsModel';
 import APIFeatures from '../utils/apiFeatures';
+import notifier from '../notificationProvider';
+import NotificationModel, {
+  notificationNewOrder,
+} from '../models/notificationModel';
 
 const factory = new HandlerFactory<OrderDoc>('order');
 
@@ -25,6 +30,11 @@ class OrderController {
       next(new AppError('Cannot create the order', 500));
       return;
     }
+
+    const seller = await SellerModel.findOne({ stores: order.store });
+    const notifyToCreate = notificationNewOrder([seller?.id], []);
+    const notify = await NotificationModel.create(notifyToCreate);
+    notifier().emit('newOrder', { notify }, seller?.id.toString());
 
     res.status(201).json({
       status: 'success',

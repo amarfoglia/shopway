@@ -13,11 +13,12 @@ const addCustomerListeners = (socket: Socket) => {
   });
 };
 
-const addSellerListeners = (socket: Socket) => {
+const addSellerListeners = (socket: Socket, sellerId: string) => {
   console.log('seller connected!');
+  socket.join(sellerId);
 };
 
-type Code = 'newArticle' | 'none';
+type Code = 'newArticle' | 'newOrder' | 'none';
 
 class NotificationProvider {
   private readonly server: HttpServer;
@@ -33,8 +34,9 @@ class NotificationProvider {
       cors: { origin: process.env.ORIGIN, credentials: true },
     });
     this.socketIo.on('connection', (socket: Socket) => {
-      if (socket.handshake.query.role === Role.SELLER) {
-        addSellerListeners(socket);
+      const { role, userId } = socket.handshake.query;
+      if (role === Role.SELLER) {
+        addSellerListeners(socket, userId as string);
       } else addCustomerListeners(socket);
     });
   }
@@ -43,8 +45,6 @@ class NotificationProvider {
     if (room) this.socketIo.to(room).emit(code, data);
     else this.socketIo.emit(code, data);
   };
-
-  // getSocket() { return this.socketIo; }
 }
 
 let instance: NotificationProvider;
