@@ -17,9 +17,11 @@ import AuthContext from '../../../hooks/useAuth';
 import ArrowForwardIos from '@material-ui/icons/ArrowForwardIos';
 import MyPaper from '../../../components/MyPaper';
 import Routes from '../../../utils/routes';
+import NotifierContext from '../../../hooks/useNotifier';
 
 const Settings = (): React.ReactElement => {
   const { user } = useContext(AuthContext);
+  const { disconnect, connect, isConnected } = useContext(NotifierContext);
   const history = useHistory();
 
   const UserAvatarSection = () => (
@@ -30,6 +32,7 @@ const Settings = (): React.ReactElement => {
           alt={`user avatar of ${user?.fullName}`}
           imagePath={user?.photo as string}
           text={user?.fullName}
+          subject={user?.role === 'Customer' ? 'user' : 'store'}
         />
       </Grid>
       <Grid item>
@@ -39,9 +42,15 @@ const Settings = (): React.ReactElement => {
   );
 
   const AccountSection = () => {
-    const [isNotifiesOn, setNotifiesOn] = useState(true);
-    const handleNotifies = (event: React.ChangeEvent<HTMLInputElement>) => {
-      setNotifiesOn(event.target.checked);
+    const [isNotifiesOn, setNotifiesOn] = useState(isConnected);
+    const handleNotifies = () => {
+      if (isNotifiesOn) {
+        disconnect();
+        setNotifiesOn(false);
+      } else {
+        user && connect(user);
+        setNotifiesOn(true);
+      }
     };
 
     const goToChangePassword = () => history.push(Routes.CHANGE_PASSWORD);

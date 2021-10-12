@@ -129,14 +129,16 @@ const OrderCard: React.FC<CardProps> = ({
   const history = useHistory();
   const details = articleDetails as ArticleDetails;
   const customer = order.customer;
+  const isCustomer = subject === 'Customer';
+
   const goToArticlePage = () =>
     history.push(Routes.ARTICLE_PAGE.replace(':id', details.articleId), {
       store,
     });
 
-  const isCustomer = subject === 'Customer';
   const goToStorePage = () =>
     store?._id && history.push(Routes.STORE_PAGE.replace(':id', store._id));
+
   const goToCustomerPage = () =>
     customer?._id && history.push(Routes.CUSTOMER_PROFILE.replace(':id', customer._id));
 
@@ -161,7 +163,7 @@ const OrderCard: React.FC<CardProps> = ({
           text={name}
           size={'medium'}
           alt={`logo of ${name}`}
-          subject={isCustomer ? 'user' : 'store'}
+          subject={isCustomer ? 'store' : 'user'}
           imagePath={imagePath}
           handleClick={goToPage}
         />

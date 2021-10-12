@@ -11,7 +11,6 @@ import { Grid } from '@material-ui/core';
 import AuthContext from '../hooks/useAuth';
 import MyAvatar from './MyAvatar';
 import NotificationsPopOver from './NotificationsPopOver';
-import Seller from '../model/users/seller';
 import MenuPopOver from './MenuPopOver';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -89,7 +88,7 @@ const UserAppBar: React.FC<Props> = ({ tabs, handleChange }) => {
     const avatar = (
       <MyAvatar
         text={user?.fullName}
-        imagePath={isCustomer ? (user?.photo as string) : (user as Seller).stores?.[0]}
+        imagePath={user?.photo as string}
         subject={isCustomer ? 'user' : 'store'}
         size={'medium'}
         alt={`${user?.fullName}'s avatar`}

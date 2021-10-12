@@ -141,7 +141,6 @@ const ArticlePage: React.FC<Props> = ({ location: { state } }): React.ReactEleme
       selectedSize={order?.size}
       selectedColor={order?.color}
       error={orderError?.message}
-      // subject={user?.role === 'Customer' ? 'Customer' : 'Seller'}
     />
   );
 
@@ -184,11 +183,14 @@ const ArticlePage: React.FC<Props> = ({ location: { state } }): React.ReactEleme
     </React.Fragment>
   );
 
+  const subject = user?.role === 'Customer' ? 'Customer' : 'Seller';
+
   return (
     <Container maxWidth="md" className={classes.container}>
       <TopBar
         variant="simple"
         position="absolute"
+        subject={subject}
         leftChild={
           <div className={classes.backButton}>
             <IconButton onClick={history.goBack} style={{ padding: 0 }} aria-label="go back">

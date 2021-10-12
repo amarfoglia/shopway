@@ -42,7 +42,7 @@ interface UserContext {
 }
 
 const AuthContext = createContext<UserContext>({
-  reset: () => console.log('reset'),
+  reset: () => null,
   updateMe: (_) => new Promise(() => _),
   register: (_) => new Promise(() => _),
   login: (_) => new Promise(() => _),
@@ -105,8 +105,7 @@ export const AuthProvider: React.FC = (props) => {
   const addFollow = (storeId: string): Promise<Payload<User>> =>
     jsonClient.post<Follow, Payload<User>>(`/customers/followers`, { storeId }).then(_onUser);
 
-  const logout = (): Promise<void> =>
-    jsonClient.post(`/users/logout`).then(() => localStorage.clear());
+  const logout = (): Promise<void> => jsonClient.post(`/users/logout`);
 
   const reset = () => setUser(undefined);
 

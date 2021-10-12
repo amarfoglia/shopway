@@ -12,7 +12,7 @@ import Routes from '../utils/routes';
 import { useHistory } from 'react-router-dom';
 
 type Variants = 'simple' | 'user';
-type Subject = 'seller' | 'customer';
+type Subject = 'Seller' | 'Customer';
 type Position = 'fixed' | 'sticky' | 'absolute' | 'relative' | 'static' | undefined;
 
 interface Props {
@@ -55,7 +55,7 @@ const TopBar: React.FC<Props> = ({
   variant = 'simple',
   userName,
   avatarPath,
-  subject = 'customer',
+  subject = 'Customer',
   position = 'fixed',
   p,
 }) => {
@@ -70,7 +70,7 @@ const TopBar: React.FC<Props> = ({
         text={userName}
         imagePath={avatarPath}
         size={'large'}
-        subject={subject === 'customer' ? 'user' : 'store'}
+        subject={subject === 'Customer' ? 'user' : 'store'}
         alt={`${userName}'s avatar`}
       />
     );

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { createContext, useEffect, useContext, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 import Customer from '../model/users/customer';
@@ -8,10 +9,14 @@ import Article from '../model/article';
 import { BACKEND_URL, jsonClient, Payload } from '../utils/axiosClient';
 import { AppError } from '../model/http';
 import { useMutation } from 'react-query';
+import User from '../model/users/user';
 
 interface NotificationContext {
   notifications: Notification[];
   markNotification: (notificationId: string) => void;
+  disconnect: () => void;
+  connect: (user: User) => void;
+  isConnected: () => boolean;
 }
 
 type NewArticleData = {
@@ -21,7 +26,10 @@ type NewArticleData = {
 
 const NotifierContext = createContext<NotificationContext>({
   notifications: [],
-  markNotification: (id) => console.log(`mark notification ${id}`),
+  markNotification: (_) => null,
+  disconnect: () => null,
+  connect: (_) => null,
+  isConnected: () => false,
 });
 
 export type { NotifierContext };
@@ -43,12 +51,27 @@ export const NotifierProvider: React.FC = (props) => {
     },
   );
 
+  const disconnect = () => {
+    setNotifications([]);
+    socket?.disconnect();
+  };
+
+  const connect = () => socket?.connect();
+
+  const isConnected = () => socket?.connected ?? false;
+
   useEffect(() => {
-    if (user?.role) {
-      _setUpSocket(io(BACKEND_URL, { query: { role: user.role, userId: user._id ?? '-' } }));
-      _getNotifications();
+    socket && connect();
+  }, [socket]);
+
+  useEffect(() => {
+    if (user) {
+      const params = { query: { role: user.role, userId: user._id ?? '-' } };
+      _setUpSocket(io(BACKEND_URL, params), user);
     }
-    return _disconnect;
+    return () => {
+      disconnect();
+    };
   }, [user?.role]);
 
   const _handleCustomerConnection = (socket: Socket, customer: Customer) => {
@@ -65,15 +88,20 @@ export const NotifierProvider: React.FC = (props) => {
     });
   };
 
-  const _setUpSocket = (socket: Socket) => {
-    socket.on('connect', () => {
+  const _setUpSocket = (socket: Socket, user: User) => {
+    socket?.on('connect', () => {
       console.log('web socket connected');
+      _getNotifications();
       user?.role === Role.CUSTOMER && _handleCustomerConnection(socket, user as Customer);
       user?.role === Role.SELLER && _handleSellerConnection(socket);
     });
 
-    socket.on('connect_error', () => {
+    socket?.on('connect_error', () => {
       console.log('Connection Failed');
+    });
+
+    socket?.on('disconnect', () => {
+      console.log('web socket disconnected');
     });
 
     setSocket(socket);
@@ -88,12 +116,10 @@ export const NotifierProvider: React.FC = (props) => {
       ),
     );
 
-  const _disconnect = () => {
-    socket?.disconnect();
-  };
-
   return (
-    <NotifierContext.Provider value={{ notifications, markNotification }}>
+    <NotifierContext.Provider
+      value={{ notifications, markNotification, disconnect, connect, isConnected }}
+    >
       {props.children}
     </NotifierContext.Provider>
   );

@@ -42,7 +42,6 @@ interface Props {
 
 const TabsPage: React.FC<Props> = ({ tabs, TabPanels, role = 'customer' }): React.ReactElement => {
   const classes = useStyles();
-  // const search = useLocation().search;
   const history = useHistory();
   const search = useHistory().location.search;
   const tab = new URLSearchParams(search).get('tab') ?? '0';
@@ -77,6 +76,7 @@ const TabsPage: React.FC<Props> = ({ tabs, TabPanels, role = 'customer' }): Reac
   );
 
   const isTopBarVisible = currentTab !== tabs[tabs.length - 1].value;
+
   return (
     <div>
       <Hidden xsDown>
@@ -88,11 +88,11 @@ const TabsPage: React.FC<Props> = ({ tabs, TabPanels, role = 'customer' }): Reac
             {isTopBarVisible && (
               <Grid item xs={12}>
                 <TopBar
-                  variant={role === 'customer' ? 'user' : 'simple'}
+                  variant="user"
                   userName={user?.fullName}
                   position="relative"
                   p={0}
-                  subject={role}
+                  subject={role === 'customer' ? 'Customer' : 'Seller'}
                   avatarPath={user?.photo as string}
                 />
               </Grid>

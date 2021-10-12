@@ -126,7 +126,7 @@ const CustomerEditProfile = (): React.ReactElement => {
     <React.Fragment>
       <ProfilePage
         topTitle="Edit profile"
-        subject="user"
+        subject={user?.role === 'Customer' ? 'user' : 'store'}
         rightChild={
           <div>
             <label htmlFor={id}>
