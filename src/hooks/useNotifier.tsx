@@ -45,7 +45,7 @@ export const NotifierProvider: React.FC = (props) => {
 
   useEffect(() => {
     if (user?.role) {
-      _setUpSocket(io(BACKEND_URL, { query: { role: user.role } }));
+      _setUpSocket(io(BACKEND_URL, { query: { role: user.role, userId: user._id ?? '-' } }));
       _getNotifications();
     }
     return _disconnect;
@@ -59,10 +59,17 @@ export const NotifierProvider: React.FC = (props) => {
     socket.emit('joinFollowedStores', { storeIds: customer.followerList });
   };
 
+  const _handleSellerConnection = (socket: Socket) => {
+    socket.on('newOrder', (data: NewArticleData) => {
+      setNotifications((state) => [...state, data.notify]);
+    });
+  };
+
   const _setUpSocket = (socket: Socket) => {
     socket.on('connect', () => {
       console.log('web socket connected');
       user?.role === Role.CUSTOMER && _handleCustomerConnection(socket, user as Customer);
+      user?.role === Role.SELLER && _handleSellerConnection(socket);
     });
 
     socket.on('connect_error', () => {
