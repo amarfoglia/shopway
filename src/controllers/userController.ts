@@ -1,5 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
+import { v4 as uuidv4 } from 'uuid';
 import UserModel, { UserDoc } from '../models/users/userModel';
+import StoreModel from '../models/storeModel';
 import AppError from '../utils/appError';
 import catchAsync from '../utils/catchAsync';
 import HandlerFactory from './helpers/handlerFactory';
@@ -19,10 +21,18 @@ class UserController {
       return;
     }
 
-    const userId = req.user?.id;
-    const photo = req.file && await setPhoto('photo'.concat('-', req.user?.id), 'public/img/users', req.file);
-    const user = photo ? { ...req.body, photo } : req.body;
-    const updatedUser = await UserModel.findByIdAndUpdate(userId, user, {
+    const { user, file } = req;
+    let photo;
+
+    if (user?.role === 'Seller') {
+      photo = file && await setPhoto('logo'.concat('-', uuidv4()), 'public/img/stores', file);
+      await StoreModel.findByIdAndUpdate(user?.stores?.[0], { logo: photo });
+    } else {
+      photo = file && await setPhoto('photo'.concat('-', user?.id), 'public/img/users', req.file);
+    }
+
+    const userToUpdate = photo ? { ...req.body, photo } : req.body;
+    const updatedUser = await UserModel.findByIdAndUpdate(user?.id, userToUpdate, {
       new: true,
       runValidators: true
     });

@@ -76,8 +76,8 @@ const orderSchema = new mongoose.Schema({
 
 orderSchema.pre('find', function _(next) {
   this.populate({ path: 'articleDetails', select: 'articleId color price image discount' })
-    .populate({ path: 'store', select: '_id name' })
-    .populate({ path: 'customer', select: 'fullName _id' });
+    .populate({ path: 'store', select: '_id name logo' })
+    .populate({ path: 'customer', select: 'fullName _id photo' });
   next();
 });
 

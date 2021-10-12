@@ -3,7 +3,6 @@ import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import { v4 as uuidv4 } from 'uuid';
 import Cookies from 'universal-cookie';
-import Role from '../models/role';
 import Promisify from '../utils/promisify';
 import catchAsync from '../utils/catchAsync';
 import UserModel from '../models/users/userModel';
@@ -37,18 +36,12 @@ const sendFreshToken = (user: User | Customer | Seller, statusCode: number, res:
   };
 
   res.cookie('jwt', token, cookieOptions);
-  /*
-  const {
-    fullName, email, photo, role
-  } = user; // exclude password
-*/
+
   res.status(statusCode).json({
     status: 'success',
     token,
     data: {
-      user/* {
-        fullName, email, photo, role
-      } */
+      user
     }
   });
 };
@@ -70,7 +63,7 @@ const createStore = async (store: Store, file?: any) => {
 const createSeller = async (seller: Seller, store: Store, file: any) => {
   const storeDoc = await createStore(store, file);
   await VisitStoreModel.create({ storeId: storeDoc.id, visits: [] });
-  return SellerModel.create({ ...seller, stores: [storeDoc.id] });
+  return SellerModel.create({ ...seller, photo: storeDoc.logo, stores: [storeDoc.id] });
 };
 
 class AuthController {
@@ -113,9 +106,9 @@ class AuthController {
     }
   });
 
-  logout = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  logout = catchAsync(async (req: Request, res: Response) => {
     res.cookie('jwt', 'none', {
-      expires: new Date(Date.now() + (5*1000)),
+      expires: new Date(Date.now() + (3 * 1000)),
       httpOnly: true,
     });
     res.status(200).json({
