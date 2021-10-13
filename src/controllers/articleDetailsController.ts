@@ -25,6 +25,11 @@ class ArticleDetailsController {
       return;
     }
 
+    if (!articleDetails.stockArticles) {
+      next(new AppError('You must specify almost one stock quantity', 400));
+      return;
+    }
+
     if (!this.checkArticleSize(articleDetails.stockArticles)) {
       next(new AppError('Size must be unique, found duplicates in stockArticles', 400));
       return;

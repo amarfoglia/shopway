@@ -32,6 +32,7 @@ const sendFreshToken = (user: User | Customer | Seller, statusCode: number, res:
   const cookieOptions = {
     expires: new Date(Date.now() + Number(process.env.JWT_COOKIE_EXPIRES_IN) * ONE_DAY_IN_MS),
     httpOnly: true, // prevent cross-site scripting attack
+    sameSite: true,
     secure: process.env.NODE_ENV === 'production'
   };
 
@@ -96,10 +97,6 @@ class AuthController {
       next(new AppError('Incorrect email or password', 401));
       return;
     }
-    /*
-    const doc = user.role === Role.SELLER
-      ? await SellerModel.findById(user.id).select('+password')
-      : await CustomerModel.findById(user.id).select('+password'); */
 
     if (user) {
       sendFreshToken(user, 200, res);
@@ -108,8 +105,9 @@ class AuthController {
 
   logout = catchAsync(async (req: Request, res: Response) => {
     res.cookie('jwt', 'none', {
-      expires: new Date(Date.now() + (3 * 1000)),
+      expires: new Date(Date.now() + (1000)),
       httpOnly: true,
+      sameSite: 'strict'
     });
     res.status(200).json({
       status: 'success',

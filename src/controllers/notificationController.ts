@@ -8,7 +8,7 @@ import NotificationModel, { Notification } from '../models/notificationModel';
 class NotificationController {
   getNotificationsOfUser = catchAsync(async (req: Request, res: Response) => {
     const userId = req.user?.id;
-    const notifications = await NotificationModel.find({ receivers: userId });
+    const notifications = await NotificationModel.find({ receivers: userId }).sort('-createdAt');
 
     res.status(200).json({
       status: 'success',
