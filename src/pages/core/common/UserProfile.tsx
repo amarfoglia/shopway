@@ -22,7 +22,7 @@ interface Props {
 const UserDetails: React.FC<Props> = ({ userSince, followedStore = 0 }) => (
   <Grid container spacing={2}>
     <Grid item xs={6}>
-      <DetailPaper title={'Negozi seguiti'} value={followedStore} Icon={FavoriteOutlined} />
+      <DetailPaper title={'Followed stores'} value={followedStore} Icon={FavoriteOutlined} />
     </Grid>
     <Grid item xs={6}>
       <DetailPaper
