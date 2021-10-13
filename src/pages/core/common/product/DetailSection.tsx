@@ -62,7 +62,7 @@ const DetailsSection: React.FC<Props> = ({
               </Grid>
             </Grid>
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={12} style={{ maxHeight: 100, overflowY: 'auto' }}>
             <Typography variant="body2" align="justify">
               {article.description}
             </Typography>

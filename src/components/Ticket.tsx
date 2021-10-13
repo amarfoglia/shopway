@@ -100,10 +100,10 @@ const TicketVisualizer: React.FC<TicketProps> = ({
     <div style={modalStyle} className={classes.modal}>
       <div className={classes.ticket}>
         <div className={classes.main}>
-          <Typography variant="h5" style={{ margin: 'auto' }}>
+          <Typography variant="h5" style={{ margin: 'auto', color: 'white' }}>
             {subInfo}
           </Typography>
-          <Typography id="order-ticket-code" variant="h4" style={{ color: 'white' }}>
+          <Typography id="order-ticket-code" variant="h3" style={{ color: 'white' }}>
             {code.split('-')[1]}
           </Typography>
         </div>
@@ -118,13 +118,13 @@ const TicketVisualizer: React.FC<TicketProps> = ({
           <span className={clsx(classes.hole, classes.borderHole)}></span>
         </div>
 
-        <Typography id="order-ticket-validity" variant="h6">
+        <Typography id="order-ticket-validity" variant="h6" style={{ color: 'white' }}>
           {moment(validFrom).format('D MMM')} - {moment(validTo).format('D MMM')}
         </Typography>
       </div>
       {handleClick && (
         <div className={classes.confirmButton}>
-          <Button variant="outlined" color="primary" onClick={handleClick}>
+          <Button variant="outlined" fullWidth color="primary" onClick={handleClick}>
             Conferma
           </Button>
         </div>

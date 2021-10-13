@@ -4,6 +4,7 @@ import LoadButton from '../../../../components/formFields/LoadButton';
 import MyPaper from '../../../../components/MyPaper';
 import { WarningDisplay } from '../../../../components/ErrorDisplay';
 import NumericField from '../../../../components/formFields/NumericField';
+import { PriceDisplay } from '../../../../components/ArticlePaper';
 
 const quantityStyles = makeStyles((theme) => ({
   root: {
@@ -41,6 +42,7 @@ interface Props {
   quantity?: number;
   handleQuantityChange: (quantity: number) => void;
   price?: number;
+  discountPrice?: number;
   handlePriceChange: (price: number) => void;
   isLoading: boolean;
   handleClick: () => void;
@@ -50,6 +52,7 @@ const QuantitySection: React.FC<Props> = ({
   quantity,
   handleQuantityChange,
   price,
+  discountPrice,
   handlePriceChange,
   isLoading,
   handleClick,
@@ -60,14 +63,14 @@ const QuantitySection: React.FC<Props> = ({
   const decQuantity = () => {
     if (quantity && quantity > 1 && price) {
       handleQuantityChange(quantity - 1);
-      handlePriceChange(price - basePrice);
+      handlePriceChange((discountPrice ?? price) - basePrice);
     }
   };
 
   const incQuantity = () => {
     if (quantity && quantity < 5 && price) {
       handleQuantityChange(quantity + 1);
-      handlePriceChange(price + basePrice);
+      handlePriceChange((discountPrice ?? price) + basePrice);
     }
   };
 
@@ -84,9 +87,17 @@ const QuantitySection: React.FC<Props> = ({
             />
           </Grid>
           <Grid item xs={5}>
-            <Typography variant="body1" align="right">
-              Total ${price}
-            </Typography>
+            <Grid container justifyContent="flex-end" spacing={2}>
+              <Grid item>
+                <Typography variant="body1" align="right">
+                  Total
+                </Typography>
+              </Grid>
+              <Grid item>
+                <PriceDisplay price={price} variant="body1" discountPrice={discountPrice} />
+              </Grid>
+            </Grid>
+            {/* {price} */}
           </Grid>
         </Grid>
       </Grid>

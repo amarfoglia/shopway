@@ -35,6 +35,9 @@ const baseStyles = makeStyles((theme) => ({
     textAlign: 'left',
     paddingLeft: theme.spacing(4),
     height: 28,
+    [theme.breakpoints.up('sm')]: {
+      margin: '0 auto',
+    },
   },
 }));
 

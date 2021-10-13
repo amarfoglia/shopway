@@ -42,7 +42,12 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 15,
     padding: theme.spacing(1),
     boxShadow: shadow,
-    width: '25vw',
+    [theme.breakpoints.only('xs')]: {
+      width: 90,
+    },
+    [theme.breakpoints.up('sm')]: {
+      width: 150,
+    },
   },
   roleTitle: {
     textTransform: 'capitalize',

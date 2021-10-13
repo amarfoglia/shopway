@@ -9,6 +9,7 @@ const Home = lazy(() => import('./pages/HomePage'));
 const Logout = lazy(() => import('./pages/LogoutPage'));
 const ErrorPage = lazy(() => import('./pages/ErrorPage'));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
+const UserPage = lazy(() => import('./pages/core/common/UserProfile'));
 const StorePage = lazy(() => import('./pages/core/common/StorePage'));
 
 const renderContent = () => {
@@ -23,6 +24,7 @@ const renderContent = () => {
           <MyRoute path="/customer" mustBe="Customer" render={() => <CustomerRouter />} />
           <MyRoute path="/seller" mustBe="Seller" render={() => <SellerRouter />} />
           <MyRoute path="/article" mustBeLoggedIn render={() => <ArticleRouter />} />
+          <MyRoute path={'/users/:id'} mustBeLoggedIn render={() => <UserPage />} />
           <MyRoute path={'/stores/:id'} mustBeLoggedIn render={() => <StorePage />} />
           <Route path={'*'} render={() => <NotFoundPage />} />
         </Switch>

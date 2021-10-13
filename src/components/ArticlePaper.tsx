@@ -30,6 +30,38 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+type Size = 'body1' | 'body2';
+
+interface PriceProps {
+  price?: number;
+  discountPrice?: number;
+  variant?: Size;
+}
+
+const PriceDisplay: React.FC<PriceProps> = ({ price = 0, discountPrice, variant = 'body2' }) => {
+  const classes = useStyles();
+  return discountPrice ? (
+    <Grid container>
+      <Grid item>
+        <Typography variant={variant} className={classes.discount}>
+          ${price}
+        </Typography>
+      </Grid>
+      <Grid item>
+        <Typography variant={variant}>
+          <strong>${discountPrice}</strong>
+        </Typography>
+      </Grid>
+    </Grid>
+  ) : (
+    <Typography variant="body1">
+      <strong>${price}</strong>
+    </Typography>
+  );
+};
+
+export { PriceDisplay };
+
 const ArticlePaper: React.FC<ProductProps> = ({ article, hideHeader = false }) => {
   const classes = useStyles();
   const history = useHistory();
@@ -41,26 +73,6 @@ const ArticlePaper: React.FC<ProductProps> = ({ article, hideHeader = false }) =
 
   const goToArticleDetails = () =>
     articleId && history.push(Routes.ARTICLE_PAGE.replace(':id', articleId), { article, store });
-
-  const renderPrice = (price = 0, discountPrice?: string) =>
-    discountPrice ? (
-      <Grid container>
-        <Grid item>
-          <Typography variant="body2" className={classes.discount}>
-            ${price}
-          </Typography>
-        </Grid>
-        <Grid item>
-          <Typography variant="body2">
-            <strong>${discountPrice}</strong>
-          </Typography>
-        </Grid>
-      </Grid>
-    ) : (
-      <Typography variant="body1">
-        <strong>${price}</strong>
-      </Typography>
-    );
 
   return (
     <MyPaper>
@@ -99,7 +111,7 @@ const ArticlePaper: React.FC<ProductProps> = ({ article, hideHeader = false }) =
           </Typography>
         </Grid>
         <Grid item xs={12}>
-          {renderPrice(details?.price, details?.discount)}
+          <PriceDisplay price={details?.price} discountPrice={details?.discount} />
         </Grid>
       </Grid>
     </MyPaper>

@@ -100,6 +100,7 @@ const UserAppBar: React.FC<Props> = ({ tabs, handleChange }) => {
         label="user menu"
         CustomNode={avatar}
         onChange={onLogout}
+        disableIconPadding
         items={[{ value: 'log-out', label: 'Log out' }]}
       />
     );

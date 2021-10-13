@@ -49,8 +49,9 @@ const useStyles = makeStyles<Theme, { subject: Subject }>({
     display: 'flex',
   },
   formContainer: {
-    display: 'block',
+    //display: 'block',
     textAlign: 'center',
+    width: (props) => (props.subject === 'articledetail' ? '100%' : 'inherit'),
     height: (props) => (props.subject === 'articledetail' ? '100%' : 'inherit'),
   },
 });

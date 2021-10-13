@@ -12,7 +12,7 @@ interface ArticleDetails {
   color: string;
   price: number;
   image?: string | File;
-  discount?: string;
+  discount?: number;
   stockArticles: ArticleStock[];
   dateArticleAdded?: Date;
   storeId: string;

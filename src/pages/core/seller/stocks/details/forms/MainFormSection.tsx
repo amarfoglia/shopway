@@ -35,7 +35,7 @@ interface FormProps {
   color: string;
   price: number;
   image?: string | File;
-  discount?: string;
+  discount?: number;
   stockArticles: ArticleStock[];
 }
 
@@ -192,16 +192,30 @@ const MainFormSection: React.FC<Props> = ({
     helpers.setSubmitting(false);
   };
 
+  const currentStocks =
+    details?.stockArticles.flatMap(({ quantity, size }) => ({
+      size,
+      quantity,
+    })) ?? [];
+  const sizesToExclude = currentStocks.flatMap((s) => s.size) ?? [];
+
   const initValues: FormProps = {
-    color: '',
-    price: 0,
-    stockArticles: sizes.flatMap((s) => ({ quantity: 0, size: s })),
+    color: details?.color ?? '',
+    price: details?.price ?? 0,
+    discount: details?.discount,
+    image: details?.image,
+    stockArticles: [
+      ...sizes
+        .filter((s) => !sizesToExclude.includes(s))
+        .flatMap((s) => ({ size: s, quantity: 0 })),
+      ...currentStocks,
+    ].sort((a, b) => (a.size > b.size ? 1 : -1)),
   };
 
   return (
     <MyForm
       errors={errorMessage}
-      initialValues={details ?? initValues}
+      initialValues={initValues}
       handleSubmit={handleSubmit}
       validationSchema={detailsValidation}
       formId={'article-details-form'}

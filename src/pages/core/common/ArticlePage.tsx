@@ -48,7 +48,7 @@ const useStyles = makeStyles<Theme, { role: string }>((theme) => ({
   },
   detailsContainer: {
     [theme.breakpoints.down('xs')]: {
-      paddingBottom: ({ role }) => (role === 'Customer' ? 'calc(100% - 300px)' : 'inherit'),
+      paddingBottom: ({ role }) => (role === 'Customer' ? 'calc(100% - 260px)' : 'inherit'),
     },
   },
   backButton: {
@@ -97,6 +97,7 @@ const ArticlePage: React.FC<Props> = ({ location: { state } }): React.ReactEleme
   const isGreaterThanXs = useMediaQuery(theme.breakpoints.up('sm'));
   const { id } = useParams<{ id: string }>();
   const [order, setOrder] = useState<Partial<Order>>({});
+  const [discount, setDiscount] = useState<number>();
   const store = state && (state as State).store;
 
   useEffect(() => {
@@ -110,7 +111,10 @@ const ArticlePage: React.FC<Props> = ({ location: { state } }): React.ReactEleme
     mutate: _getArticle,
   } = useMutation<Payload<Article>, AppError, string>('getArticle', getArticle, {
     onSuccess: ({ data }) => {
-      data?.article && user && setOrder(createInitialOrder(data.article, user, store));
+      if (data?.article && user) {
+        setOrder(createInitialOrder(data.article, user, store));
+        setDiscount(data.article.articleDetails?.[0].discount);
+      }
     },
   });
 
@@ -127,8 +131,15 @@ const ArticlePage: React.FC<Props> = ({ location: { state } }): React.ReactEleme
   const article = articleRes?.data?.article;
 
   const handleColorChange = (color: string) => {
-    const detailsId = article?.articleDetails?.find((d) => d.color === color)?._id;
-    detailsId && setOrder({ ...order, color, articleDetails: detailsId });
+    const articleDetails = article?.articleDetails?.find((d) => d.color === color);
+    setDiscount(articleDetails?.discount);
+    articleDetails &&
+      setOrder({
+        ...order,
+        color,
+        totalPrice: articleDetails.price,
+        articleDetails: articleDetails._id,
+      });
   };
 
   const DetailsNode = article && (
@@ -149,6 +160,7 @@ const ArticlePage: React.FC<Props> = ({ location: { state } }): React.ReactEleme
       quantity={order?.quantity}
       handleQuantityChange={(q) => setOrder({ ...order, quantity: q })}
       price={order?.totalPrice}
+      discountPrice={discount}
       handlePriceChange={(p) => setOrder({ ...order, totalPrice: p })}
       handleClick={() => _createOrder(order)}
       isLoading={isOrderLoading}
@@ -160,16 +172,18 @@ const ArticlePage: React.FC<Props> = ({ location: { state } }): React.ReactEleme
       <Grid container>
         <Grid item xs={12}>
           <Carousel showStatus={false} showThumbs={false} autoPlay dynamicHeight={false}>
-            {article?.articleDetails?.map((a) => (
-              <div key={a._id}>
-                <Image
-                  src={`${BACKEND_URL}/img/articledetails/${a?.image}`}
-                  alt={`product image of ${article?.name}`}
-                  aspectRatio={isGreaterThanXs ? 21 / 9 : 4 / 3}
-                  style={{ objectFit: 'contain' }}
-                />
-              </div>
-            ))}
+            {article?.articleDetails
+              ?.filter((d) => d.image)
+              .map((a) => (
+                <div key={a._id}>
+                  <Image
+                    src={`${BACKEND_URL}/img/articledetails/${a?.image}`}
+                    alt={`product image of ${article?.name}`}
+                    aspectRatio={isGreaterThanXs ? 21 / 9 : 4 / 3}
+                    style={{ objectFit: 'contain' }}
+                  />
+                </div>
+              ))}
           </Carousel>
         </Grid>
 

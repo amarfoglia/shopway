@@ -60,6 +60,11 @@ export const NotifierProvider: React.FC = (props) => {
 
   const isConnected = () => socket?.connected ?? false;
 
+  const _reset = () => {
+    disconnect();
+    setSocket(undefined);
+  };
+
   useEffect(() => {
     socket && connect();
   }, [socket]);
@@ -68,11 +73,11 @@ export const NotifierProvider: React.FC = (props) => {
     if (user) {
       const params = { query: { role: user.role, userId: user._id ?? '-' } };
       _setUpSocket(io(BACKEND_URL, params), user);
+    } else {
+      _reset();
     }
-    return () => {
-      disconnect();
-    };
-  }, [user?.role]);
+    return _reset;
+  }, [user]);
 
   const _handleCustomerConnection = (socket: Socket, customer: Customer) => {
     socket.on('newArticle', (data: NewArticleData) => {
@@ -92,8 +97,10 @@ export const NotifierProvider: React.FC = (props) => {
     socket?.on('connect', () => {
       console.log('web socket connected');
       _getNotifications();
-      user?.role === Role.CUSTOMER && _handleCustomerConnection(socket, user as Customer);
-      user?.role === Role.SELLER && _handleSellerConnection(socket);
+      if (!socket.hasListeners('newArticle') && !socket.hasListeners('newOrder')) {
+        user?.role === Role.CUSTOMER && _handleCustomerConnection(socket, user as Customer);
+        user?.role === Role.SELLER && _handleSellerConnection(socket);
+      }
     });
 
     socket?.on('connect_error', () => {

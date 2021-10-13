@@ -42,7 +42,6 @@ const ProfilePage: React.FC<Props> = ({
 }): React.ReactElement => {
   const history = useHistory();
   const classes = useStyles();
-
   const ProfileNode = () => (
     <ProfileSection
       key="profile-section"

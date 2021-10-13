@@ -12,8 +12,9 @@ enum Routes {
   FORGOT_PASSWORD = '/auth/forgotPassword',
   CHANGE_PASSWORD = '/auth/changePassword',
 
+  USER_PROFILE = '/users/:id',
+
   CUSTOMER_MAIN = '/customer',
-  CUSTOMER_PROFILE = '/customer/:id',
   CUSTOMER_EDIT = '/customer/edit',
   SEARCH_ARTICLE = '/customer/search',
 

@@ -80,6 +80,7 @@ const TopBar: React.FC<Props> = ({
         label="user menu"
         CustomNode={avatar}
         onChange={onLogout}
+        disableIconPadding
         items={[{ value: 'log-out', label: 'Log out' }]}
       />
     );

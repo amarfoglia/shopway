@@ -1,7 +1,5 @@
 import React from 'react';
 import { Grid, Typography } from '@material-ui/core';
-// import RoomOutlined from '@material-ui/icons/RoomOutlined';
-// import PhoneOutlined from '@material-ui/icons/PhoneOutlined';
 import MyAvatar from '../../../components/MyAvatar';
 
 type Subject = 'store' | 'user';
@@ -32,18 +30,12 @@ const ProfileSection: React.FC<Props> = ({ title, subtitle1, subtitle2, imagePat
     </Grid>
     {subtitle1 && (
       <Grid item xs={12}>
-        <Typography variant="body1">
-          {/* <RoomOutlined fontSize="small" /> */}
-          {subtitle1}
-        </Typography>
+        <Typography variant="body1">{subtitle1}</Typography>
       </Grid>
     )}
     {subtitle2 && (
       <Grid item>
-        <Typography variant="body2">
-          {/* <PhoneOutlined fontSize="small" /> */}
-          {subtitle2}
-        </Typography>
+        <Typography variant="body2">{subtitle2}</Typography>
       </Grid>
     )}
   </Grid>

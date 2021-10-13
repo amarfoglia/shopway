@@ -1,6 +1,6 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
-import ConfirmationNumber from '@material-ui/icons/ConfirmationNumber';
+import FavoriteOutlined from '@material-ui/icons/FavoriteOutlined';
 import Event from '@material-ui/icons/Event';
 import ProfilePage from './ProfilePage';
 import { useParams } from 'react-router-dom';
@@ -12,15 +12,17 @@ import { AppError } from '../../../model/http';
 import ErrorDisplay from '../../../components/ErrorDisplay';
 import DetailPaper from '../../../components/DetailPaper';
 import moment from 'moment';
+import Customer from '../../../model/users/customer';
 
 interface Props {
   userSince?: Date;
+  followedStore?: number;
 }
 
-const UserDetails: React.FC<Props> = ({ userSince }) => (
+const UserDetails: React.FC<Props> = ({ userSince, followedStore = 0 }) => (
   <Grid container spacing={2}>
     <Grid item xs={6}>
-      <DetailPaper title={'Total orders'} value={'12'} Icon={ConfirmationNumber} />
+      <DetailPaper title={'Negozi seguiti'} value={followedStore} Icon={FavoriteOutlined} />
     </Grid>
     <Grid item xs={6}>
       <DetailPaper
@@ -44,7 +46,18 @@ const UserProfile = (): React.ReactElement => {
     { enabled: !!id },
   );
   const user = data?.data?.user;
-  const sections = [{ node: <UserDetails userSince={user?.createdAt} /> }];
+  const sections = [
+    {
+      node: (
+        <UserDetails
+          userSince={user?.createdAt}
+          followedStore={(user as Customer)?.followerList?.length}
+        />
+      ),
+    },
+  ];
+
+  console.log(user);
 
   return isLoading ? (
     <Loader />
@@ -55,6 +68,7 @@ const UserProfile = (): React.ReactElement => {
       name={user?.fullName}
       subinfo1={user?.email}
       subinfo2={user?.role}
+      imagePath={user?.photo as string}
       subject="user"
       sections={sections}
     />

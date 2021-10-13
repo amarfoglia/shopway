@@ -8,6 +8,7 @@ interface Props {
   CustomNode?: React.ReactNode;
   id: string;
   label: string;
+  disableIconPadding?: boolean;
   items: {
     label: string;
     value: string;
@@ -22,6 +23,7 @@ const MenuPopOver: React.FC<Props> = ({
   id,
   label,
   items,
+  disableIconPadding = false,
   onChange,
   selectedItem = -1,
 }) => {
@@ -43,7 +45,7 @@ const MenuPopOver: React.FC<Props> = ({
   return (
     <div>
       <IconButton
-        style={{ paddingLeft: 0 }}
+        style={disableIconPadding ? { paddingLeft: 0 } : {}}
         aria-controls={id}
         aria-haspopup="true"
         onClick={handleClick}

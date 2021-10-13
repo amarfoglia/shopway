@@ -29,6 +29,10 @@ const useStyles = makeStyles((theme) => ({
       color: 'grey',
     },
   },
+  notificationList: {
+    maxWidth: 300,
+    maxHeight: 300,
+  },
 }));
 
 const NotificationsPopOver: React.FC = () => {
@@ -80,7 +84,7 @@ const NotificationsPopOver: React.FC = () => {
           horizontal: 'right',
         }}
       >
-        <List component="nav" aria-label="notifications list" style={{ maxWidth: 300 }}>
+        <List component="nav" aria-label="notifications list" className={classes.notificationList}>
           {notifications.length > 0 ? (
             notifications.map((n, i) => (
               <React.Fragment key={n._id}>

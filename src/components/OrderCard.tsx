@@ -140,7 +140,7 @@ const OrderCard: React.FC<CardProps> = ({
     store?._id && history.push(Routes.STORE_PAGE.replace(':id', store._id));
 
   const goToCustomerPage = () =>
-    customer?._id && history.push(Routes.CUSTOMER_PROFILE.replace(':id', customer._id));
+    customer?._id && history.push(Routes.USER_PROFILE.replace(':id', customer._id));
 
   type CardHeaderInfo = {
     name?: string;
@@ -241,7 +241,7 @@ const OrderCard: React.FC<CardProps> = ({
           <Grid item xs={6}>
             <Typography variant="body2">Total payment</Typography>
             <Typography variant="body1">
-              <b>${details?.price}</b>
+              <b>${order.totalPrice}</b>
             </Typography>
           </Grid>
           <Grid item xs={6} style={{ textAlign: 'right' }}>
