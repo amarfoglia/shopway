@@ -25,7 +25,6 @@ const StatsSections: React.FC<Props> = ({ stats, isLoading }) => {
   const orders = stats?.salesStore.flatMap((s) => s.numberOfOrders);
   const weeklyProfit = profits?.reduce(_sum, 0);
   const weeklyVisits = stats?.viewsStore?.flatMap((v) => v.numberOfViews).reduce(_sum, 0);
-  const weeklyOrders = stats?.salesStore?.flatMap((s) => s.numberOfOrders).reduce(_sum, 0);
   const history = useHistory();
 
   const TopStats = () => (
