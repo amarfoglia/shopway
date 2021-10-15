@@ -1,0 +1,42 @@
+version: '3'
+services:
+    mongodb:
+        build:
+            context: ./mongo
+            dockerfile: Dockerfile
+        image: mongodb
+        ports:
+            - 27017:27017
+        networks:
+            - interna
+        container_name: mongodb
+    backend:
+        build:
+            context: ./shopway-backend
+            dockerfile: Dockerfile
+        image: shopway-backend
+        ports:
+            - 5000:5000
+        networks:
+            - interna
+        container_name: backend
+        restart: on-failure        
+        depends_on:
+            - mongodb
+    frontend:
+        build:
+            context: ./shopway-frontend
+            dockerfile: Dockerfile
+        image: shopway-frontend
+        ports:
+            - 3000:80
+        networks:
+            - interna
+        container_name: frontend
+        depends_on:
+            - backend
+networks:
+    interna:
+        driver: bridge
+        driver_opts:
+            com.docker.network.bridge.name: "brinterna"
