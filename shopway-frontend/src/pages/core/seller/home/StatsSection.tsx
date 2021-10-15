@@ -17,16 +17,13 @@ interface Props {
   isLoading: boolean;
 }
 
-const computeAvgProfit = (total?: number, num?: number) =>
-  total && num && total > 0 && num > 0 ? (total / num).toFixed(2) : 0;
-
 const _sum = (x: number, y: number) => x + y;
 
 const StatsSections: React.FC<Props> = ({ stats, isLoading }) => {
   const dates = stats?.salesStore?.flatMap((s) => moment(s._id).format('DD MMM'));
   const profits = stats?.salesStore?.flatMap((s) => s.profit);
   const orders = stats?.salesStore.flatMap((s) => s.numberOfOrders);
-  const weeklyProfit = profits?.filter((p) => p.sold).reduce(_sum, 0);
+  const weeklyProfit = profits?.reduce(_sum, 0);
   const weeklyVisits = stats?.viewsStore?.flatMap((v) => v.numberOfViews).reduce(_sum, 0);
   const weeklyOrders = stats?.salesStore?.flatMap((s) => s.numberOfOrders).reduce(_sum, 0);
   const history = useHistory();
@@ -112,7 +109,7 @@ const StatsSections: React.FC<Props> = ({ stats, isLoading }) => {
       <Grid item xs={6}>
         <DetailPaper
           title={'Profits per day'}
-          value={weeklyProfit}
+          value={weeklyProfit ?? 0}
           Icon={ArrowUpwardOutlined}
           iconColor="success"
         />

@@ -18,7 +18,7 @@ const objectToFormData = function (
 
       if (typeof obj[property] === 'object' && !(obj[property] instanceof File)) {
         objectToFormData(obj[property], fd, formKey);
-      } else {
+      } else if (obj[property]) {
         fd.append(formKey, obj[property]);
       }
     }

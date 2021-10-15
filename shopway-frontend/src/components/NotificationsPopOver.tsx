@@ -47,6 +47,8 @@ const NotificationsPopOver: React.FC = () => {
     { onSuccess: ({ data }) => data && markNotification(data.notification._id) },
   );
 
+  const notRead = (n: Notification) => !n.readBy.flatMap((n) => n.user).includes(user?._id ?? '');
+
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -89,7 +91,7 @@ const NotificationsPopOver: React.FC = () => {
             notifications.map((n, i) => (
               <React.Fragment key={n._id}>
                 <ListItem
-                  onClick={() => _readNotification(n._id)}
+                  onClick={() => notRead(n) && _readNotification(n._id)}
                   button
                   style={{
                     backgroundColor: n.readBy.find((r) => r.user === user?._id)

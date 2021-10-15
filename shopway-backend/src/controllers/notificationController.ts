@@ -23,7 +23,7 @@ class NotificationController {
     if (!notification) {
       next(new AppError("Notifications doesn't exist", 404));
     }
-    const notify = notification?.readBy.filter((n) => n.user === req.user.id);
+    const notify = notification?.readBy.filter((n) => n.user.toString() === req.user.id.toString());
     const isNotifySeen = notify && notify.length > 0;
     if (!isNotifySeen) {
       const notified = { user: req.user.id };

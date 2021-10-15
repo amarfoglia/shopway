@@ -16,14 +16,14 @@ const Pagination: React.FC<Props> = ({ onNext, onPrev, currentPage, numberOfItem
     <Grid container justifyContent="space-between">
       <Grid item>
         {currentPage > 1 && (
-          <IconButton onClick={onPrev} aria-label="Next page">
+          <IconButton onClick={onPrev} aria-label="Previous page">
             <ArrowBackIosOutlined />
           </IconButton>
         )}
       </Grid>
       <Grid item>
         {numberOfItems === limit && (
-          <IconButton onClick={onNext} aria-label="Previous page">
+          <IconButton onClick={onNext} aria-label="Next page">
             <ArrowForwardIosOutlined />
           </IconButton>
         )}

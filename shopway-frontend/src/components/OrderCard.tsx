@@ -127,11 +127,12 @@ const OrderCard: React.FC<CardProps> = ({
   const timeLeft = getTimeLeft(order.orderExpireAt).asHours();
   const classes = useStyles({ timeLeft, sold: order.sold });
   const history = useHistory();
-  const details = articleDetails as ArticleDetails;
+  const details = articleDetails && (articleDetails as ArticleDetails);
   const customer = order.customer;
   const isCustomer = subject === 'Customer';
 
   const goToArticlePage = () =>
+    details &&
     history.push(Routes.ARTICLE_PAGE.replace(':id', details.articleId), {
       store,
     });
@@ -207,13 +208,15 @@ const OrderCard: React.FC<CardProps> = ({
         <Grid container spacing={2}>
           <Grid item xs={3} style={{ display: 'flex' }}>
             <Grid container justifyContent="center" alignItems="center">
-              <MyAvatar
-                imagePath={details?.image as string}
-                size="fullWidth"
-                subject="articledetail"
-                shape="square"
-                alt={`image of article ${details.articleId}`}
-              />
+              {details && (
+                <MyAvatar
+                  imagePath={details?.image as string}
+                  size="fullWidth"
+                  subject="articledetail"
+                  shape="square"
+                  alt={`image of article ${details.articleId}`}
+                />
+              )}
             </Grid>
           </Grid>
           <Grid item xs={9}>
@@ -224,12 +227,14 @@ const OrderCard: React.FC<CardProps> = ({
                 </Typography>
               </Grid>
               <Grid item>
-                <Details
-                  brand={order.brandArticle}
-                  color={details?.color}
-                  quantity={1}
-                  size={order.size}
-                />
+                {details && (
+                  <Details
+                    brand={order.brandArticle}
+                    color={details?.color}
+                    quantity={1}
+                    size={order.size}
+                  />
+                )}
               </Grid>
             </Grid>
           </Grid>

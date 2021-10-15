@@ -37,9 +37,14 @@ const Orders: React.FC<Props> = ({ role }) => {
     error: errorOnGet,
     isLoading,
     mutate: _fetchOrders,
-  } = useMutation<Payload<Order[]>, AppError>(['getAllOrder', page], () => getAllOrdes(page), {
+  } = useMutation<Payload<Order[]>, AppError, number>('getAllOrder', getAllOrdes, {
     onSuccess: ({ data }) => data?.order && setOrders(data.order),
   });
+
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+    _fetchOrders(newPage);
+  };
 
   const { error: errorOnDelete, mutate: _deleteOrder } = useMutation<
     Payload<void>,
@@ -51,13 +56,15 @@ const Orders: React.FC<Props> = ({ role }) => {
     Payload<void>,
     AppError,
     string
-  >(confirmOrder, { onSuccess: () => _fetchOrders() });
+  >(confirmOrder, { onSuccess: () => _fetchOrders(page) });
 
   const error = (errorOnGet?.message ?? '')
     .concat(errorOnDelete?.message ?? '')
     .concat(errorOnConfirm?.message ?? '');
 
-  useEffect(() => _fetchOrders(), []);
+  console.log(page.toString, orders);
+
+  useEffect(() => _fetchOrders(page), []);
 
   const OrdersSection = () => (
     <Grid container spacing={1}>
@@ -105,17 +112,15 @@ const Orders: React.FC<Props> = ({ role }) => {
       <Hidden xsDown>
         <Grid item sm={5}></Grid>
       </Hidden>
-      {orders && orders?.length > 0 && (
-        <Grid item xs={12} sm={7}>
-          <Pagination
-            onNext={() => setPage(page + 1)}
-            onPrev={() => setPage(page - 1)}
-            currentPage={page}
-            limit={limit}
-            numberOfItems={orders?.length ?? 0}
-          />
-        </Grid>
-      )}
+      <Grid item xs={12} sm={7}>
+        <Pagination
+          onNext={() => handlePageChange(page + 1)}
+          onPrev={() => handlePageChange(page - 1)}
+          currentPage={page}
+          limit={limit}
+          numberOfItems={orders?.length ?? 0}
+        />
+      </Grid>
     </Grid>
   );
 

@@ -4,7 +4,7 @@ ENV WORKINGDIR=/root/app
 
 WORKDIR ${WORKINGDIR}
 
-RUN	mkdir -p ${WORKINGDIR} && chmod 666 ${WORKINGDIR}
+RUN     mkdir -p ${WORKINGDIR} && chmod 666 ${WORKINGDIR}
 
 COPY . ${WORKINGDIR}/
 
