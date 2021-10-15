@@ -26,7 +26,7 @@ const StatsSections: React.FC<Props> = ({ stats, isLoading }) => {
   const dates = stats?.salesStore?.flatMap((s) => moment(s._id).format('DD MMM'));
   const profits = stats?.salesStore?.flatMap((s) => s.profit);
   const orders = stats?.salesStore.flatMap((s) => s.numberOfOrders);
-  const weeklyProfit = profits?.reduce(_sum, 0);
+  const weeklyProfit = profits?.filter((p) => p.sold).reduce(_sum, 0);
   const weeklyVisits = stats?.viewsStore?.flatMap((v) => v.numberOfViews).reduce(_sum, 0);
   const weeklyOrders = stats?.salesStore?.flatMap((s) => s.numberOfOrders).reduce(_sum, 0);
   const history = useHistory();
@@ -112,7 +112,7 @@ const StatsSections: React.FC<Props> = ({ stats, isLoading }) => {
       <Grid item xs={6}>
         <DetailPaper
           title={'Profits per day'}
-          value={computeAvgProfit(weeklyProfit, weeklyOrders)}
+          value={weeklyProfit}
           Icon={ArrowUpwardOutlined}
           iconColor="success"
         />
