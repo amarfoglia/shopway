@@ -144,7 +144,7 @@ class StoreController {
     const storeObjectId = mongoose.Types.ObjectId(storeId);
     const sales = await OrderModel.aggregate([
       {
-        $match: { store: storeObjectId, sold: false, bookDate: { $gte: startDate, $lte: endDate } }
+        $match: { store: storeObjectId, sold: true, bookDate: { $gte: startDate, $lte: endDate } }
       },
       {
         $group: {
@@ -165,7 +165,7 @@ class StoreController {
     const storeObjectId = mongoose.Types.ObjectId(storeId);
     const stats = await OrderModel.aggregate([
       {
-        $match: { store: storeObjectId, sold: false }
+        $match: { store: storeObjectId, sold: true }
       },
       {
         $lookup: {

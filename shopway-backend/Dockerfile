@@ -1,11 +1,24 @@
 FROM node:12-buster-slim
-ENV NODE_ENV=development
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
-COPY ./package.json ./
-RUN npm install
-COPY ./ ./
 
-CMD [ "npm", "start" ]
+RUN apt-get update && apt-get upgrade -y
+RUN apt-get install python3 -y
+
+ENV WORKINGDIR=/shopway/app
+
+WORKDIR ${WORKINGDIR}
+
+RUN	mkdir ${WORKINGDIR}
+
+# COPY .  ${WORKINGDIR}/
+COPY src ./src
+COPY tsconfig.json .
+COPY package.json .
+COPY package-lock.json .
+COPY config.env .
+
+RUN	npm install
+RUN npm run build
 
 EXPOSE 5000
+
+CMD ["npm", "run-script", "start:prod"]

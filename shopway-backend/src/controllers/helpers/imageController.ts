@@ -44,7 +44,7 @@ const setPhoto = async (fileName: string, filepath: string, file: any): Promise<
   try {
     await access(filepath);
   } catch (err) {
-    await mkdir(filepath);
+    await mkdir(filepath, { recursive: true });
   }
   return file.toFile(`${filepath}/${myFileName}`).then(() => myFileName);
 };

@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "ts-node-dev ./src/server.ts",
-    "start:prod": "ts-node ./src/server.ts",
+    "start:prod": "node ./dist/server.ts",
     "debug": "ndb server.js",
     "build": "tsc -p .",
     "lint": "eslint ./"
