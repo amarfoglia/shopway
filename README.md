@@ -16,4 +16,5 @@ ASW project
     
 Note:
 With these commands you start the services: mongodb (with empty data), frontend and backend.
+
 If you want to start the services with mongo database pre-filled see the release.
