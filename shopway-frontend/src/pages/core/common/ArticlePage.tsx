@@ -81,7 +81,7 @@ const createInitialOrder = (article: Article, user: User, store: Store): Partial
     brandArticle: article.brand,
     store: store,
     customer: user as Customer,
-    totalPrice: details?.price,
+    totalPrice: details?.discount ?? details?.price,
     articleDetails: details?._id,
     quantity: stocks?.size ? 1 : 0,
     size: stocks?.size,
@@ -98,6 +98,7 @@ const ArticlePage: React.FC<Props> = ({ location: { state } }): React.ReactEleme
   const { id } = useParams<{ id: string }>();
   const [order, setOrder] = useState<Partial<Order>>({});
   const [discount, setDiscount] = useState<number>();
+  const [price, setPrice] = useState<number>();
   const store = state && (state as State).store;
 
   useEffect(() => {
@@ -113,7 +114,9 @@ const ArticlePage: React.FC<Props> = ({ location: { state } }): React.ReactEleme
     onSuccess: ({ data }) => {
       if (data?.article && user) {
         setOrder(createInitialOrder(data.article, user, store));
-        setDiscount(data.article.articleDetails?.[0].discount);
+        const details = data.article.articleDetails?.[0];
+        setDiscount(details?.discount);
+        setPrice(details?.price);
       }
     },
   });
@@ -132,12 +135,13 @@ const ArticlePage: React.FC<Props> = ({ location: { state } }): React.ReactEleme
 
   const handleColorChange = (color: string) => {
     const articleDetails = article?.articleDetails?.find((d) => d.color === color);
+    setPrice(articleDetails?.price);
     setDiscount(articleDetails?.discount);
     articleDetails &&
       setOrder({
         ...order,
         color,
-        totalPrice: articleDetails.price,
+        totalPrice: articleDetails.discount ?? articleDetails.price,
         articleDetails: articleDetails._id,
       });
   };
@@ -159,7 +163,7 @@ const ArticlePage: React.FC<Props> = ({ location: { state } }): React.ReactEleme
     <QuantitySection
       quantity={order?.quantity}
       handleQuantityChange={(q) => setOrder({ ...order, quantity: q })}
-      price={order?.totalPrice}
+      price={price}
       discountPrice={discount}
       handlePriceChange={(p) => setOrder({ ...order, totalPrice: p })}
       handleClick={() => _createOrder(order)}

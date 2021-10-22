@@ -28,7 +28,7 @@ class UserController {
       photo = file && await setPhoto('logo'.concat('-', uuidv4()), 'public/img/stores', file);
       await StoreModel.findByIdAndUpdate(user?.stores?.[0], { logo: photo });
     } else {
-      photo = file && await setPhoto('photo'.concat('-', user?.id), 'public/img/users', req.file);
+      photo = file && await setPhoto('photo'.concat('-', uuidv4()), 'public/img/users', file);
     }
 
     const userToUpdate = photo ? { ...req.body, photo } : req.body;
